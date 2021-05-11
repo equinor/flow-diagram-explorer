@@ -38,7 +38,7 @@ jobs:
           npm run test
 
       - name: 🔼 Build and publish Node.js package
-        if: github.event_name == 'release' && matrix.python-version == '3.6'
+        if: github.event_name == 'release'
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
