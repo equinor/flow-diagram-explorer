@@ -30,9 +30,6 @@ export const FlowDiagramParser = (flowDiagram: FlowDiagram): NodePath[] => {
 
     nodePaths = nodePaths.filter(node => !endNodes.includes(node.startNode));
 
-    console.log(startNodes);
-    console.log(endNodes);
-
     return nodePaths;
 };
 

@@ -9,6 +9,8 @@ import React from "react";
 import { FlowDiagramParser } from "../lib/utils/node-path-algorithm";
 import { DiagramDrawer } from "../lib/utils/diagram-drawer";
 import { waterinj } from "./examples/water-injection";
+import { Scene } from "../lib/components/Scene";
+
 const nodePaths = FlowDiagramParser(waterinj);
 const { nodes, arrows } = DiagramDrawer({
   diagram: waterinj,
@@ -16,13 +18,13 @@ const { nodes, arrows } = DiagramDrawer({
 });
 
 function App(): JSX.Element {
-    return (
-        <React.StrictMode>
-            <div className="App">
-                <header className="App-header">Here we are going to display the flow diagram explorer.</header>
-            </div>
-        </React.StrictMode>
-    );
+  return (
+    <React.StrictMode>
+      <div className="App">
+        <Scene nodes={nodes} />
+      </div>
+    </React.StrictMode>
+  );
 }
 
 export default App;

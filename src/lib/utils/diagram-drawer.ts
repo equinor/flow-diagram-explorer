@@ -33,8 +33,8 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
     const config = props.config || defaultConfig;
     const { nodePaths, diagram } = props;
 
-    const nodesList: DiagramNode[] = [];
-    const arrowsList: DiagramArrow[] = [];
+    let nodesList: DiagramNode[] = [];
+    let arrowsList: DiagramArrow[] = [];
 
     nodePaths.map(path => {
         if (path.fullPath) {
@@ -51,13 +51,28 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                 startX: x,
                 startY: y
             });
-            nodesList.concat(nodes);
-            arrowsList.concat(arrows);
+            nodesList = nodesList.concat(nodes);
+            arrowsList = arrowsList.concat(arrows);
         }
     });
 
     return {
-        nodes: nodesList,
+        nodes: nodesList.reduce((filtered: DiagramNode[], node: DiagramNode) => {
+            let combinedY = 0;
+            let count = 0;
+            nodesList.forEach(n => {
+                if (n.node === node.node) {
+                    combinedY += n.centerPosition.y;
+                    count++;
+                }
+            });
+            combinedY /= count;
+            if (!filtered.some(n => n.node === node.node)) {
+                node.centerPosition.y = combinedY;
+                filtered.push(node);
+            }
+            return filtered;
+        }, []),
         arrows: arrowsList
     };
 };
@@ -65,19 +80,20 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
 const createNodesAndArrowsRecursively = (props: NodesAndArrowsProps): { nodes: DiagramNode[], arrows: DiagramArrow[] } => {
     const { diagram, nodePaths, config, currentNodePath, currentIndex, startX, startY } = props;
 
-    const nodesList: DiagramNode[] = [];
-    const arrowsList: DiagramArrow[] = [];
+    let nodesList: DiagramNode[] = [];
+    let arrowsList: DiagramArrow[] = [];
 
     nodesList.push({
         centerPosition: { x: startX, y: startY },
-        dimensions: config.nodeDimensions
+        dimensions: config.nodeDimensions,
+        node: diagram.nodes!.find(n => n.id === currentNodePath.nodes[currentIndex])?.id!,
     });
 
     const nodesStartingFromHere = nodePaths.filter(path => path.startNode === currentNodePath.nodes[currentIndex]);
     const height = (config.verticalSpacing + config.nodeDimensions.height) * (nodesStartingFromHere.length - 1);
     const newStartY = startY - height / 2;
 
-    if (nodesStartingFromHere.length > 0) {
+    if (nodesStartingFromHere.length > 1) {
         nodesStartingFromHere.forEach((node, index) => {
             const { nodes, arrows } = createNodesAndArrowsRecursively({
                 diagram: diagram,
@@ -88,11 +104,11 @@ const createNodesAndArrowsRecursively = (props: NodesAndArrowsProps): { nodes: D
                 startX: startX + config.nodeDimensions.width + config.horizontalSpacing,
                 startY: newStartY + index * (config.verticalSpacing + config.nodeDimensions.height),
             });
-            nodesList.concat(nodes);
-            arrowsList.concat(arrows);
+            nodesList = nodesList.concat(nodes);
+            arrowsList = arrowsList.concat(arrows);
         })
     }
-    else {
+    else if (nodesStartingFromHere.length === 1) {
         const { nodes, arrows } = createNodesAndArrowsRecursively({
             diagram: diagram,
             nodePaths: nodePaths,
@@ -102,8 +118,8 @@ const createNodesAndArrowsRecursively = (props: NodesAndArrowsProps): { nodes: D
             startX: startX + config.nodeDimensions.width + config.horizontalSpacing,
             startY: newStartY,
         });
-        nodesList.concat(nodes);
-        arrowsList.concat(arrows);
+        nodesList = nodesList.concat(nodes);
+        arrowsList = arrowsList.concat(arrows);
     }
     return { nodes: nodesList, arrows: arrowsList };
 };

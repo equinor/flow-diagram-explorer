@@ -10,9 +10,11 @@ export type DiagramConfig = {
 export type DiagramNode = {
     centerPosition: Point;
     dimensions: Dimensions;
+    node: string;
 };
 
 export type DiagramArrow = {
     startPosition: Point;
     endPosition: Point;
+    startNode: string;
 };
