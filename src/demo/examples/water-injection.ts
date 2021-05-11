@@ -26,11 +26,20 @@ export const waterinj: FlowDiagram = {
       title: 'Pump 4',
       icon: 'pump',
     },
+    {
+      id: 'other',
+      title: 'Other',
+      icon: 'other',
+    },
   ],
   edges: [
-    {from: 'input', to: 'pump1'},
-    {from: 'input', to: 'pump2'},
-    {from: 'input', to: 'pump3'},
-    {from: 'input', to: 'pump4'},
+    { from: 'input', to: 'pump1' },
+    { from: 'input', to: 'pump2' },
+    { from: 'input', to: 'pump3' },
+    { from: 'input', to: 'pump4' },
+    { from: 'pump1', to: 'other' },
+    { from: 'pump2', to: 'other' },
+    { from: 'pump3', to: 'other' },
+    { from: 'pump4', to: 'other' },
   ]
 };

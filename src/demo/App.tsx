@@ -6,6 +6,14 @@
  */
 
 import React from "react";
+import { FlowDiagramParser } from "../lib/utils/node-path-algorithm";
+import { DiagramDrawer } from "../lib/utils/diagram-drawer";
+import { waterinj } from "./examples/water-injection";
+const nodePaths = FlowDiagramParser(waterinj);
+const { nodes, arrows } = DiagramDrawer({
+  diagram: waterinj,
+  nodePaths: nodePaths
+});
 
 function App(): JSX.Element {
     return (
