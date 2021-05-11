@@ -1,0 +1,48 @@
+name: flow-diagram-explorer
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  release:
+    types:
+      - published
+  schedule:
+    # Run CI daily and check that tests are working with latest dependencies
+    - cron: "0 0 * * *"
+
+jobs:
+  flow-diagram-explorer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📖 Checkout commit locally
+        uses: actions/checkout@v2
+
+      - name: 📦 Install build dependencies
+        run: |
+          npm ci --ignore-scripts
+
+      - name: 🏗️ Build application
+        run: |
+          npm run build
+
+      - name: 🕵️ Check code style & linting
+        run: |
+          npm run typecheck && npm run lint
+
+      - name: 🤖 Run tests
+        run: |
+          npm run test
+
+      - name: 🔼 Build and publish Node.js package
+        if: github.event_name == 'release' && matrix.python-version == '3.6'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm version --no-git-tag-version ${GITHUB_REF//refs\/tags\//}
+          npm config set '//registry.npmjs.org/:_authToken' '${NPM_TOKEN}'
+          npm config set always-auth true
+          npm publish --access public
