@@ -6,25 +6,28 @@
  */
 
 import React from "react";
-import { FlowDiagramParser } from "../lib/utils/node-path-algorithm";
+import { LinearOptimizer } from "../lib/utils/node-path-algorithm";
 import { DiagramDrawer } from "../lib/utils/diagram-drawer";
 import { waterinj } from "./examples/water-injection";
 import { Scene } from "../lib/components/Scene";
+import { View } from "../lib/components/View";
 
-const nodePaths = FlowDiagramParser(waterinj);
 const { nodes, arrows } = DiagramDrawer({
-  diagram: waterinj,
-  nodePaths: nodePaths
+    diagram: waterinj
 });
 
+LinearOptimizer(waterinj);
 function App(): JSX.Element {
-  return (
-    <React.StrictMode>
-      <div className="App">
-        <Scene nodes={nodes} />
-      </div>
-    </React.StrictMode>
-  );
+    return (
+        <React.StrictMode>
+            <View
+                Scene={<Scene nodes={nodes} arrows={arrows} />}
+                initialCenterPoint={{ x: 200, y: 500 }}
+                width={1800}
+                height={1000}
+            />
+        </React.StrictMode>
+    );
 }
 
 export default App;

@@ -1,7 +1,7 @@
 export interface FlowDiagram {
-  title?: string;
-  nodes?: FDNode[];
-  edges?: Edge[];
+  title: string;
+  nodes: FDNode[];
+  edges: Edge[];
 };
 
 export type Edge = {

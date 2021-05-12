@@ -53,6 +53,8 @@
       "not dead",
       "not op_mini all"
     ],
+        "javascript-lp-solver": "^0.4.24",
+        "mathjs": "^9.3.2",
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -77,6 +79,7 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "copy-webpack-plugin": "^8.1.1",
+        "css-loader": "^5.2.4",
     "css-minimizer-webpack-plugin": "^2.0.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",

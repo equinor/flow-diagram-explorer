@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require('webpack'); //to access built-in plugins
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -82,6 +83,10 @@ module.exports = (env, argv) => {
         },
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".jsx"],
+            fallback: {
+                "child_process": false,
+                "fs": false
+            }
         },
         devtool: devtool,
         plugins: [
@@ -103,7 +108,8 @@ module.exports = (env, argv) => {
                         }
                     }
                 ]
-            })
+            }),
+            new webpack.IgnorePlugin(/(fs|child_process)/),
         ],
         optimization: {
             minimizer: [
@@ -116,6 +122,6 @@ module.exports = (env, argv) => {
                 },
                 new CssMinimizerPlugin({}),
             ],
-        },
+        }
     };
 };
