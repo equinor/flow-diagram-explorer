@@ -1,6 +1,6 @@
 import { FlowDiagram } from '../types/nodes';
 import { DiagramConfig, DiagramNode, DiagramArrow } from "../types/diagram";
-import { LinearOptimizer } from './node-path-algorithm';
+import { DagreGraphLayouter } from './node-path-algorithm';
 
 type DiagramDrawerProps = {
     diagram: FlowDiagram;
@@ -22,11 +22,13 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
     const config = props.config || defaultConfig;
     const { diagram } = props;
 
-    let nodesList: DiagramNode[] = LinearOptimizer(diagram);
-    let arrowsList: DiagramArrow[] = [];
+    const result = DagreGraphLayouter(diagram);
+    let nodesList: DiagramNode[] = result.nodes;
+    let arrowsList: DiagramArrow[] = result.arrows;
 
+    /*
     nodesList = nodesList.map(node => ({
-        centerPosition: { x: node.centerPosition.x * (config.horizontalSpacing + config.nodeDimensions.width), y: node.centerPosition.y * (config.verticalSpacing * 2 + config.nodeDimensions.height)},
+        centerPosition: { x: node.centerPosition.x, y: node.centerPosition.y },
         dimensions: config.nodeDimensions,
         node: node.node
     }));
@@ -36,10 +38,11 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         const endPosition = nodesList.find(el => el.node === edge.to)!.centerPosition;
         arrowsList.push({
             startPosition: { x: startPosition.x + config.nodeDimensions.width / 2, y: startPosition.y },
-            endPosition: {x: endPosition.x - config.nodeDimensions.width / 2, y: endPosition.y},
+            endPosition: { x: endPosition.x - config.nodeDimensions.width / 2, y: endPosition.y },
             startNode: edge.from
         });
     });
+    */
 
     return {
         nodes: nodesList,

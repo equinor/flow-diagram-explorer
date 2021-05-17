@@ -14,7 +14,5 @@ export type DiagramNode = {
 };
 
 export type DiagramArrow = {
-    startPosition: Point;
-    endPosition: Point;
-    startNode: string;
+    points: Point[]
 };

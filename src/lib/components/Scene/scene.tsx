@@ -4,6 +4,8 @@ import { Point } from "../../types/point";
 import { Dimensions } from "../../types/dimensions";
 import { DiagramNode, DiagramArrow } from "../../types/diagram";
 
+import "./scene.css";
+
 type ScenePropsType = {
     centerPoint?: Point;
     dimensions?: Dimensions;
@@ -35,11 +37,27 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
         return <></>;
     }
 
+    const left = centerPoint.x - dimensions.width / 2.0;
+    const top = centerPoint.y - dimensions.height / 2.0;
+
+    const realCenterPoint = { x: dimensions.width / 2.0 - left, y: dimensions.height / 2.0 - top };
+
+    let count = 0;
+
+    if (props.nodes) {
+        props.nodes.forEach((node) => {
+            if (isPartlyContained(realCenterPoint, dimensions, node.centerPosition, node.dimensions)) {
+                count++;
+            }
+        });
+    }
+    console.log(`Drawing ${count} nodes.`)
+
     return (
-        <div className="WorldMap">
+        <div className="Scene" style={{ top: top, left: left }}>
             {props.nodes &&
                 props.nodes.map((node) => {
-                    if (isPartlyContained(centerPoint!, dimensions!, node.centerPosition, node.dimensions)) {
+                    if (isPartlyContained(realCenterPoint, dimensions, node.centerPosition, node.dimensions)) {
                         return (
                             <div
                                 style={{
@@ -73,7 +91,7 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
                         id="arrow"
                         markerWidth="16"
                         markerHeight="16"
-                        refX="0"
+                        refX="9"
                         refY="3"
                         orient="auto"
                         markerUnits="strokeWidth"
@@ -85,25 +103,21 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
                 {props.arrows!.map((arrow) => {
                     if (
                         isPartlyContained(
-                            centerPoint!,
+                            realCenterPoint,
                             dimensions!,
                             {
-                                x: arrow.startPosition.x + (arrow.endPosition.x - arrow.startPosition.x) / 2,
-                                y: arrow.startPosition.y + (arrow.endPosition.y - arrow.startPosition.y)
+                                x: arrow.points[0].x + (arrow.points[arrow.points.length - 1].x - arrow.points[0].x) / 2,
+                                y: arrow.points[0].y + (arrow.points[arrow.points.length - 1].y - arrow.points[0].y) / 2
                             },
                             {
-                                width: Math.abs(arrow.endPosition.x - arrow.startPosition.x),
-                                height: Math.abs(arrow.endPosition.y - arrow.startPosition.y)
+                                width: Math.abs(arrow.points[arrow.points.length - 1].x - arrow.points[0].x),
+                                height: Math.abs(arrow.points[arrow.points.length - 1].y - arrow.points[0].y)
                             }
                         )
                     ) {
                         return (
                             <polyline
-                                points={`${arrow.startPosition.x},${arrow.startPosition.y} ${
-                                    arrow.startPosition.x + (arrow.endPosition.x - arrow.startPosition.x) / 2
-                                },${arrow.startPosition.y} ${
-                                    arrow.startPosition.x + (arrow.endPosition.x - arrow.startPosition.x) / 2
-                                },${arrow.endPosition.y} ${arrow.endPosition.x - 14},${arrow.endPosition.y}`}
+                                points={arrow.points.map(p => `${p.x},${p.y}`).join(" ")}
                                 fill="none"
                                 stroke="#000"
                                 strokeWidth={2}

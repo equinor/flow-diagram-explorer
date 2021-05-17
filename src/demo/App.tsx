@@ -6,7 +6,7 @@
  */
 
 import React from "react";
-import { LinearOptimizer } from "../lib/utils/node-path-algorithm";
+import { Heuristic } from "../lib/utils/node-path-algorithm";
 import { DiagramDrawer } from "../lib/utils/diagram-drawer";
 import { waterinj } from "./examples/water-injection";
 import { Scene } from "../lib/components/Scene";
@@ -16,15 +16,15 @@ const { nodes, arrows } = DiagramDrawer({
     diagram: waterinj
 });
 
-LinearOptimizer(waterinj);
+Heuristic(waterinj);
 function App(): JSX.Element {
     return (
         <React.StrictMode>
             <View
                 Scene={<Scene nodes={nodes} arrows={arrows} />}
-                initialCenterPoint={{ x: 200, y: 500 }}
-                width={1800}
-                height={1000}
+                initialCenterPoint={{ x: 400, y: 250 }}
+                width={800}
+                height={500}
             />
         </React.StrictMode>
     );

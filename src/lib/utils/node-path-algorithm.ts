@@ -1,13 +1,40 @@
+import dagre from "dagre";
+
 import { FlowDiagram, Edge } from '../types/nodes';
 import { NodePath } from '../types/nodepath';
-import { DiagramNode } from '../types/diagram';
+import { DiagramArrow, DiagramNode } from '../types/diagram';
 
-export const LinearPositioner = (flowDiagram: FlowDiagram): {[key: string]: number} => {
+export const DagreGraphLayouter = (flowDiagram: FlowDiagram): { nodes: DiagramNode[], arrows: DiagramArrow[] } => {
+    let graph = new dagre.graphlib.Graph();
+    graph.setGraph({ rankdir: "LR" });
+
+    graph.setDefaultEdgeLabel(function () { return {}; });
+
+    flowDiagram.nodes.forEach(node => {
+        graph.setNode(node.id, { label: node.title, width: 200, height: 100 });
+    });
+    flowDiagram.edges.forEach(edge => {
+        graph.setEdge(edge.from, edge.to);
+    });
+
+    dagre.layout(graph, { rankdir: "LR" });
+
+    const result: { nodes: DiagramNode[], arrows: DiagramArrow[] } = { nodes: [], arrows: [] };
+    graph.nodes().forEach(function (v) {
+        result.nodes.push({ node: v, centerPosition: { x: graph.node(v).x, y: graph.node(v).y }, dimensions: { width: graph.node(v).width, height: graph.node(v).height } });
+    });
+    graph.edges().forEach(function (v) {
+        result.arrows.push({ points: graph.edge(v).points });
+    });
+    return result;
+}
+
+export const LinearPositioner = (flowDiagram: FlowDiagram): { [key: string]: number } => {
     const nodePaths = FlowDiagramParser(flowDiagram);
-    
-    const nodeCoordinates: {[key: string]: number} = {};
 
-    flowDiagram.nodes.forEach(({id}) => {
+    const nodeCoordinates: { [key: string]: number } = {};
+
+    flowDiagram.nodes.forEach(({ id }) => {
         const longestPath = nodePaths.reduce((value: number, path: NodePath) => {
             if (path.endNode && path.endNode === id) {
                 value = Math.max(value, path.nodes.length - 1);
@@ -20,7 +47,7 @@ export const LinearPositioner = (flowDiagram: FlowDiagram): {[key: string]: numb
     return nodeCoordinates;
 };
 
-export const LinearOptimizer = (flowDiagram: FlowDiagram): DiagramNode[] => {
+export const Heuristic = (flowDiagram: FlowDiagram): DiagramNode[] => {
     const nodeCoordinates = LinearPositioner(flowDiagram);
     const nodePaths = FlowDiagramParser(flowDiagram);
 
@@ -31,26 +58,26 @@ export const LinearOptimizer = (flowDiagram: FlowDiagram): DiagramNode[] => {
         return filtered;
     }, []);
 
-    const coordinates: {[key: string]: number} = {};
+    const coordinates: { [key: string]: number } = {};
 
     startNodes.forEach(currentNode => {
         const childNodes = nodePaths.filter(path => path.startNode === currentNode && path.fullPath).length;
         adjustCoordinates(currentNode, childNodes / 2, nodePaths, coordinates, {});
     });
 
-    const result: DiagramNode[]  = [];
+    const result: DiagramNode[] = [];
     flowDiagram.nodes.forEach(node => {
         result.push({
             node: node.id,
-            centerPosition: { x: nodeCoordinates[node.id], y: coordinates[node.id]},
-            dimensions: { width: 1, height: 1}
+            centerPosition: { x: nodeCoordinates[node.id], y: coordinates[node.id] },
+            dimensions: { width: 1, height: 1 }
         });
     });
 
     return result;
 }
 
-const adjustCoordinates = (currentNode: string, y: number, nodePaths: NodePath[], coordinates: {[key: string]: number}, usedParentNodes: {[key: string]: string[]}) => {
+const adjustCoordinates = (currentNode: string, y: number, nodePaths: NodePath[], coordinates: { [key: string]: number }, usedParentNodes: { [key: string]: string[] }) => {
     if (!Object.keys(usedParentNodes).includes(currentNode)) {
         usedParentNodes[currentNode] = [];
     }
@@ -66,7 +93,7 @@ const adjustCoordinates = (currentNode: string, y: number, nodePaths: NodePath[]
     else {
         coordinates[currentNode] = y
     }
-    const childNodes = nodePaths.filter(path => path.startNode === currentNode && path.nodes.length > 1).map(path => path.nodes[1]).filter((item, pos, arr) => !pos || item != arr[pos-1]);
+    const childNodes = nodePaths.filter(path => path.startNode === currentNode && path.nodes.length > 1).map(path => path.nodes[1]).filter((item, pos, arr) => !pos || item != arr[pos - 1]);
     const angleShare = Math.PI / (childNodes.length + 1);
     childNodes.forEach((node, index) => {
         if (!usedParentNodes[currentNode].includes(node)) {

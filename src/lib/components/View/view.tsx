@@ -4,6 +4,7 @@ import "./view.css";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 
 import { Point } from "../../types/point";
+import { useMouseDrag } from "../../hooks/useMouseDrag";
 
 type ViewPropsType = {
     initialCenterPoint: Point;
@@ -16,6 +17,7 @@ export const View: React.FC<ViewPropsType> = ({ initialCenterPoint, Scene, width
     const viewRef = React.useRef<HTMLDivElement>(null);
     const [centerPoint, setCenterPoint] = React.useState({ x: initialCenterPoint.x, y: initialCenterPoint.y });
     const dimensions = useContainerDimensions(viewRef);
+    const dragDistance = useMouseDrag();
 
     React.useEffect(() => {
         setCenterPoint({ x: initialCenterPoint.x, y: initialCenterPoint.y });
@@ -23,7 +25,7 @@ export const View: React.FC<ViewPropsType> = ({ initialCenterPoint, Scene, width
 
     return (
         <div className="View" ref={viewRef} style={{ width: width, height: height }}>
-            {React.cloneElement(Scene, { centerPoint: centerPoint, dimensions: dimensions })}
+            {React.cloneElement(Scene, { centerPoint: { x: centerPoint.x + dragDistance.x, y: centerPoint.y + dragDistance.y }, dimensions: dimensions })}
         </div>
     );
 };
