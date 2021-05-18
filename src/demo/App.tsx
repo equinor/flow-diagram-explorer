@@ -6,25 +6,25 @@
  */
 
 import React from "react";
-import { Heuristic } from "../lib/utils/node-path-algorithm";
 import { DiagramDrawer } from "../lib/utils/diagram-drawer";
 import { waterinj } from "./examples/water-injection";
 import { Scene } from "../lib/components/Scene";
-import { View } from "../lib/components/View";
+import { Map } from "../lib/components/Map";
 
-const { nodes, arrows } = DiagramDrawer({
-    diagram: waterinj
+const { nodes, arrows, size } = DiagramDrawer({
+    flowDiagram: waterinj
 });
 
-Heuristic(waterinj);
 function App(): JSX.Element {
     return (
         <React.StrictMode>
-            <View
-                Scene={<Scene nodes={nodes} arrows={arrows} />}
+            <Map
+                Scene={<Scene nodes={nodes} arrows={arrows} size={size} />}
                 initialCenterPoint={{ x: 400, y: 250 }}
-                width={800}
-                height={500}
+                width="100%"
+                height="800px"
+                sceneSize={size}
+                margin={200}
             />
         </React.StrictMode>
     );

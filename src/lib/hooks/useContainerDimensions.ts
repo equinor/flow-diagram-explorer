@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Dimensions } from "../types/dimensions";
+import { Size } from "../types/dimensions";
 
 export const useContainerDimensions = (ref: React.RefObject<HTMLElement>) => {
-    const [dimensions, setDimensions] = React.useState<Dimensions>({width: 0, height: 0});
+    const [dimensions, setDimensions] = React.useState<Size>({width: 0, height: 0});
 
     React.useEffect(() => {
-        const getDimensions = (): Dimensions => ({
+        const getDimensions = (): Size => ({
             width: ref.current ? ref.current.offsetWidth : 0,
             height: ref.current ? ref.current.offsetHeight: 0
         });
@@ -22,7 +22,7 @@ export const useContainerDimensions = (ref: React.RefObject<HTMLElement>) => {
         window.addEventListener("resize", handleResize);
 
         return () => {
-            window.removeEventListener("resize", handleResize);
+                window.removeEventListener("resize", handleResize);
         }
     }, [ref]);
 

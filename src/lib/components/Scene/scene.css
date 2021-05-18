@@ -1,3 +1,4 @@
 .Scene {
     position: absolute;
+    display: block;
 }

@@ -1,18 +1,23 @@
-import { Dimensions } from "./dimensions";
+import { Size } from "./dimensions";
 import { Point } from "./point";
+import { Flow } from "./nodes";
 
 export type DiagramConfig = {
     horizontalSpacing: number;
     verticalSpacing: number;
-    nodeDimensions: Dimensions,
+    nodeDimensions: Size,
 };
 
 export type DiagramNode = {
+    id: string;
     centerPosition: Point;
-    dimensions: Dimensions;
-    node: string;
+    size: Size;
+    html: JSX.Element;
 };
 
 export type DiagramArrow = {
-    points: Point[]
+    flow: Flow;
+    points: Point[];
+    label: string;
+    labelPosition: Point;
 };

@@ -58,6 +58,7 @@
         "fs": false
     },
     "dependencies": {
+        "clsx": "^1.1.1",
         "dagre": "^0.8.5",
         "javascript-lp-solver": "^0.4.24",
         "mathjs": "^9.3.2",
