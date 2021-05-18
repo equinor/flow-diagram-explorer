@@ -32,6 +32,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
     const { initialCenterPoint, Scene, scaling, viewSize, boundaryBox, onCenterPointChange, margin } = props;
 
     const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
+    const [mouseDownPosition, setMouseDownPosition] = React.useState({ x: 0, y: 0 });
 
     const viewRef = React.useRef<HTMLDivElement>(null);
     const mapRef = React.useRef<HTMLDivElement>(null);
@@ -42,14 +43,42 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
     }, [initialCenterPoint]);
 
     React.useEffect(() => {
-        if (onCenterPointChange) {
-            onCenterPointChange(
-                calcCenterPointWithinBoundaryBox(
-                    { x: centerPoint.x + dragDistance.x / scaling, y: centerPoint.y + dragDistance.y / scaling },
-                    viewSize,
-                    boundaryBox
-                )
-            );
+        const handleMouseDown = (e: MouseEvent) => {
+            setMouseDownPosition({ x: e.clientX, y: e.clientY });
+        };
+
+        const handleMouseUp = (e: MouseEvent) => {
+            if (onCenterPointChange && Math.sqrt(Math.pow(e.clientX - mouseDownPosition.x, 2) + Math.pow(e.clientY - mouseDownPosition.y, 2)) < 13.11) {
+                const newCenterPoint = { x: (mouseDownPosition.x - mapRef.current!.getBoundingClientRect().left) / scaling, y: (mouseDownPosition.y - mapRef.current!.getBoundingClientRect().top) / scaling };
+                const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, viewSize, boundaryBox);
+                setCenterPoint(adjustedCenterPoint);
+                onCenterPointChange(adjustedCenterPoint);
+            }
+        };
+
+        if (mapRef.current) {
+            mapRef.current.addEventListener("mousedown", handleMouseDown);
+            window.addEventListener("mouseup", handleMouseUp);
+        }
+        return () => {
+            if (mapRef.current) {
+                mapRef.current.removeEventListener("mousedown", handleMouseDown);
+                window.removeEventListener("mouseup", handleMouseUp);
+            }
+        }
+    }, [mapRef, mouseDownPosition]);
+
+    React.useEffect(() => {
+        if (dragging) {
+            if (onCenterPointChange) {
+                onCenterPointChange(
+                    calcCenterPointWithinBoundaryBox(
+                        { x: centerPoint.x + dragDistance.x / scaling, y: centerPoint.y + dragDistance.y / scaling },
+                        viewSize,
+                        boundaryBox
+                    )
+                );
+            }
         }
         if (!dragging) {
             setCenterPoint(
@@ -67,10 +96,10 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
 
     const calculatedCenterPoint = dragging
         ? calcCenterPointWithinBoundaryBox(
-              { x: centerPoint.x + dragDistance.x / scaling, y: centerPoint.y + dragDistance.y / scaling },
-              viewSize,
-              boundaryBox
-          )
+            { x: centerPoint.x + dragDistance.x / scaling, y: centerPoint.y + dragDistance.y / scaling },
+            viewSize,
+            boundaryBox
+        )
         : centerPoint;
 
     return (

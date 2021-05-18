@@ -38,7 +38,7 @@ export const useMouseDrag = (ref: React.RefObject<HTMLElement>): { dragging: boo
       }
     };
 
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseUp = () => {
       if (mousePressed) {
         setMousePressed(false);
         document.body.classList.remove("effects__unselectable");
@@ -64,7 +64,7 @@ export const useMouseDrag = (ref: React.RefObject<HTMLElement>): { dragging: boo
         window.removeEventListener("click", handleMouseClick, true);
       }
     };
-  }, [referencePosition, ref, ref.current, mousePressed]);
+  }, [referencePosition, ref, mousePressed]);
 
   React.useEffect(() => {
     if (mousePressed && calcDistance(referencePosition, { x: mousePosition.x, y: mousePosition.y }) > 13.11) {
