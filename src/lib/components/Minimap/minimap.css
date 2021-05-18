@@ -7,10 +7,12 @@
     left: 16px;
     display: block;
     border-radius: 4px;
+    z-index: 2;
 }
 
 .Minimap__View {
     border: 16px blue solid;
     position: absolute;
     display: block;
+    z-index: 3;
 }

@@ -88,7 +88,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
             flow: flow,
             points: graph.edge(v).points,
             label: flow.label,
-            labelPosition: { x: graph.edge(v).x, y: graph.edge(v).y }
+            labelPosition: { x: graph.edge(v)["x"], y: graph.edge(v)["y"] }
         });
     });
 

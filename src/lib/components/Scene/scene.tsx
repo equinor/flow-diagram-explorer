@@ -12,7 +12,8 @@ type ScenePropsType = {
     nodes?: DiagramNode[];
     arrows?: DiagramArrow[];
     size: Size;
-    margin: number;
+    margin?: number;
+    onNodeClick?: (nodeId: string) => void;
 };
 
 const isPartlyContained = (centerPoint1: Point, dimensions1: Size, centerPoint2: Point, dimensions2: Size): boolean => {
@@ -28,7 +29,8 @@ const isPartlyContained = (centerPoint1: Point, dimensions1: Size, centerPoint2:
 };
 
 export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Element => {
-    const { centerPoint, dimensions, size, margin } = props;
+    const { centerPoint, dimensions, size, onNodeClick } = props;
+    const margin = props.margin || 0;
 
     if (!centerPoint || !dimensions) {
         return <></>;
@@ -62,8 +64,9 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
                                     position: "absolute",
                                     left: node.centerPosition.x,
                                     top: node.centerPosition.y,
-                                    zIndex: 0
+                                    zIndex: 1
                                 }}
+                                onClick={onNodeClick ? () => onNodeClick(node.id) : undefined}
                             >
                                 {node.html}
                             </div>
@@ -100,6 +103,7 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
                                     <defs>
                                         <marker
                                             id={`arrow-${arrow.flow.id}`}
+                                            key={`arrow-${arrow.flow.id}`}
                                             markerWidth="16"
                                             markerHeight="16"
                                             refX="9"

@@ -15,11 +15,15 @@ const { nodes, arrows, size } = DiagramDrawer({
     flowDiagram: waterinj
 });
 
+const handleNodeClick = (nodeId: string) => {
+    console.log(`${nodeId} clicked!`);
+}
+
 function App(): JSX.Element {
     return (
         <React.StrictMode>
             <Map
-                Scene={<Scene nodes={nodes} arrows={arrows} size={size} />}
+                Scene={<Scene nodes={nodes} arrows={arrows} size={size} onNodeClick={handleNodeClick} />}
                 initialCenterPoint={{ x: 400, y: 250 }}
                 width="100%"
                 height="800px"

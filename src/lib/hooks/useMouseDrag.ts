@@ -22,7 +22,7 @@ const calcDistance = (point1: Point, point2: Point): number => {
   return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
 }
 
-export const useMouseDrag = (ref: React.RefObject<HTMLElement>): {dragging: boolean, dragDistance: Point} => {
+export const useMouseDrag = (ref: React.RefObject<HTMLElement>): { dragging: boolean, dragDistance: Point } => {
   const [referencePosition, setReferencePosition] = React.useState<Point>({ x: 0, y: 0 });
   const [distance, setDistance] = React.useState<Point>({ x: 0, y: 0 });
   const mousePosition = useMousePosition();
@@ -37,24 +37,34 @@ export const useMouseDrag = (ref: React.RefObject<HTMLElement>): {dragging: bool
         document.body.classList.add("effects__unselectable");
       }
     };
-    const handleMouseUp = () => {
-      setMousePressed(false);
+
+    const handleMouseUp = (e: MouseEvent) => {
       if (mousePressed) {
+        setMousePressed(false);
         document.body.classList.remove("effects__unselectable");
       }
     };
+
+    const handleMouseClick = (e: MouseEvent) => {
+      if (mousePressed && calcDistance({ x: e.clientX, y: e.clientY }, { x: mousePosition.x, y: mousePosition.y }) > 13.11) {
+        e.stopPropagation();
+      }
+    };
+
     if (ref.current) {
       ref.current.addEventListener("mousedown", setFromEvent);
       window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("click", handleMouseClick, true);
     }
 
     return () => {
       if (ref.current) {
         ref.current.removeEventListener("mousedown", setFromEvent);
         window.removeEventListener("mouseup", handleMouseUp);
+        window.removeEventListener("click", handleMouseClick, true);
       }
     };
-  }, [referencePosition, ref, mousePressed]);
+  }, [referencePosition, ref, ref.current, mousePressed]);
 
   React.useEffect(() => {
     if (mousePressed && calcDistance(referencePosition, { x: mousePosition.x, y: mousePosition.y }) > 13.11) {
@@ -62,5 +72,5 @@ export const useMouseDrag = (ref: React.RefObject<HTMLElement>): {dragging: bool
     }
   }, [mousePosition]);
 
-  return {dragging: mousePressed, dragDistance: distance};
+  return { dragging: mousePressed, dragDistance: distance };
 }
