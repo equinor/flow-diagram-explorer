@@ -6,30 +6,31 @@
  */
 
 import React from "react";
-import { DiagramDrawer } from "../lib/utils/diagram-drawer";
-import { waterinj } from "./examples/water-injection";
-import { Scene } from "../lib/components/Scene";
-import { Map } from "../lib/components/Map";
+import { norne} from "./examples/norne";
+import {waterinj} from "./examples/waterinj";
+import FlowDiagramExplorer from "../lib";
 
-const { sceneItems, sceneSize } = DiagramDrawer({
-    flowDiagram: waterinj
-});
-
-const handleNodeClick = (nodeId: string) => {
-    console.log(`${nodeId} clicked!`);
-}
 
 function App(): JSX.Element {
+    const [diagram, setDiagram] = React.useState(norne);
+    
+    const handleNodeClick = (nodeId: string) => {
+        if (nodeId === "norne") {
+            setDiagram(waterinj);
+        }
+    };
+
+    const handleDiagramChange = (title: string) => {
+        if (title === "norne") {
+            setDiagram(waterinj);
+        } else {
+            setDiagram(norne);
+        }
+    };
+
     return (
         <React.StrictMode>
-            <Map
-                Scene={<Scene size={sceneSize} onNodeClick={handleNodeClick}>{sceneItems}</Scene>}
-                initialCenterPoint={{ x: 400, y: 250 }}
-                width="100%"
-                height="95vh"
-                sceneSize={sceneSize}
-                margin={200}
-            />
+            <FlowDiagramExplorer flowDiagram={diagram} onNodeClick={handleNodeClick} onDiagramChange={handleDiagramChange} />
         </React.StrictMode>
     );
 }

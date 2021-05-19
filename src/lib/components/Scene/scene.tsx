@@ -12,11 +12,13 @@ type ScenePropsType = {
     size: Size;
     margin?: number;
     onNodeClick?: (nodeId: string) => void;
+    onNodeEnter: (nodeId: string, flows: string[]) => void;
+    onNodeLeave: (nodeId: string) => void;
     children?: React.ReactElement<SceneItemPropsType>[];
 };
 
 export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Element => {
-    const { centerPoint, dimensions, size, onNodeClick, children } = props;
+    const { centerPoint, dimensions, size, onNodeClick, onNodeEnter, onNodeLeave, children } = props;
     const margin = props.margin || 0;
 
     if (!centerPoint || !dimensions) {
@@ -41,7 +43,7 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
         <div className="Scene" style={{ top: top, left: left, width: size.width, height: size.height }}>
             {children && children.map((child: React.ReactElement<SceneItemPropsType>) =>
                 React.cloneElement(child, {
-                    viewCenterPoint: realCenterPoint, viewSize: dimensions, onClick: onNodeClick ? (id: string) => onNodeClick(id) : undefined
+                    viewCenterPoint: realCenterPoint, viewSize: dimensions, onClick: onNodeClick ? (id: string) => onNodeClick(id) : undefined, onMouseEnter: onNodeEnter, onMouseLeave: onNodeLeave
                 })
             )}
         </div>

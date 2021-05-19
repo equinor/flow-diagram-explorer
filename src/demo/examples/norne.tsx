@@ -100,8 +100,8 @@ const renderOilrigNode = (node: FDNode): { html: JSX.Element; width: number; hei
 };
 
 
-export const waterinj: FlowDiagram = {
-    title: "oilrig",
+export const norne: FlowDiagram = {
+    title: "World",
     nodes: [
         {
             id: "input",
@@ -121,7 +121,7 @@ export const waterinj: FlowDiagram = {
         {
             id: "norne",
             title: "NORNE",
-            render: renderOilrigNode
+            render: renderOilrigNode,
         },
         {
             id: "electricity-output",
