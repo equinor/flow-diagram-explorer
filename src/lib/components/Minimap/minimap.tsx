@@ -69,28 +69,30 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
     }, [mapRef, mouseDownPosition]);
 
     React.useEffect(() => {
-        if (dragging) {
-            if (onCenterPointChange) {
-                onCenterPointChange(
+        if (Math.sqrt(Math.pow(dragDistance.x, 2) + Math.pow(dragDistance.y, 2)) > 13.11) {
+            if (dragging) {
+                if (onCenterPointChange) {
+                    onCenterPointChange(
+                        calcCenterPointWithinBoundaryBox(
+                            { x: centerPoint.x + dragDistance.x / scaling, y: centerPoint.y + dragDistance.y / scaling },
+                            viewSize,
+                            boundaryBox
+                        )
+                    );
+                }
+            }
+            if (!dragging) {
+                setCenterPoint(
                     calcCenterPointWithinBoundaryBox(
-                        { x: centerPoint.x + dragDistance.x / scaling, y: centerPoint.y + dragDistance.y / scaling },
+                        {
+                            x: centerPoint.x + dragDistance.x / scaling,
+                            y: centerPoint.y + dragDistance.y / scaling
+                        },
                         viewSize,
                         boundaryBox
                     )
                 );
             }
-        }
-        if (!dragging) {
-            setCenterPoint(
-                calcCenterPointWithinBoundaryBox(
-                    {
-                        x: centerPoint.x + dragDistance.x / scaling,
-                        y: centerPoint.y + dragDistance.y / scaling
-                    },
-                    viewSize,
-                    boundaryBox
-                )
-            );
         }
     }, [dragDistance, dragging]);
 

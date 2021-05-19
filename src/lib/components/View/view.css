@@ -1,5 +1,5 @@
 .View {
-    border: 1px black solid;
     overflow: hidden;
     position: relative;
+    background-color: #F7F7F7;
 }

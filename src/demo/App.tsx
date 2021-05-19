@@ -11,7 +11,7 @@ import { waterinj } from "./examples/water-injection";
 import { Scene } from "../lib/components/Scene";
 import { Map } from "../lib/components/Map";
 
-const { nodes, arrows, size } = DiagramDrawer({
+const { sceneItems, sceneSize } = DiagramDrawer({
     flowDiagram: waterinj
 });
 
@@ -23,11 +23,11 @@ function App(): JSX.Element {
     return (
         <React.StrictMode>
             <Map
-                Scene={<Scene nodes={nodes} arrows={arrows} size={size} onNodeClick={handleNodeClick} />}
+                Scene={<Scene size={sceneSize} onNodeClick={handleNodeClick}>{sceneItems}</Scene>}
                 initialCenterPoint={{ x: 400, y: 250 }}
                 width="100%"
-                height="800px"
-                sceneSize={size}
+                height="95vh"
+                sceneSize={sceneSize}
                 margin={200}
             />
         </React.StrictMode>
