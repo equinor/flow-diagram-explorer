@@ -26,11 +26,11 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
     const left =
         dimensions.width <= size.width + 2 * margin
             ? -(centerPoint.x - dimensions.width / 2.0) + margin
-            : (dimensions.width - (size.width + 2 * margin)) / 2;
+            : (dimensions.width - (size.width)) / 2;
     const top =
         dimensions.height <= size.height + 2 * margin
             ? -(centerPoint.y - dimensions.height / 2.0) + margin
-            : (dimensions.height - (size.height + 2 * margin)) / 2;
+            : (dimensions.height - (size.height)) / 2;
 
     const realCenterPoint = {
         x: dimensions.width / 2.0 + (centerPoint.x - dimensions.width / 2.0) - margin,
