@@ -197,11 +197,11 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                         bendPositionDistance -
                         bendPositionLength / 2 +
                         (bendPositionLength / (inputFlows.length + 1)) * (index + 1),
-                    y: node.y - node.height / 2 + (node.height / (inputFlows.length + 1)) * (index + 1)
+                    y: node.y - node.height / 2 + (node.height / (outputFlows.length + 1)) * (index + 1)
                 },
                 outputPosition: {
                     x: node.x + node.width / 2,
-                    y: node.y - node.height / 2 + (node.height / (inputFlows.length + 1)) * (index + 1)
+                    y: node.y - node.height / 2 + (node.height / (outputFlows.length + 1)) * (index + 1)
                 }
             });
         });
@@ -210,16 +210,17 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
     const nodeFlowEdgeMap: { node: string; sourceNodes: string[]; targetNodes: string[]; flow: string }[] = [];
     flowDiagram.nodes.forEach((node) => {
         flowDiagram.flows.forEach((flow) => {
-            const sourceNodes: string[] = [node.id];
-            const targetNodes: string[] = [node.id];
+            const sourceNodes: string[] = [];
+            const targetNodes: string[] = [];
             let edges = [...flowDiagram.edges.filter((edge) => edge.flow === flow.id)];
             for (let i = 0; i < edges.length; i++) {
                 const edge = edges[i];
-                if (sourceNodes.includes(edge.from)) {
+                if (sourceNodes.includes(edge.from) || edge.from === node.id) {
                     targetNodes.push(edge.to);
                     edges = edges.splice(i, 1);
                     i = 0;
-                } else if (targetNodes.includes(edge.to)) {
+                } 
+                if (targetNodes.includes(edge.to) || edge.to === node.id) {
                     sourceNodes.push(edge.from);
                     edges = edges.splice(i, 1);
                     i = 0;
@@ -290,8 +291,8 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         const jointPoint = flowJointPoints.find((el) => el.fromNode === edge.from && el.flow === edge.flow)!.position;
         const splitPoint = flowSplitPoints.find((el) => el.toNode == edge.to && el.flow === edge.flow)!.position;
         const points = [outputPoint, startBendPoint, jointPoint, splitPoint, endBendPoint, inputPoint];
-        const width = Math.abs(outputPoint.x - inputPoint.x);
-        const height = Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y)));
+        const width = Math.abs(outputPoint.x - inputPoint.x) + 2 * arrowWidth;
+        const height = Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y))) + 2 * arrowWidth;
         const left = Math.min(...points.map((point) => point.x)) - arrowWidth;
         const top = Math.min(...points.map((point) => point.y)) - arrowWidth;
         const svg = (
