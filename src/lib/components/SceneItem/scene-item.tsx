@@ -9,7 +9,7 @@ export type SceneItemPropsType = {
     size: Size;
     position: Point;
     zIndex: number;
-    onMouseEnter?: (id: string, flows: string[]) => void;
+    onMouseEnter?: (id: string) => void;
     onMouseLeave?: (id: string) => void;
     onClick?: (id: string) => void;
     children?: React.ReactNode;
@@ -17,7 +17,6 @@ export type SceneItemPropsType = {
     viewSize?: Size;
     clickable: boolean;
     hoverable?: boolean;
-    connectedFlows?: string[];
 };
 
 const isPartlyContained = (centerPoint1: Point, dimensions1: Size, centerPoint2: Point, dimensions2: Size): boolean => {
@@ -33,10 +32,14 @@ const isPartlyContained = (centerPoint1: Point, dimensions1: Size, centerPoint2:
 };
 
 export const SceneItem: React.FC<SceneItemPropsType> = (props: SceneItemPropsType): JSX.Element => {
-    const { id, position, size, zIndex, onClick, viewCenterPoint, viewSize, clickable, onMouseEnter, onMouseLeave } = props;
-    const connectedFlows = props.connectedFlows || [];
+    const { id, position, size, zIndex, onClick, viewCenterPoint, viewSize, clickable, onMouseEnter, onMouseLeave } =
+        props;
     const hoverable = props.hoverable || false;
-    if ((viewCenterPoint && viewSize && isPartlyContained(viewCenterPoint, viewSize, position, size)) || (!viewCenterPoint || !viewSize)) {
+    if (
+        (viewCenterPoint && viewSize && isPartlyContained(viewCenterPoint, viewSize, position, size)) ||
+        !viewCenterPoint ||
+        !viewSize
+    ) {
         return (
             <div
                 data-id={id}
@@ -48,13 +51,13 @@ export const SceneItem: React.FC<SceneItemPropsType> = (props: SceneItemPropsTyp
                     cursor: onClick && clickable ? "pointer" : "default"
                 }}
                 onClick={onClick && clickable ? () => onClick(id) : undefined}
-                onMouseEnter={onMouseEnter && hoverable ? () => onMouseEnter(id, connectedFlows) : undefined}
+                onMouseEnter={onMouseEnter && hoverable ? () => onMouseEnter(id) : undefined}
                 onMouseLeave={onMouseLeave && hoverable ? () => onMouseLeave(id) : undefined}
             >
                 {props.children}
-            </div>);
-    }
-    else {
+            </div>
+        );
+    } else {
         return <></>;
     }
 };

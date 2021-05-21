@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "../View";
 import { Minimap } from "../Minimap";
+import { MapActions } from "../MapActions";
 import { Point } from "../../types/point";
 import { Size } from "../../types/dimensions";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
@@ -70,6 +71,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 margin={margin}
                 onCenterPointChange={handleMinimapCenterPointChange}
             />
+            <MapActions />
         </div>
     );
 };

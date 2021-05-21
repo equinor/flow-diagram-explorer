@@ -11,10 +11,9 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
             <div
                 style={{
                     width: 0,
-                    height: 0,
+                    height: 0
                 }}
-            >
-            </div>
+            ></div>
         ),
         width: 0,
         height: 100
@@ -99,7 +98,6 @@ const renderOilrigNode = (node: FDNode): { html: JSX.Element; width: number; hei
     };
 };
 
-
 export const norne: FlowDiagram = {
     title: "World",
     nodes: [
@@ -121,22 +119,30 @@ export const norne: FlowDiagram = {
         {
             id: "norne",
             title: "NORNE",
-            render: renderOilrigNode,
-        },
-        {
-            id: "electricity-output",
-            title: "Output",
-            render: renderInputOutputNode
+            render: renderOilrigNode
         },
         {
             id: "emissions-output",
             title: "Output",
             render: renderInputOutputNode
+        },
+        {
+            id: "electricity-output",
+            title: "Output",
+            render: renderInputOutputNode
         }
     ],
     flows: [
-        { id: "electricity-import", label: "Electricity import", style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" } },
-        { id: "electricity-export", label: "Electricity export", style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" } },
+        {
+            id: "electricity-import",
+            label: "Electricity import",
+            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" }
+        },
+        {
+            id: "electricity-export",
+            label: "Electricity export",
+            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" }
+        },
         { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
         { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } }
     ],
@@ -144,7 +150,7 @@ export const norne: FlowDiagram = {
         { flow: "electricity-import", from: "windfarm", to: "norne" },
         { flow: "electricity-import", from: "power-from-shore", to: "norne" },
         { flow: "fuel", from: "input", to: "norne" },
-        { flow: "electricity-export", from: "norne", to: "electricity-output" },
-        { flow: "emissions", from: "norne", to: "emissions-output" }
+        { flow: "emissions", from: "norne", to: "emissions-output" },
+        { flow: "electricity-export", from: "norne", to: "electricity-output" }
     ]
 };

@@ -1,4 +1,4 @@
-.Minimap {
+.FlowDiagramExplorer .Minimap {
     position: absolute;
     padding: 10px;
     background-color: white;
@@ -10,9 +10,15 @@
     z-index: 10;
 }
 
-.Minimap__View {
-    border: 16px blue solid;
+.FlowDiagramExplorer .Minimap__View {
+    border: 16px #246e78 solid;
     position: absolute;
     display: block;
+    z-index: 12;
+}
+
+.FlowDiagramExplorer .NoHoverLayer {
+    position: absolute;
     z-index: 11;
+    border: 16px transparent solid;
 }

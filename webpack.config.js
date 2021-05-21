@@ -90,6 +90,9 @@ module.exports = (env, argv) => {
         },
         devtool: devtool,
         plugins: [
+            new webpack.ProvidePlugin({
+                process: 'process/browser',
+            }),
             new MiniCssExtractPlugin({
                 filename: filenameCss,
             }),
