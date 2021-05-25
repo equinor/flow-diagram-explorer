@@ -1,5 +1,5 @@
 {
-  "name": "flow-diagram-explorer",
+  "name": "@equinor/flow-diagram-explorer",
   "description": "Explorer for flow diagrams",
   "repository": {
     "type": "git",
