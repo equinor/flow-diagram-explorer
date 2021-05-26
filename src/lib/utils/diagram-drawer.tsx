@@ -29,7 +29,7 @@ export type Diagram = {
 const defaultConfig: DiagramConfig = {
     horizontalSpacing: 100,
     verticalSpacing: 100,
-    nodeDimensions: { width: 200, height: 100 }
+    nodeDimensions: { width: 200, height: 100 },
 };
 
 const defaultRenderNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
@@ -47,14 +47,14 @@ const defaultRenderNode = (node: FDNode): { html: JSX.Element; width: number; he
                     width: "200px",
                     height: "100px",
                     marginTop: "-50px",
-                    marginLeft: "-100px"
+                    marginLeft: "-100px",
                 }}
             >
                 {node.title}
             </div>
         ),
         width: 200,
-        height: 100
+        height: 100,
     };
 };
 
@@ -64,12 +64,12 @@ const renderJointNode = (): { html: JSX.Element; width: number; height: number }
             <div
                 style={{
                     width: 0,
-                    height: 0
+                    height: 0,
                 }}
             ></div>
         ),
         width: 0,
-        height: 0
+        height: 0,
     };
 };
 
@@ -132,7 +132,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                 node: node.id,
                 sourceNodes: sourceNodes,
                 targetNodes: targetNodes,
-                flow: flow.id
+                flow: flow.id,
             });
         });
     });
@@ -187,24 +187,24 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         graph.setNode(`${el.flow}-joint-${el.sourceNodes.join("-")}`, {
             label: "",
             width: nodeMeta.width,
-            height: nodeMeta.height
+            height: nodeMeta.height,
         });
         graph.setNode(`${el.flow}-split-${el.targetNodes.join("-")}`, {
             label: "",
             width: nodeMeta.width,
-            height: nodeMeta.height
+            height: nodeMeta.height,
         });
         additionalFlowNodes.push(`${el.flow}-joint-${el.sourceNodes.join("-")}`);
         additionalFlowNodes.push(`${el.flow}-split-${el.targetNodes.join("-")}`);
         additionalFlowNodesMap.push({
             sourceNodes: el.sourceNodes,
             targetNodes: el.targetNodes,
-            edgeId: `${el.flow}-joint-${el.sourceNodes.join("-")}`
+            edgeId: `${el.flow}-joint-${el.sourceNodes.join("-")}`,
         });
         additionalFlowNodesMap.push({
             sourceNodes: el.sourceNodes,
             targetNodes: el.targetNodes,
-            edgeId: `${el.flow}-split-${el.targetNodes.join("-")}`
+            edgeId: `${el.flow}-split-${el.targetNodes.join("-")}`,
         });
         el.sourceNodes.forEach((node) => {
             graph.setEdge(node, `${el.flow}-joint-${el.sourceNodes.join("-")}`, {}, el.flow);
@@ -224,7 +224,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
 
     const sceneSize = {
         width: graph.graph().width ? graph.graph().width! : 0,
-        height: graph.graph().height ? graph.graph().height! : 0
+        height: graph.graph().height ? graph.graph().height! : 0,
     };
 
     graph.nodes().forEach((v) => {
@@ -298,7 +298,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
     let edgeIndex = 0;
     const flowNodeEdgeIndicesMap: { id: string; edgeIndices: number[] }[] = flowDiagram.nodes.map((node) => ({
         id: node.id,
-        edgeIndices: []
+        edgeIndices: [],
     }));
     flowDiagram.flows.forEach((flow) => {
         flowNodeEdgeIndicesMap.push({ id: `flow-${flow.id}`, edgeIndices: [] });
@@ -332,7 +332,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                       graph.node(edge.w).y -
                       graph.node(edge.w).height / 2 +
                       (graph.node(edge.w).height / (sourceNodes.length + 1)) *
-                          (sourceNodes.findIndex((el) => el.node === edge.v) + 1)
+                          (sourceNodes.findIndex((el) => el.node === edge.v) + 1),
               };
         const outputPoint = additionalFlowNodes.includes(edge.v)
             ? graph.edge(edge).points[0]
@@ -342,7 +342,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                       graph.node(edge.v).y -
                       graph.node(edge.v).height / 2 +
                       (graph.node(edge.v).height / (targetNodes.length + 1)) *
-                          (targetNodes.findIndex((el) => el.node === edge.w) + 1)
+                          (targetNodes.findIndex((el) => el.node === edge.w) + 1),
               };
 
         const points: Point[] = [];
@@ -439,7 +439,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                     size={{ width: graph.edge(edge)["width"], height: graph.edge(edge)["height"] }}
                     position={{
                         x: node1.x + (node2.x - node1.x) / 2,
-                        y: node1.y - graph.edge(edge)["height"]
+                        y: node1.y - graph.edge(edge)["height"],
                     }}
                     zIndex={6}
                     children={label}
@@ -728,6 +728,6 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
     return {
         sceneItems: sceneItems,
         sceneSize: sceneSize,
-        flowNodeEdgeMap: flowNodeEdgeIndicesMap
+        flowNodeEdgeMap: flowNodeEdgeIndicesMap,
     };
 };

@@ -28,19 +28,19 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
 
     const boundaryBox = {
         width: Math.max(sceneSize.width + 2 * margin, size.width),
-        height: Math.max(sceneSize.height + 2 * margin, size.height)
+        height: Math.max(sceneSize.height + 2 * margin, size.height),
     };
 
     React.useEffect(() => {
         const adjustedViewCenterPoint = {
             x: Math.min(Math.max(viewCenterPoint.x, size.width / 2), boundaryBox.width - size.width / 2),
-            y: Math.min(Math.max(viewCenterPoint.y, size.height / 2), boundaryBox.height - size.height / 2)
+            y: Math.min(Math.max(viewCenterPoint.y, size.height / 2), boundaryBox.height - size.height / 2),
         };
         setViewCenterPoint(adjustedViewCenterPoint);
 
         const adjustedMinimapCenterPoint = {
             x: Math.min(Math.max(minimapCenterPoint.x, size.width / 2), boundaryBox.width - size.width / 2),
-            y: Math.min(Math.max(minimapCenterPoint.y, size.height / 2), boundaryBox.height - size.height / 2)
+            y: Math.min(Math.max(minimapCenterPoint.y, size.height / 2), boundaryBox.height - size.height / 2),
         };
         setMinimapCenterPoint(adjustedMinimapCenterPoint);
     }, [size]);

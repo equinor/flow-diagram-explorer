@@ -11,12 +11,12 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
             <div
                 style={{
                     width: 0,
-                    height: 0
+                    height: 0,
                 }}
             ></div>
         ),
         width: 0,
-        height: 100
+        height: 100,
     };
 };
 
@@ -34,7 +34,7 @@ const renderWindFarmNode = (node: FDNode): { html: JSX.Element; width: number; h
                     border: "2px #545454 solid",
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
                 }}
             >
                 <img src={windfarm} alt="" style={{ marginRight: 16 }} />
@@ -42,7 +42,7 @@ const renderWindFarmNode = (node: FDNode): { html: JSX.Element; width: number; h
             </div>
         ),
         width: 250,
-        height: 100
+        height: 100,
     };
 };
 
@@ -60,7 +60,7 @@ const renderPowerPlantNode = (node: FDNode): { html: JSX.Element; width: number;
                     border: "2px #545454 solid",
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
                 }}
             >
                 <img src={powerplant} alt="" style={{ marginRight: 16 }} />
@@ -68,7 +68,7 @@ const renderPowerPlantNode = (node: FDNode): { html: JSX.Element; width: number;
             </div>
         ),
         width: 250,
-        height: 100
+        height: 100,
     };
 };
 
@@ -86,7 +86,7 @@ const renderOilrigNode = (node: FDNode): { html: JSX.Element; width: number; hei
                     border: "2px #545454 solid",
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
                 }}
             >
                 <img src={oilrig} alt="" style={{ marginRight: 16 }} />
@@ -94,7 +94,7 @@ const renderOilrigNode = (node: FDNode): { html: JSX.Element; width: number; hei
             </div>
         ),
         width: 250,
-        height: 100
+        height: 100,
     };
 };
 
@@ -104,63 +104,63 @@ export const norneComplex: FlowDiagram = {
         {
             id: "input",
             title: "Input",
-            render: renderInputOutputNode
+            render: renderInputOutputNode,
         },
         {
             id: "windfarm1",
             title: "Wind farm 1",
-            render: renderWindFarmNode
+            render: renderWindFarmNode,
         },
         {
             id: "windfarm2",
             title: "Wind farm 2",
-            render: renderWindFarmNode
+            render: renderWindFarmNode,
         },
         {
             id: "windfarm3",
             title: "Wind farm 3",
-            render: renderWindFarmNode
+            render: renderWindFarmNode,
         },
         {
             id: "power-from-shore",
             title: "Power from shore",
-            render: renderPowerPlantNode
+            render: renderPowerPlantNode,
         },
         {
             id: "norne",
             title: "NORNE",
-            render: renderOilrigNode
+            render: renderOilrigNode,
         },
         {
             id: "oil-output",
             title: "Oil output",
-            render: renderInputOutputNode
+            render: renderInputOutputNode,
         },
         {
             id: "emissions-output",
             title: "Output",
-            render: renderInputOutputNode
+            render: renderInputOutputNode,
         },
         {
             id: "electricity-output",
             title: "Output",
-            render: renderInputOutputNode
-        }
+            render: renderInputOutputNode,
+        },
     ],
     flows: [
         {
             id: "electricity-import",
             label: "Electricity import",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" }
+            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
         },
         {
             id: "electricity-export",
             label: "Electricity export",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" }
+            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
         },
         { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
         { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } }
+        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
     ],
     edges: [
         { flow: "electricity-import", from: "windfarm1", to: "norne" },
@@ -170,6 +170,6 @@ export const norneComplex: FlowDiagram = {
         { flow: "fuel", from: "input", to: "norne" },
         { flow: "emissions", from: "norne", to: "emissions-output" },
         { flow: "oil", from: "norne", to: "oil-output" },
-        { flow: "electricity-export", from: "norne", to: "electricity-output" }
-    ]
+        { flow: "electricity-export", from: "norne", to: "electricity-output" },
+    ],
 };

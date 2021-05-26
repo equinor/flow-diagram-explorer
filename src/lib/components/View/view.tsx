@@ -36,7 +36,7 @@ export const View: React.FC<ViewPropsType> = ({
     width,
     height,
     margin,
-    scale
+    scale,
 }) => {
     const viewRef = React.useRef<HTMLDivElement>(null);
     const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
@@ -81,7 +81,7 @@ export const View: React.FC<ViewPropsType> = ({
                           )
                         : centerPoint,
                     dimensions: { width: dimensions.width / scale, height: dimensions.height / scale },
-                    margin: margin
+                    margin: margin,
                 })}
             </div>
         </div>

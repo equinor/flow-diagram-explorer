@@ -1,9 +1,9 @@
 const path = require("path");
-const webpack = require('webpack'); //to access built-in plugins
+const webpack = require("webpack"); //to access built-in plugins
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const packagejson = require("./package.json");
 const libraryName = packagejson.name.replace(/[-\/]/g, "_").replace(/@/g, "");
@@ -15,11 +15,9 @@ module.exports = (env, argv) => {
     let mode;
     if (argv && argv.mode) {
         mode = argv.mode;
-    }
-    else if (overrides.mode) {
+    } else if (overrides.mode) {
         mode = overrides.mode;
-    }
-    else {
+    } else {
         mode = "production";
     }
 
@@ -33,8 +31,7 @@ module.exports = (env, argv) => {
     const filenameCss = `${libraryName}.css`;
 
     // Devtool
-    const devtool =
-        argv.devtool || (mode === "development" ? "eval-source-map" : false);
+    const devtool = argv.devtool || (mode === "development" ? "eval-source-map" : false);
 
     // NOTE: Keep order of the following configuration output
     // See: https://webpack.js.org/configuration/
@@ -54,7 +51,7 @@ module.exports = (env, argv) => {
                 {
                     test: /\.jsx?$/,
                     exclude: /node_modules/,
-                    use: "babel-loader"
+                    use: "babel-loader",
                 },
                 {
                     test: /\.tsx?$/,
@@ -65,10 +62,7 @@ module.exports = (env, argv) => {
                     test: /\.css$/,
                     use: [
                         {
-                            loader:
-                                mode === "production"
-                                    ? MiniCssExtractPlugin.loader
-                                    : "style-loader",
+                            loader: mode === "production" ? MiniCssExtractPlugin.loader : "style-loader",
                         },
                         "css-loader",
                     ],
@@ -76,7 +70,7 @@ module.exports = (env, argv) => {
                 {
                     test: /\.(png|svg|jpg|jpeg|gif)$/i,
                     use: {
-                        loader: 'url-loader',
+                        loader: "url-loader",
                     },
                 },
             ],
@@ -84,14 +78,14 @@ module.exports = (env, argv) => {
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".jsx"],
             fallback: {
-                "child_process": false,
-                "fs": false
-            }
+                child_process: false,
+                fs: false,
+            },
         },
         devtool: devtool,
         plugins: [
             new webpack.ProvidePlugin({
-                process: 'process/browser',
+                process: "process/browser",
             }),
             new MiniCssExtractPlugin({
                 filename: filenameCss,
@@ -105,12 +99,12 @@ module.exports = (env, argv) => {
             new CopyWebpackPlugin({
                 patterns: [
                     {
-                        from: "public", 
+                        from: "public",
                         globOptions: {
-                            ignore: ["**.html"]
-                        }
-                    }
-                ]
+                            ignore: ["**.html"],
+                        },
+                    },
+                ],
             }),
             new webpack.IgnorePlugin(/(fs|child_process)/),
         ],
@@ -119,12 +113,12 @@ module.exports = (env, argv) => {
                 () => {
                     return () => {
                         return {
-                            terserOptions: {}
-                        }
-                    }
+                            terserOptions: {},
+                        };
+                    };
                 },
                 new CssMinimizerPlugin({}),
             ],
-        }
+        },
     };
 };

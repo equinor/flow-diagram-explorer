@@ -36,7 +36,7 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
 
     const realCenterPoint = {
         x: dimensions.width / 2.0 + (centerPoint.x - dimensions.width / 2.0) - margin,
-        y: dimensions.height / 2.0 + (centerPoint.y - dimensions.height / 2.0) - margin
+        y: dimensions.height / 2.0 + (centerPoint.y - dimensions.height / 2.0) - margin,
     };
 
     return (
@@ -48,7 +48,7 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
                         viewSize: dimensions,
                         onClick: onNodeClick ? (id: string) => onNodeClick(id) : undefined,
                         onMouseEnter: onNodeEnter,
-                        onMouseLeave: onNodeLeave
+                        onMouseLeave: onNodeLeave,
                     })
                 )}
         </div>

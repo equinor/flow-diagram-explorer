@@ -48,7 +48,7 @@ export const SceneItem: React.FC<SceneItemPropsType> = (props: SceneItemPropsTyp
                     left: position.x,
                     top: position.y,
                     zIndex: zIndex,
-                    cursor: onClick && clickable ? "pointer" : "default"
+                    cursor: onClick && clickable ? "pointer" : "default",
                 }}
                 onClick={onClick && clickable ? () => onClick(id) : undefined}
                 onMouseEnter={onMouseEnter && hoverable ? () => onMouseEnter(id) : undefined}

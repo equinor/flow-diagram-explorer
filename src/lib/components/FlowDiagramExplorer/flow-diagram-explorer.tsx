@@ -29,7 +29,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
 
     React.useEffect(() => {
         const result = DiagramDrawer({
-            flowDiagram: props.flowDiagram
+            flowDiagram: props.flowDiagram,
         });
         setSceneProperties(result);
         const index = levels.findIndex((el) => el.title === props.flowDiagram.title);
@@ -69,7 +69,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                             highlighted.push({
                                 svg: child as SVGElement,
                                 originalColor: (polyline as SVGPolylineElement).getAttribute("stroke")!,
-                                originalZIndex: (child as SVGElement).style.zIndex
+                                originalZIndex: (child as SVGElement).style.zIndex,
                             });
                             polyline.setAttribute("stroke", highlightColor);
                             item.style.zIndex = "5";

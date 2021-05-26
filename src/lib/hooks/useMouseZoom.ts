@@ -4,7 +4,7 @@ export const useMouseZoom = ({
     ref,
     minScale = 0.125,
     maxScale = 4,
-    delta = 0.01
+    delta = 0.01,
 }: {
     ref: React.RefObject<HTMLElement>;
     minScale: number;

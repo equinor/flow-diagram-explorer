@@ -56,7 +56,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
             ) {
                 const newCenterPoint = {
                     x: (mouseDownPosition.x - mapRef.current!.getBoundingClientRect().left) / scaling,
-                    y: (mouseDownPosition.y - mapRef.current!.getBoundingClientRect().top) / scaling
+                    y: (mouseDownPosition.y - mapRef.current!.getBoundingClientRect().top) / scaling,
                 };
                 const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, viewSize, boundaryBox);
                 setCenterPoint(adjustedCenterPoint);
@@ -84,7 +84,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                         calcCenterPointWithinBoundaryBox(
                             {
                                 x: centerPoint.x + (dragDistance.x / scaling) * scale,
-                                y: centerPoint.y + (dragDistance.y / scaling) * scale
+                                y: centerPoint.y + (dragDistance.y / scaling) * scale,
                             },
                             { width: (viewSize.width * scaling) / scale, height: (viewSize.height * scaling) / scale },
                             boundaryBox
@@ -97,7 +97,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                     calcCenterPointWithinBoundaryBox(
                         {
                             x: centerPoint.x + (dragDistance.x / scaling) * scale,
-                            y: centerPoint.y + (dragDistance.y / scaling) * scale
+                            y: centerPoint.y + (dragDistance.y / scaling) * scale,
                         },
                         { width: (viewSize.width * scaling) / scale, height: (viewSize.height * scaling) / scale },
                         boundaryBox
@@ -111,7 +111,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
         ? calcCenterPointWithinBoundaryBox(
               {
                   x: centerPoint.x + (dragDistance.x / scaling) * scale,
-                  y: centerPoint.y + (dragDistance.y / scaling) * scale
+                  y: centerPoint.y + (dragDistance.y / scaling) * scale,
               },
               { width: (viewSize.width * scaling) / scale, height: (viewSize.height * scaling) / scale },
               boundaryBox
@@ -128,7 +128,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                 {React.cloneElement(Scene, {
                     centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
                     dimensions: { width: boundaryBox.width, height: boundaryBox.height },
-                    margin: margin
+                    margin: margin,
                 })}
                 <div
                     ref={viewRef}
@@ -137,14 +137,14 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                         width: Math.min(viewSize.width / scale, boundaryBox.width),
                         height: Math.min(viewSize.height / scale, boundaryBox.height),
                         left: (calculatedCenterPoint.x - viewSize.width / 2) / scale,
-                        top: (calculatedCenterPoint.y - viewSize.height / 2) / scale
+                        top: (calculatedCenterPoint.y - viewSize.height / 2) / scale,
                     }}
                 ></div>
                 <div
                     className="NoHoverLayer"
                     style={{
                         width: boundaryBox.width,
-                        height: boundaryBox.height
+                        height: boundaryBox.height,
                     }}
                 />
             </div>
