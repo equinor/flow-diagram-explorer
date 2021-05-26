@@ -10,3 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#3](https://github.com/equinor/flow-diagram-explorer/pull/3) - Setup of build environment.
+
+### Fixed
+- [#4](https://github.com/equinor/flow-diagram-explorer/pull/3) - Fixed security issues, missing dependencies and adjusted actions according to `master` -> `main` convention.

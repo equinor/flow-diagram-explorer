@@ -10,6 +10,6 @@ import { render } from "@testing-library/react";
 import App from "./App";
 
 test("Renders", () => {
-  render(<App />);
-  expect(true).toBeTruthy();
+    render(<App />);
+    expect(true).toBeTruthy();
 });
