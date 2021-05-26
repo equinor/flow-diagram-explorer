@@ -4,7 +4,7 @@ import "./view.css";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 
 import { Point } from "../../types/point";
-import { useMouseDrag } from "../../hooks/useMouseDrag";
+import { useMouseDrag, useMousePosition } from "../../hooks/useMouseDrag";
 import { Size } from "../../types/dimensions";
 
 type ViewPropsType = {
@@ -15,6 +15,7 @@ type ViewPropsType = {
     width: number | string;
     height: number | string;
     margin: number;
+    scale: number;
 };
 
 export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, viewSize: Size, boundaryBox: Size): Point => {
@@ -34,23 +35,25 @@ export const View: React.FC<ViewPropsType> = ({
     boundaryBox,
     width,
     height,
-    margin
+    margin,
+    scale
 }) => {
     const viewRef = React.useRef<HTMLDivElement>(null);
     const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
     const dimensions = useContainerDimensions(viewRef);
     const { dragging, dragDistance } = useMouseDrag(viewRef);
+    const mousePosition = useMousePosition();
 
     React.useEffect(() => {
-        setCenterPoint(initialCenterPoint);
-    }, [initialCenterPoint]);
+        setCenterPoint({ x: initialCenterPoint.x * scale, y: initialCenterPoint.y * scale });
+    }, [initialCenterPoint, scale]);
 
     React.useEffect(() => {
         if (onCenterPointChange) {
             onCenterPointChange(
                 calcCenterPointWithinBoundaryBox(
-                    { x: centerPoint.x - dragDistance.x, y: centerPoint.y - dragDistance.y },
-                    dimensions,
+                    { x: centerPoint.x - dragDistance.x * scale, y: centerPoint.y - dragDistance.y * scale },
+                    { width: dimensions.width / scale, height: dimensions.height / scale },
                     boundaryBox
                 )
             );
@@ -58,8 +61,8 @@ export const View: React.FC<ViewPropsType> = ({
         if (!dragging) {
             setCenterPoint(
                 calcCenterPointWithinBoundaryBox(
-                    { x: centerPoint.x - dragDistance.x, y: centerPoint.y - dragDistance.y },
-                    dimensions,
+                    { x: centerPoint.x - dragDistance.x * scale, y: centerPoint.y - dragDistance.y * scale },
+                    { width: dimensions.width / scale, height: dimensions.height / scale },
                     boundaryBox
                 )
             );
@@ -68,17 +71,19 @@ export const View: React.FC<ViewPropsType> = ({
 
     return (
         <div className="View" ref={viewRef} style={{ width: width, height: height }}>
-            {React.cloneElement(Scene, {
-                centerPoint: dragging
-                    ? calcCenterPointWithinBoundaryBox(
-                          { x: centerPoint.x - dragDistance.x, y: centerPoint.y - dragDistance.y },
-                          dimensions,
-                          boundaryBox
-                      )
-                    : centerPoint,
-                dimensions: dimensions,
-                margin: margin
-            })}
+            <div style={{ transform: `scale(${scale}, ${scale})` }}>
+                {React.cloneElement(Scene, {
+                    centerPoint: dragging
+                        ? calcCenterPointWithinBoundaryBox(
+                              { x: centerPoint.x - dragDistance.x * scale, y: centerPoint.y - dragDistance.y * scale },
+                              { width: dimensions.width / scale, height: dimensions.height / scale },
+                              boundaryBox
+                          )
+                        : centerPoint,
+                    dimensions: { width: dimensions.width / scale, height: dimensions.height / scale },
+                    margin: margin
+                })}
+            </div>
         </div>
     );
 };

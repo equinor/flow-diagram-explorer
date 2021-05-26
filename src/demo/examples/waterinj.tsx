@@ -9,10 +9,9 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
             <div
                 style={{
                     width: 0,
-                    height: 0,
+                    height: 0
                 }}
-            >
-            </div>
+            ></div>
         ),
         width: 0,
         height: 100
@@ -74,13 +73,11 @@ export const waterinj: FlowDiagram = {
             render: renderPumpNode
         }
     ],
-    flows: [
-        { id: "something", label: "Something", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-    ],
+    flows: [{ id: "something", label: "Something", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } }],
     edges: [
         { flow: "something", from: "input", to: "pump1" },
         { flow: "something", from: "input", to: "pump2" },
         { flow: "something", from: "input", to: "pump3" },
-        { flow: "something", from: "input", to: "pump4" },
+        { flow: "something", from: "input", to: "pump4" }
     ]
 };

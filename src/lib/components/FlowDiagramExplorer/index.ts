@@ -5,4 +5,4 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- export {default} from "./flow-diagram-explorer";
+export { default } from "./flow-diagram-explorer";

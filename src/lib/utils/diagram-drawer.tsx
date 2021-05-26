@@ -104,7 +104,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         flowDiagram.flows.forEach((flow) => {
             const sourceNodes: string[] = [];
             const targetNodes: string[] = [];
-            let edges = [...flowDiagram.edges.filter((edge) => edge.flow === flow.id)];
+            const edges = [...flowDiagram.edges.filter((edge) => edge.flow === flow.id)];
             let i = 0;
             while (i < edges.length) {
                 const edge = edges[i];

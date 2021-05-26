@@ -5,6 +5,7 @@ import { MapActions } from "../MapActions";
 import { Point } from "../../types/point";
 import { Size } from "../../types/dimensions";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
+import { useMouseZoom } from "../../hooks/useMouseZoom";
 
 import "./map.css";
 
@@ -23,6 +24,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
     const size = useContainerDimensions(mapRef);
     const [viewCenterPoint, setViewCenterPoint] = React.useState(initialCenterPoint);
     const [minimapCenterPoint, setMinimapCenterPoint] = React.useState(initialCenterPoint);
+    const scale = useMouseZoom({ ref: mapRef, minScale: 0.1, maxScale: 4, delta: 0.001 });
 
     const boundaryBox = {
         width: Math.max(sceneSize.width + 2 * margin, size.width),
@@ -61,6 +63,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 boundaryBox={boundaryBox}
                 margin={margin}
                 onCenterPointChange={handleViewCenterPointChange}
+                scale={scale}
             />
             <Minimap
                 initialCenterPoint={minimapCenterPoint}
@@ -70,6 +73,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 Scene={Scene}
                 margin={margin}
                 onCenterPointChange={handleMinimapCenterPointChange}
+                scale={scale}
             />
             <MapActions />
         </div>

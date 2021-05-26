@@ -5,7 +5,7 @@ import { Flow } from "./nodes";
 export type DiagramConfig = {
     horizontalSpacing: number;
     verticalSpacing: number;
-    nodeDimensions: Size,
+    nodeDimensions: Size;
 };
 
 export type DiagramNode = {

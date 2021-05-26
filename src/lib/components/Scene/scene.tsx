@@ -28,11 +28,11 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
     const left =
         dimensions.width <= size.width + 2 * margin
             ? -(centerPoint.x - dimensions.width / 2.0) + margin
-            : (dimensions.width - (size.width)) / 2;
+            : (dimensions.width - size.width) / 2;
     const top =
         dimensions.height <= size.height + 2 * margin
             ? -(centerPoint.y - dimensions.height / 2.0) + margin
-            : (dimensions.height - (size.height)) / 2;
+            : (dimensions.height - size.height) / 2;
 
     const realCenterPoint = {
         x: dimensions.width / 2.0 + (centerPoint.x - dimensions.width / 2.0) - margin,
@@ -41,11 +41,16 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
 
     return (
         <div className="Scene" style={{ top: top, left: left, width: size.width, height: size.height }}>
-            {children && children.map((child: React.ReactElement<SceneItemPropsType>) =>
-                React.cloneElement(child, {
-                    viewCenterPoint: realCenterPoint, viewSize: dimensions, onClick: onNodeClick ? (id: string) => onNodeClick(id) : undefined, onMouseEnter: onNodeEnter, onMouseLeave: onNodeLeave
-                })
-            )}
+            {children &&
+                children.map((child: React.ReactElement<SceneItemPropsType>) =>
+                    React.cloneElement(child, {
+                        viewCenterPoint: realCenterPoint,
+                        viewSize: dimensions,
+                        onClick: onNodeClick ? (id: string) => onNodeClick(id) : undefined,
+                        onMouseEnter: onNodeEnter,
+                        onMouseLeave: onNodeLeave
+                    })
+                )}
         </div>
     );
 };

@@ -6,14 +6,13 @@
  */
 
 import React from "react";
-import { norne} from "./examples/norne";
-import {waterinj} from "./examples/waterinj";
+import { norne } from "./examples/norne";
+import { waterinj } from "./examples/waterinj";
 import FlowDiagramExplorer from "../lib";
-
 
 function App(): JSX.Element {
     const [diagram, setDiagram] = React.useState(norne);
-    
+
     const handleNodeClick = (nodeId: string) => {
         if (nodeId === "norne") {
             setDiagram(waterinj);
@@ -30,7 +29,11 @@ function App(): JSX.Element {
 
     return (
         <React.StrictMode>
-            <FlowDiagramExplorer flowDiagram={diagram} onNodeClick={handleNodeClick} onDiagramChange={handleDiagramChange} />
+            <FlowDiagramExplorer
+                flowDiagram={diagram}
+                onNodeClick={handleNodeClick}
+                onDiagramChange={handleDiagramChange}
+            />
         </React.StrictMode>
     );
 }
