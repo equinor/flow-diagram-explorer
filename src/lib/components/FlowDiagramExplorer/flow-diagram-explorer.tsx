@@ -62,8 +62,8 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                     const child = item.children![0];
                     if (child.tagName.toLowerCase() === "svg") {
                         const polyline =
-                            child.children.length > 0 && child.children[0].tagName.toLowerCase() === "polyline"
-                                ? child.children[0]
+                            child.children.length > 0 && child.children[child.children.length - 1].tagName.toLowerCase() === "polyline"
+                                ? child.children[child.children.length - 1]
                                 : undefined;
                         if (polyline) {
                             highlighted.push({
@@ -72,7 +72,12 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                                 originalZIndex: (child as SVGElement).style.zIndex,
                             });
                             polyline.setAttribute("stroke", highlightColor);
-                            item.style.zIndex = "5";
+                            if (polyline.getAttribute("marker-end")) {
+                                polyline.setAttribute("marker-end", polyline.getAttribute("marker-end")!.replace(")", "-hover)"));
+                            }
+                            if (child.parentElement) {
+                                child.parentElement.style.zIndex = "5";
+                            }
                         }
                     }
                 });
@@ -84,12 +89,14 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
 
     const handleMouseLeave = React.useCallback(() => {
         highlightedSceneItems.forEach(({ svg, originalColor, originalZIndex }) => {
-            [].forEach.call(svg.getElementsByTagName("polyline"), (line) => {
-                (line as SVGPolylineElement).setAttribute("stroke", originalColor);
-                if (svg.parentElement) {
-                    svg.parentElement.style.zIndex = originalZIndex;
-                }
-            });
+            const line = svg.getElementsByTagName("polyline")[svg.getElementsByTagName("polyline").length - 1];
+            (line as SVGPolylineElement).setAttribute("stroke", originalColor);
+            if ((line as SVGPolylineElement).getAttribute("marker-end")) {
+                (line as SVGPolylineElement).setAttribute("marker-end", (line as SVGPolylineElement).getAttribute("marker-end")!.replace("-hover", ""));
+            }
+            if (svg.parentElement) {
+                svg.parentElement.style.zIndex = originalZIndex;
+            }
         });
     }, [highlightedSceneItems, setHighlightedSceneItems]);
 
@@ -112,6 +119,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                                 if (index === array.length - 1) {
                                     return (
                                         <Breadcrumbs.Breadcrumb
+                                            key={level.title}
                                             href="#"
                                             onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.preventDefault()}
                                         >

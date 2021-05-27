@@ -8,10 +8,11 @@
 import React from "react";
 import { norne } from "./examples/norne";
 import { waterinj } from "./examples/waterinj";
+import {norneComplex} from "./examples/complex";
 import FlowDiagramExplorer from "../lib";
 
 function App(): JSX.Element {
-    const [diagram, setDiagram] = React.useState(norne);
+    const [diagram, setDiagram] = React.useState(norneComplex);
 
     const handleNodeClick = (nodeId: string) => {
         if (nodeId === "norne") {

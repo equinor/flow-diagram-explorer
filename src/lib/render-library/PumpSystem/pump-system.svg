@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 217.7 169.4" style="enable-background:new 0 0 217.7 169.4;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:none;stroke:#3E9299;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-</style>
+<svg version="1.1" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" viewBox="0 0 217.7 169.4" overflow="visible" xml:space="preserve">
 <g>
 	<g>
-		<circle class="st0" cx="120.9" cy="96.7" r="64.1"/>
-		<circle class="st0" cx="120.9" cy="96.7" r="24.1"/>
-		<polyline class="st0" points="120.9,32.6 206.6,32.6 206.6,72.7 180.7,72.7 		"/>
-		<rect x="206.6" y="25.6" class="st0" width="9.6" height="54.1"/>
-		<polyline class="st0" points="120.9,160.9 35.2,160.9 35.2,120.8 61.1,120.8 		"/>
 		
-			<rect x="25.6" y="113.8" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 60.7216 281.6344)" class="st0" width="9.6" height="54.1"/>
+			<circle fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="120.9" cy="96.7" r="64.1"/>
+		
+			<circle fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="120.9" cy="96.7" r="24.1"/>
+		
+			<polyline fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+			120.9,32.6 206.6,32.6 206.6,72.7 180.7,72.7 		"/>
+		
+			<rect x="206.6" y="25.6" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="9.6" height="54.1"/>
+		
+			<polyline fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+			120.9,160.9 35.2,160.9 35.2,120.8 61.1,120.8 		"/>
+		
+			<rect x="25.5" y="113.7" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="9.6" height="54.1"/>
 	</g>
 	<g>
-		<path class="st0" d="M41.5,105.2c-5.6-9.5-8.8-20.6-8.8-32.5c0-35.4,28.7-64.1,64.1-64.1c15.2,0,29.2,5.3,40.2,14.1"/>
-		<line class="st0" x1="96.8" y1="8.5" x2="182.6" y2="8.5"/>
-		<polyline class="st0" points="182.6,22.6 182.6,1.5 192.2,1.5 192.2,22.6 		"/>
-		<polyline class="st0" points="15.8,136.8 11.1,136.8 11.1,96.7 37,96.7 		"/>
+		<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M41.5,105.2c-5.6-9.5-8.8-20.6-8.8-32.5c0-35.4,28.7-64.1,64.1-64.1c15.2,0,29.2,5.3,40.2,14.1"/>
 		
-			<rect x="1.5" y="89.7" transform="matrix(-1 -1.224647e-16 1.224647e-16 -1 12.6 233.5128)" class="st0" width="9.6" height="54.1"/>
+			<line fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="96.8" y1="8.5" x2="182.6" y2="8.5"/>
+		
+			<polyline fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+			182.6,22.6 182.6,1.5 192.2,1.5 192.2,22.6 		"/>
+		
+			<polyline fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+			15.8,136.8 11.1,136.8 11.1,96.7 37,96.7 		"/>
+		
+			<rect x="1.5" y="89.7" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" width="9.6" height="54.1"/>
 	</g>
 </g>
 </svg>

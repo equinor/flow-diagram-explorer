@@ -1,7 +1,6 @@
 import React from "react";
 import { FlowDiagram, FDNode } from "../../lib/types/nodes";
-
-import pump from "./pump.png";
+import { pumpRenderer} from "../../lib/render-library";
 
 const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
     return {
@@ -18,32 +17,6 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
     };
 };
 
-const renderPumpNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    padding: 24,
-                    width: 202,
-                    height: 52,
-                    marginTop: -50,
-                    marginLeft: -125,
-                    backgroundColor: "#fff",
-                    border: "2px #545454 solid",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <img src={pump} alt="" style={{ marginRight: 16 }} />
-                {node.title}
-            </div>
-        ),
-        width: 250,
-        height: 100,
-    };
-};
-
 export const waterinj: FlowDiagram = {
     title: "NORNE",
     nodes: [
@@ -55,22 +28,22 @@ export const waterinj: FlowDiagram = {
         {
             id: "pump1",
             title: "Pump 1",
-            render: renderPumpNode,
+            render: pumpRenderer,
         },
         {
             id: "pump2",
             title: "Pump 2",
-            render: renderPumpNode,
+            render: pumpRenderer,
         },
         {
             id: "pump3",
             title: "Pump 3",
-            render: renderPumpNode,
+            render: pumpRenderer,
         },
         {
             id: "pump4",
             title: "Pump 4",
-            render: renderPumpNode,
+            render: pumpRenderer,
         },
     ],
     flows: [{ id: "something", label: "Something", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } }],

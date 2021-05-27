@@ -86,7 +86,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                                 x: centerPoint.x + (dragDistance.x / scaling) * scale,
                                 y: centerPoint.y + (dragDistance.y / scaling) * scale,
                             },
-                            { width: (viewSize.width * scaling) / scale, height: (viewSize.height * scaling) / scale },
+                            { width: viewSize.width / scale, height: viewSize.height / scale},
                             boundaryBox
                         )
                     );
@@ -99,7 +99,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                             x: centerPoint.x + (dragDistance.x / scaling) * scale,
                             y: centerPoint.y + (dragDistance.y / scaling) * scale,
                         },
-                        { width: (viewSize.width * scaling) / scale, height: (viewSize.height * scaling) / scale },
+                        {  width: viewSize.width / scale, height: viewSize.height / scale},
                         boundaryBox
                     )
                 );
@@ -110,13 +110,20 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
     const calculatedCenterPoint = dragging
         ? calcCenterPointWithinBoundaryBox(
               {
-                  x: centerPoint.x + (dragDistance.x / scaling) * scale,
-                  y: centerPoint.y + (dragDistance.y / scaling) * scale,
+                  x: centerPoint.x + (dragDistance.x / scaling) / scale,
+                  y: centerPoint.y + (dragDistance.y / scaling) / scale,
               },
-              { width: (viewSize.width * scaling) / scale, height: (viewSize.height * scaling) / scale },
+              { width: viewSize.width / scale, height: viewSize.height / scale },
               boundaryBox
           )
-        : centerPoint;
+        : calcCenterPointWithinBoundaryBox(
+              {
+                  x: centerPoint.x / scale,
+                  y: centerPoint.y / scale,
+              },
+              { width: viewSize.width / scale, height: viewSize.height / scale },
+              boundaryBox
+          );
 
     return (
         <div

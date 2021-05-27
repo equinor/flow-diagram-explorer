@@ -1,0 +1,39 @@
+.DiagramNode {
+    padding: 24px;
+    width: 202px;
+    height: 52px;
+    margin-top: -50px;
+    margin-left: -125px;
+    background-color: #fff;
+    border: 2px #233746 solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #233746;
+    border-radius: 4px;
+    font-size: 1.0em;
+}
+
+.DiagramNode:hover {
+    border-color: #E51139;
+    transform: scale(1.01, 1.01);
+    transform-origin: center;
+}
+
+.DiagramNode:hover .DiagramSymbol * {
+    stroke: #E51139;
+}
+
+.DiagramSymbol {
+    max-width: 50px;
+    max-height: 50x;
+    margin-right: 24px;
+}
+
+.DiagramSymbol * {
+    stroke-width: 8px;
+    stroke: #3E9299;
+}
+.DiagramSymbol *:not([fill="none"]) *:not([fill="none"]) *:not([fill="none"]) {
+    fill: #3E9299;
+}

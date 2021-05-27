@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.1.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 391.4 142.3" style="enable-background:new 0 0 391.4 142.3;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:none;stroke:#3E9299;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{fill:#3E9299;}
-	.st2{fill:none;stroke:#3E9299;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-</style>
+<svg version="1.1" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" viewBox="0 0 391.4 142.3" overflow="visible" xml:space="preserve">
 <g>
 	<g>
-		<rect x="247" y="27.3" class="st0" width="142.9" height="93.3"/>
-		<rect x="261.4" y="120.6" class="st0" width="22.5" height="20.2"/>
-		<rect x="354.8" y="120.6" class="st0" width="22.5" height="20.2"/>
-		<polygon class="st1" points="323.4,72.3 337.5,48.2 318.5,48.2 302.8,77.6 313.1,77.6 299.3,99.8 333.4,72.3 		"/>
-		<path class="st2" d="M246.6,97.7h-4.6c-2.8,0-5-3.9-5-8.7V62.6c0-4.8,2.3-8.7,5-8.7h4.6"/>
-		<line class="st2" x1="225.3" y1="84.5" x2="237" y2="84.5"/>
-		<line class="st2" x1="237" y1="67.1" x2="228.4" y2="67.1"/>
+		
+			<rect x="247" y="27.3" fill="none" stroke="#000000" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="10" width="142.9" height="93.3"/>
+		
+			<rect x="261.4" y="120.6" fill="none" stroke="#000000" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="10" width="22.5" height="20.2"/>
+		
+			<rect x="354.8" y="120.6" fill="none" stroke="#000000" stroke-width="3" stroke-linejoin="round" stroke-miterlimit="10" width="22.5" height="20.2"/>
+		<polygon points="323.4,72.3 337.5,48.2 318.5,48.2 302.8,77.6 313.1,77.6 299.3,99.8 333.4,72.3 		"/>
+		<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M246.6,97.7H242c-2.8,0-5-3.9-5-8.7V62.6c0-4.8,2.3-8.7,5-8.7h4.6"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="225.3" y1="84.5" x2="237" y2="84.5"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="237" y1="67.1" x2="228.4" y2="67.1"/>
 	</g>
 	<g>
-		<path class="st2" d="M166,5.7L166,5.7c0-2.3-1.9-4.2-4.2-4.2H77.9c-2.3,0-4.2,1.9-4.2,4.2v0c0,2.3,1.9,4.2,4.2,4.2h83.9
-			C164.1,9.9,166,8,166,5.7z"/>
-		<polyline class="st2" points="27.4,108.7 51.8,108.7 51.8,108.9 51.8,135.2 129.4,135.2 174.5,108.9 191.3,108.9 191.3,42.9 
-			157.8,20.8 75.6,20.8 51.8,46 51.8,58.8 27.4,58.8 27,58.8 27,46 14.3,46 1.5,58.8 1.5,108.7 14.3,121.4 27,121.4 27,108.7 		"/>
-		<polyline class="st2" points="126.4,20.8 126.4,9.9 113.4,9.9 113.4,20.8 		"/>
-		<line class="st2" x1="210.7" y1="67.2" x2="191.2" y2="67.2"/>
-		<line class="st2" x1="191.2" y1="84.6" x2="205.2" y2="84.6"/>
+		<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M166,5.7L166,5.7c0-2.3-1.9-4.2-4.2-4.2H77.9c-2.3,0-4.2,1.9-4.2,4.2l0,0c0,2.3,1.9,4.2,4.2,4.2h83.9C164.1,9.9,166,8,166,5.7z"/>
+		
+			<polyline fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+			27.4,108.7 51.8,108.7 51.8,108.9 51.8,135.2 129.4,135.2 174.5,108.9 191.3,108.9 191.3,42.9 157.8,20.8 75.6,20.8 51.8,46 
+			51.8,58.8 27.4,58.8 27,58.8 27,46 14.3,46 1.5,58.8 1.5,108.7 14.3,121.4 27,121.4 27,108.7 		"/>
+		
+			<polyline fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+			126.4,20.8 126.4,9.9 113.4,9.9 113.4,20.8 		"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="210.7" y1="67.2" x2="191.2" y2="67.2"/>
+		
+			<line fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="191.2" y1="84.6" x2="205.2" y2="84.6"/>
 	</g>
 	<g>
-		<path class="st2" d="M219.2,48.7c0,5.3-6,5.3-6,10.7c0,5.3,6,5.3,6,10.7c0,5.3-6,5.3-6,10.7c0,5.3,6,5.3,6,10.7
-			c0,5.3-6,5.3-6,10.7"/>
+		<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M219.2,48.7c0,5.3-6,5.3-6,10.7c0,5.3,6,5.3,6,10.7c0,5.3-6,5.3-6,10.7c0,5.3,6,5.3,6,10.7c0,5.3-6,5.3-6,10.7"/>
 	</g>
 </g>
 </svg>

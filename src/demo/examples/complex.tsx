@@ -1,9 +1,6 @@
 import React from "react";
 import { FlowDiagram, FDNode } from "../../lib/types/nodes";
-
-import windfarm from "./windfarm.png";
-import powerplant from "./powerplant.png";
-import oilrig from "./oilrig.png";
+import {windTurbineSystemRenderer, installationRenderer, cableRenderer} from "../../lib/render-library";
 
 const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
     return {
@@ -20,84 +17,6 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
     };
 };
 
-const renderWindFarmNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    padding: 24,
-                    width: 202,
-                    height: 52,
-                    marginTop: -50,
-                    marginLeft: -125,
-                    backgroundColor: "#fff",
-                    border: "2px #545454 solid",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <img src={windfarm} alt="" style={{ marginRight: 16 }} />
-                {node.title}
-            </div>
-        ),
-        width: 250,
-        height: 100,
-    };
-};
-
-const renderPowerPlantNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    padding: 24,
-                    width: 202,
-                    height: 52,
-                    marginTop: -50,
-                    marginLeft: -125,
-                    backgroundColor: "#fff",
-                    border: "2px #545454 solid",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <img src={powerplant} alt="" style={{ marginRight: 16 }} />
-                {node.title}
-            </div>
-        ),
-        width: 250,
-        height: 100,
-    };
-};
-
-const renderOilrigNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    padding: 24,
-                    width: 202,
-                    height: 52,
-                    marginTop: -50,
-                    marginLeft: -125,
-                    backgroundColor: "#fff",
-                    border: "2px #545454 solid",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <img src={oilrig} alt="" style={{ marginRight: 16 }} />
-                {node.title}
-            </div>
-        ),
-        width: 250,
-        height: 100,
-    };
-};
-
 export const norneComplex: FlowDiagram = {
     title: "World",
     nodes: [
@@ -109,27 +28,27 @@ export const norneComplex: FlowDiagram = {
         {
             id: "windfarm1",
             title: "Wind farm 1",
-            render: renderWindFarmNode,
+            render: windTurbineSystemRenderer,
         },
         {
             id: "windfarm2",
             title: "Wind farm 2",
-            render: renderWindFarmNode,
+            render: windTurbineSystemRenderer,
         },
         {
             id: "windfarm3",
             title: "Wind farm 3",
-            render: renderWindFarmNode,
+            render: windTurbineSystemRenderer,
         },
         {
             id: "power-from-shore",
             title: "Power from shore",
-            render: renderPowerPlantNode,
+            render: cableRenderer,
         },
         {
             id: "norne",
             title: "NORNE",
-            render: renderOilrigNode,
+            render: installationRenderer,
         },
         {
             id: "oil-output",

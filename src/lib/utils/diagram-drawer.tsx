@@ -252,6 +252,9 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         );
     });
 
+    const highlightColor = "#DF323D";
+    const backgroundColor = "#F7F7F7";
+
     flowDiagram.flows.forEach((flow) => {
         const arrowHeadSize = flow.style.arrowHeadSize || 9;
         const svg = (
@@ -270,6 +273,21 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                         <path
                             d={`M0,0 L0,${(arrowHeadSize * 2) / 3} L${arrowHeadSize},${arrowHeadSize / 3} z`}
                             fill={flow.style.strokeColor}
+                        />
+                    </marker>
+                    <marker
+                        id={`arrow-${flow.id}-hover`}
+                        markerWidth={arrowHeadSize}
+                        markerHeight={arrowHeadSize}
+                        refX={arrowHeadSize - 1}
+                        refY={arrowHeadSize / 3}
+                        orient="auto"
+                        markerUnits="strokeWidth"
+                        viewBox={`0 0 ${arrowHeadSize} ${arrowHeadSize}`}
+                    >
+                        <path
+                            d={`M0,0 L0,${(arrowHeadSize * 2) / 3} L${arrowHeadSize},${arrowHeadSize / 3} z`}
+                            fill={highlightColor}
                         />
                     </marker>
                 </defs>
@@ -303,6 +321,8 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
     flowDiagram.flows.forEach((flow) => {
         flowNodeEdgeIndicesMap.push({ id: `flow-${flow.id}`, edgeIndices: [] });
     });
+
+    const adjustedPoints: {startNode: string, position: Point}[] = [];
 
     graph.edges().forEach((edge) => {
         const flow = flowDiagram.flows.find((flow) => flow.id === edge.name)!;
@@ -348,8 +368,10 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         const points: Point[] = [];
         if (!additionalFlowNodes.includes(edge.v) && additionalFlowNodes.includes(edge.w)) {
             points.push(outputPoint);
-            points.push({ x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x, y: outputPoint.y });
-            points.push(graph.edge(edge).points[graph.edge(edge).points.length - 1]);
+            points.push({ x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x + 20 * targetNodes.findIndex(el => el.node === edge.w), y: outputPoint.y });
+            let yPosition = graph.edge(edge).points[graph.edge(edge).points.length - 1].y;
+            points.push({x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x  + 20 * targetNodes.findIndex(el => el.node === edge.w), y: yPosition});
+            adjustedPoints.push({startNode: edge.w, position: {x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x  + 20 * targetNodes.findIndex(el => el.node === edge.w), y: graph.edge(edge).points[graph.edge(edge).points.length - 1].y}});
             flowNodeEdgeIndicesMap.find((el) => el.id === edge.v)!.edgeIndices.push(edgeIndex);
             additionalFlowNodesMap.forEach((el) => {
                 if (el.edgeId === edge.w) {
@@ -359,7 +381,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                 }
             });
         } else if (additionalFlowNodes.includes(edge.v) && additionalFlowNodes.includes(edge.w)) {
-            points.push(graph.edge(edge).points[0]);
+            points.push(adjustedPoints.some(el => el.startNode === edge.v) ? adjustedPoints.find(el => el.startNode === edge.v)!.position : graph.edge(edge).points[0]);
             points.push(graph.edge(edge).points[graph.edge(edge).points.length - 1]);
             additionalFlowNodesMap.forEach((el) => {
                 if (el.edgeId === edge.w || el.edgeId === edge.v) {
@@ -392,7 +414,7 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
         const left = Math.min(...points.map((point) => point.x)) - arrowWidth;
         const top = Math.min(...points.map((point) => point.y)) - arrowWidth;
 
-        const svg = (
+        let svg = (
             <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
                 <polyline
                     points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
@@ -408,6 +430,35 @@ export const DiagramDrawer = (props: DiagramDrawerProps): Diagram => {
                 />
             </svg>
         );
+        if (strokeStyle && strokeStyle.split(" ").length > 1) {
+            const strokes = strokeStyle.split(" ");
+            strokes.unshift("0");
+            strokes.push("0")
+            const antiDashArray = strokes.join(" ");
+            svg = (
+                    <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
+                        <polyline
+                            points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
+                            fill="none"
+                            stroke={backgroundColor}
+                            strokeWidth={strokeWidth}
+                            strokeDasharray={antiDashArray}
+                        />
+                        <polyline
+                            points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
+                            fill="none"
+                            stroke={strokeColor}
+                            strokeWidth={strokeWidth}
+                            strokeDasharray={strokeStyle}
+                            markerEnd={
+                                additionalFlowNodes.includes(edge.v) && !additionalFlowNodes.includes(edge.w)
+                                    ? `url(#arrow-${flow.id})`
+                                    : undefined
+                            }
+                        />
+                    </svg>
+            );
+        }
         sceneItems.push(
             <SceneItem
                 key={`${flow.id}:${edge.v}-${edge.w}-edge`}
