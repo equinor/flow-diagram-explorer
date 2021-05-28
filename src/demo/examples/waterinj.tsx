@@ -1,6 +1,6 @@
 import React from "react";
 import { FlowDiagram, FDNode } from "../../lib/types/nodes";
-import { pumpRenderer} from "../../lib/render-library";
+import { pumpRenderer } from "../../lib/render-library";
 
 const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
     return {
@@ -18,7 +18,8 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
 };
 
 export const waterinj: FlowDiagram = {
-    title: "NORNE",
+    id: "waterinj",
+    title: "",
     nodes: [
         {
             id: "input",

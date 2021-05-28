@@ -4,8 +4,11 @@ import "./view.css";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 
 import { Point } from "../../types/point";
-import { useMouseDrag, useMousePosition } from "../../hooks/useMouseDrag";
+import { usePan } from "../../hooks/usePan";
 import { Size } from "../../types/dimensions";
+import { useMousePosition } from "../../hooks/useMousePosition";
+import { usePrevious } from "../../hooks/usePrevious";
+import { ORIGIN, pointDifference, pointScale, pointSum } from "../../utils/geometry";
 
 type ViewPropsType = {
     initialCenterPoint: Point;
@@ -16,6 +19,7 @@ type ViewPropsType = {
     height: number | string;
     margin: number;
     scale: number;
+    id: string;
 };
 
 export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, viewSize: Size, boundaryBox: Size): Point => {
@@ -37,51 +41,80 @@ export const View: React.FC<ViewPropsType> = ({
     height,
     margin,
     scale,
+    id,
 }) => {
     const viewRef = React.useRef<HTMLDivElement>(null);
+    const paneRef = React.useRef<HTMLDivElement>(null);
     const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
-    const dimensions = useContainerDimensions(viewRef);
-    const { dragging, dragDistance } = useMouseDrag(viewRef);
-    const mousePosition = useMousePosition();
+    const [buffer, setBuffer] = React.useState<Point>({ x: 0, y: 0 });
+    const viewSize = useContainerDimensions(viewRef);
+    const offset = usePan(paneRef);
+    const mousePosition = useMousePosition(paneRef);
 
-    React.useEffect(() => {
-        setCenterPoint({ x: initialCenterPoint.x * scale, y: initialCenterPoint.y * scale });
-    }, [initialCenterPoint, scale]);
+    const previousOffset = usePrevious<Point>(offset) || ORIGIN;
+    const previousScale = usePrevious<number>(scale) || 1;
 
-    React.useEffect(() => {
-        if (onCenterPointChange) {
-            onCenterPointChange(
-                calcCenterPointWithinBoundaryBox(
-                    { x: centerPoint.x - dragDistance.x * scale, y: centerPoint.y - dragDistance.y * scale },
-                    { width: dimensions.width / scale, height: dimensions.height / scale },
-                    boundaryBox
-                )
-            );
+    const delta = pointDifference(offset, previousOffset);
+
+    const adjustedOffset = React.useRef<Point>(pointDifference(pointSum(offset, delta), buffer));
+
+    React.useLayoutEffect(() => {
+        if (previousScale !== scale) {
+            const previousMousePosition = pointScale(mousePosition, previousScale);
+            const newMousePosition = pointScale(mousePosition, scale);
+            const mousePositionOffset = pointDifference(previousMousePosition, newMousePosition);
+            setBuffer((buffer) => pointSum(buffer, mousePositionOffset));
         }
-        if (!dragging) {
-            setCenterPoint(
-                calcCenterPointWithinBoundaryBox(
-                    { x: centerPoint.x - dragDistance.x * scale, y: centerPoint.y - dragDistance.y * scale },
-                    { width: dimensions.width / scale, height: dimensions.height / scale },
-                    boundaryBox
-                )
-            );
-        }
-    }, [dragDistance, dragging]);
+    }, [scale, previousScale, mousePosition]);
+
+    if (previousScale === scale) {
+        adjustedOffset.current = pointSum(adjustedOffset.current, pointScale(delta, 2 * scale));
+    } else {
+        const previousMousePosition = pointScale(mousePosition, previousScale);
+        const newMousePosition = pointScale(mousePosition, scale);
+        const mousePositionOffset = pointDifference(previousMousePosition, newMousePosition);
+        adjustedOffset.current = pointSum(adjustedOffset.current, mousePositionOffset);
+    }
+
+    let transformOrigin = "0 0";
+
+    if (viewSize.width >= boundaryBox.width * scale && viewSize.height >= boundaryBox.height * scale) {
+        adjustedOffset.current = {
+            x: -(boundaryBox.width - boundaryBox.width * scale) / 2,
+            y: -(boundaryBox.height - boundaryBox.height * scale) / 2,
+        };
+    }
+
+    React.useLayoutEffect(() => {
+        setBuffer({
+            x: (viewSize.width - boundaryBox.width * scale) / 2,
+            y: (viewSize.height - boundaryBox.height * scale) / 2,
+        });
+        adjustedOffset.current = { x: 0, y: 0 };
+    }, [viewSize, setBuffer, boundaryBox]);
+
+    React.useLayoutEffect(() => {
+        setCenterPoint({ x: initialCenterPoint.x, y: initialCenterPoint.y });
+    }, [initialCenterPoint]);
 
     return (
         <div className="View" ref={viewRef} style={{ width: width, height: height }}>
-            <div style={{ transform: `scale(${scale}, ${scale})` }}>
+            <div
+                ref={paneRef}
+                style={{
+                    transform: `scale(${scale}) translate(${-adjustedOffset.current.x}px, ${-adjustedOffset.current
+                        .y}px)`,
+                    transformOrigin: transformOrigin,
+                    position: "absolute",
+                    left: buffer.x,
+                    top: buffer.y,
+                    width: Math.max(viewSize.width, boundaryBox.width * scale),
+                    height: Math.max(viewSize.height, boundaryBox.height * scale),
+                }}
+            >
                 {React.cloneElement(Scene, {
-                    centerPoint: dragging
-                        ? calcCenterPointWithinBoundaryBox(
-                              { x: centerPoint.x - dragDistance.x * scale, y: centerPoint.y - dragDistance.y * scale },
-                              { width: dimensions.width / scale, height: dimensions.height / scale },
-                              boundaryBox
-                          )
-                        : centerPoint,
-                    dimensions: { width: dimensions.width / scale, height: dimensions.height / scale },
-                    margin: margin,
+                    centerPoint: { x: centerPoint.x, y: centerPoint.y },
+                    viewSize: { width: viewSize.width, height: viewSize.height },
                 })}
             </div>
         </div>

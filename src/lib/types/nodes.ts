@@ -1,4 +1,5 @@
 export interface FlowDiagram {
+    id: string;
     title: string;
     nodes: FDNode[];
     flows: Flow[];

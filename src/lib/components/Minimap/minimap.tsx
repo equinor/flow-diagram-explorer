@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 import { Point } from "../../types/point";
 import { Size } from "../../types/dimensions";
-import { useMouseDrag } from "../../hooks/useMouseDrag";
+import { useMouseDrag } from "../../hooks/usePan";
 
 import "./minimap.css";
 import "./../../effects/effects.css";
@@ -83,10 +83,10 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                     onCenterPointChange(
                         calcCenterPointWithinBoundaryBox(
                             {
-                                x: centerPoint.x + (dragDistance.x / scaling) * scale,
-                                y: centerPoint.y + (dragDistance.y / scaling) * scale,
+                                x: centerPoint.x + dragDistance.x / scaling / scale,
+                                y: centerPoint.y + dragDistance.y / scaling / scale,
                             },
-                            { width: viewSize.width / scale, height: viewSize.height / scale},
+                            { width: viewSize.width / scale, height: viewSize.height / scale },
                             boundaryBox
                         )
                     );
@@ -96,10 +96,10 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                 setCenterPoint(
                     calcCenterPointWithinBoundaryBox(
                         {
-                            x: centerPoint.x + (dragDistance.x / scaling) * scale,
-                            y: centerPoint.y + (dragDistance.y / scaling) * scale,
+                            x: centerPoint.x + dragDistance.x / scaling / scale,
+                            y: centerPoint.y + dragDistance.y / scaling / scale,
                         },
-                        {  width: viewSize.width / scale, height: viewSize.height / scale},
+                        { width: viewSize.width / scale, height: viewSize.height / scale },
                         boundaryBox
                     )
                 );
@@ -110,8 +110,8 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
     const calculatedCenterPoint = dragging
         ? calcCenterPointWithinBoundaryBox(
               {
-                  x: centerPoint.x + (dragDistance.x / scaling) / scale,
-                  y: centerPoint.y + (dragDistance.y / scaling) / scale,
+                  x: centerPoint.x + dragDistance.x / scaling / scale,
+                  y: centerPoint.y + dragDistance.y / scaling / scale,
               },
               { width: viewSize.width / scale, height: viewSize.height / scale },
               boundaryBox

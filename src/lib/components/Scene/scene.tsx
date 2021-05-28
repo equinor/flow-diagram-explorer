@@ -8,44 +8,28 @@ import "./scene.css";
 
 type ScenePropsType = {
     centerPoint?: Point;
-    dimensions?: Size;
+    viewSize?: Size;
     size: Size;
-    margin?: number;
     onNodeClick?: (nodeId: string) => void;
-    onNodeEnter: (nodeId: string, flows: string[]) => void;
+    onNodeEnter: (nodeId: string) => void;
     onNodeLeave: (nodeId: string) => void;
     children?: React.ReactElement<SceneItemPropsType>[];
 };
 
-export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Element => {
-    const { centerPoint, dimensions, size, onNodeClick, onNodeEnter, onNodeLeave, children } = props;
-    const margin = props.margin || 0;
+export const Scene: React.FC<ScenePropsType> = React.memo((props: ScenePropsType): JSX.Element => {
+    const { centerPoint, viewSize, size, onNodeClick, onNodeEnter, onNodeLeave, children } = props;
 
-    if (!centerPoint || !dimensions) {
+    if (!centerPoint || !viewSize) {
         return <></>;
     }
 
-    const left =
-        dimensions.width <= size.width + 2 * margin
-            ? -(centerPoint.x - dimensions.width / 2.0) + margin
-            : (dimensions.width - size.width) / 2;
-    const top =
-        dimensions.height <= size.height + 2 * margin
-            ? -(centerPoint.y - dimensions.height / 2.0) + margin
-            : (dimensions.height - size.height) / 2;
-
-    const realCenterPoint = {
-        x: dimensions.width / 2.0 + (centerPoint.x - dimensions.width / 2.0) - margin,
-        y: dimensions.height / 2.0 + (centerPoint.y - dimensions.height / 2.0) - margin,
-    };
-
     return (
-        <div className="Scene" style={{ top: top, left: left, width: size.width, height: size.height }}>
+        <div className="Scene" style={{ width: size.width, height: size.height }}>
             {children &&
                 children.map((child: React.ReactElement<SceneItemPropsType>) =>
                     React.cloneElement(child, {
-                        viewCenterPoint: realCenterPoint,
-                        viewSize: dimensions,
+                        viewCenterPoint: centerPoint,
+                        viewSize: viewSize,
                         onClick: onNodeClick ? (id: string) => onNodeClick(id) : undefined,
                         onMouseEnter: onNodeEnter,
                         onMouseLeave: onNodeLeave,
@@ -53,4 +37,4 @@ export const Scene: React.FC<ScenePropsType> = (props: ScenePropsType): JSX.Elem
                 )}
         </div>
     );
-};
+});

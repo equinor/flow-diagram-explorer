@@ -62,7 +62,8 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                     const child = item.children![0];
                     if (child.tagName.toLowerCase() === "svg") {
                         const polyline =
-                            child.children.length > 0 && child.children[child.children.length - 1].tagName.toLowerCase() === "polyline"
+                            child.children.length > 0 &&
+                            child.children[child.children.length - 1].tagName.toLowerCase() === "polyline"
                                 ? child.children[child.children.length - 1]
                                 : undefined;
                         if (polyline) {
@@ -73,7 +74,10 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                             });
                             polyline.setAttribute("stroke", highlightColor);
                             if (polyline.getAttribute("marker-end")) {
-                                polyline.setAttribute("marker-end", polyline.getAttribute("marker-end")!.replace(")", "-hover)"));
+                                polyline.setAttribute(
+                                    "marker-end",
+                                    polyline.getAttribute("marker-end")!.replace(")", "-hover)")
+                                );
                             }
                             if (child.parentElement) {
                                 child.parentElement.style.zIndex = "5";
@@ -92,7 +96,10 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
             const line = svg.getElementsByTagName("polyline")[svg.getElementsByTagName("polyline").length - 1];
             (line as SVGPolylineElement).setAttribute("stroke", originalColor);
             if ((line as SVGPolylineElement).getAttribute("marker-end")) {
-                (line as SVGPolylineElement).setAttribute("marker-end", (line as SVGPolylineElement).getAttribute("marker-end")!.replace("-hover", ""));
+                (line as SVGPolylineElement).setAttribute(
+                    "marker-end",
+                    (line as SVGPolylineElement).getAttribute("marker-end")!.replace("-hover", "")
+                );
             }
             if (svg.parentElement) {
                 svg.parentElement.style.zIndex = originalZIndex;
@@ -157,6 +164,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                         height="95vh"
                         sceneSize={sceneProperties.sceneSize}
                         margin={200}
+                        id={props.flowDiagram.id}
                     />
                 </>
             ) : (

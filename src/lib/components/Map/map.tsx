@@ -5,7 +5,7 @@ import { MapActions } from "../MapActions";
 import { Point } from "../../types/point";
 import { Size } from "../../types/dimensions";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
-import { useMouseZoom } from "../../hooks/useMouseZoom";
+import { useZoom } from "../../hooks/useZoom";
 
 import "./map.css";
 
@@ -16,20 +16,28 @@ type MapPropsType = {
     width: number | string;
     height: number | string;
     margin: number;
+    id: string;
 };
 
 export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element => {
-    const { initialCenterPoint, sceneSize, Scene, width, height, margin } = props;
+    const { initialCenterPoint, sceneSize, Scene, width, height, margin, id } = props;
     const mapRef = React.useRef<HTMLDivElement>(null);
     const size = useContainerDimensions(mapRef);
     const [viewCenterPoint, setViewCenterPoint] = React.useState(initialCenterPoint);
     const [minimapCenterPoint, setMinimapCenterPoint] = React.useState(initialCenterPoint);
-    const scale = useMouseZoom({ ref: mapRef, minScale: 0.1, maxScale: 4, delta: 0.001 });
+    const [boundaryBox, setBoundaryBox] = React.useState<Size>({
+        width: sceneSize.width,
+        height: sceneSize.height,
+    });
+    const { scale, resetScale } = useZoom({ ref: mapRef });
 
-    const boundaryBox = {
-        width: Math.max(sceneSize.width + 2 * margin, size.width),
-        height: Math.max(sceneSize.height + 2 * margin, size.height),
-    };
+    React.useLayoutEffect(() => {
+        setBoundaryBox({
+            width: sceneSize.width,
+            height: sceneSize.height,
+        });
+        resetScale();
+    }, [sceneSize]);
 
     React.useEffect(() => {
         const adjustedViewCenterPoint = {
@@ -49,9 +57,11 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
         setMinimapCenterPoint(newCenterPoint);
     };
 
+    /*
     const handleMinimapCenterPointChange = (newCenterPoint: Point) => {
         setViewCenterPoint(newCenterPoint);
     };
+    */
 
     return (
         <div ref={mapRef} className="Map" style={{ width: width, height: height }}>
@@ -64,7 +74,11 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 margin={margin}
                 onCenterPointChange={handleViewCenterPointChange}
                 scale={scale}
+                id={id}
             />
+        </div>
+    );
+    /*
             <Minimap
                 initialCenterPoint={minimapCenterPoint}
                 scaling={0.1}
@@ -78,4 +92,5 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
             <MapActions />
         </div>
     );
+    */
 };
