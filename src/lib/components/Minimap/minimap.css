@@ -11,10 +11,11 @@
 }
 
 .FlowDiagramExplorer .Minimap__View {
-    border: 16px #246e78 solid;
     position: absolute;
     display: block;
     z-index: 12;
+    background-color: #246e78;
+    opacity: 0.1;
 }
 
 .FlowDiagramExplorer .NoHoverLayer {

@@ -48,7 +48,7 @@ export const View: React.FC<ViewPropsType> = ({
     const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
     const [buffer, setBuffer] = React.useState<Point>({ x: 0, y: 0 });
     const viewSize = useContainerDimensions(viewRef);
-    const offset = usePan(paneRef);
+    const offset = usePan(viewRef);
     const mousePosition = useMousePosition(paneRef);
 
     const previousOffset = usePrevious<Point>(offset) || ORIGIN;
@@ -78,12 +78,14 @@ export const View: React.FC<ViewPropsType> = ({
 
     let transformOrigin = "0 0";
 
+    /*
     if (viewSize.width >= boundaryBox.width * scale && viewSize.height >= boundaryBox.height * scale) {
         adjustedOffset.current = {
-            x: -(boundaryBox.width - boundaryBox.width * scale) / 2,
-            y: -(boundaryBox.height - boundaryBox.height * scale) / 2,
+            x: 0,
+            y: 0,
         };
     }
+    */
 
     React.useLayoutEffect(() => {
         setBuffer({
@@ -94,8 +96,21 @@ export const View: React.FC<ViewPropsType> = ({
     }, [viewSize, setBuffer, boundaryBox]);
 
     React.useLayoutEffect(() => {
-        setCenterPoint({ x: initialCenterPoint.x, y: initialCenterPoint.y });
+        adjustedOffset.current = {
+            x: initialCenterPoint.x - (viewSize.width / 2 - buffer.x) / scale,
+            y: initialCenterPoint.y - (viewSize.height / 2 - buffer.y) / scale,
+        };
     }, [initialCenterPoint]);
+
+    React.useEffect(() => {
+        const centerPoint = {
+            x: (viewSize.width / 2 - buffer.x) / scale + adjustedOffset.current.x,
+            y: (viewSize.height / 2 - buffer.y) / scale + adjustedOffset.current.y,
+        };
+        if (onCenterPointChange) {
+            onCenterPointChange(centerPoint);
+        }
+    }, [offset, onCenterPointChange, buffer]);
 
     return (
         <div className="View" ref={viewRef} style={{ width: width, height: height }}>
@@ -108,8 +123,8 @@ export const View: React.FC<ViewPropsType> = ({
                     position: "absolute",
                     left: buffer.x,
                     top: buffer.y,
-                    width: Math.max(viewSize.width, boundaryBox.width * scale),
-                    height: Math.max(viewSize.height, boundaryBox.height * scale),
+                    width: boundaryBox.width,
+                    height: boundaryBox.height,
                 }}
             >
                 {React.cloneElement(Scene, {

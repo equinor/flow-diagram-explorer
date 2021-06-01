@@ -53,15 +53,16 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
         setMinimapCenterPoint(adjustedMinimapCenterPoint);
     }, [size]);
 
-    const handleViewCenterPointChange = (newCenterPoint: Point) => {
-        setMinimapCenterPoint(newCenterPoint);
-    };
+    const handleViewCenterPointChange = React.useCallback(
+        (newCenterPoint: Point) => {
+            setMinimapCenterPoint(newCenterPoint);
+        },
+        [setMinimapCenterPoint]
+    );
 
-    /*
     const handleMinimapCenterPointChange = (newCenterPoint: Point) => {
         setViewCenterPoint(newCenterPoint);
     };
-    */
 
     return (
         <div ref={mapRef} className="Map" style={{ width: width, height: height }}>
@@ -76,9 +77,6 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 scale={scale}
                 id={id}
             />
-        </div>
-    );
-    /*
             <Minimap
                 initialCenterPoint={minimapCenterPoint}
                 scaling={0.1}
@@ -92,5 +90,4 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
             <MapActions />
         </div>
     );
-    */
 };
