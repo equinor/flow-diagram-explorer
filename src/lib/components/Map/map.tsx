@@ -1,16 +1,16 @@
 import React from "react";
 import { View } from "../View";
 import { Minimap } from "../Minimap";
-import { MapActions } from "../MapActions";
+import { MapActions, MapActionType } from "../MapActions";
 import { Point } from "../../types/point";
 import { Size } from "../../types/dimensions";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 import { useZoom } from "../../hooks/useZoom";
+import { usePrevious } from "../../hooks/usePrevious";
 
 import "./map.css";
 
 type MapPropsType = {
-    initialCenterPoint: Point;
     Scene: React.ReactElement;
     sceneSize: Size;
     width: number | string;
@@ -20,16 +20,29 @@ type MapPropsType = {
 };
 
 export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element => {
-    const { initialCenterPoint, sceneSize, Scene, width, height, margin, id } = props;
+    const { sceneSize, Scene, width, height, margin, id } = props;
     const mapRef = React.useRef<HTMLDivElement>(null);
     const size = useContainerDimensions(mapRef);
-    const [viewCenterPoint, setViewCenterPoint] = React.useState(initialCenterPoint);
-    const [minimapCenterPoint, setMinimapCenterPoint] = React.useState(initialCenterPoint);
+    const [mapScale, setMapScale] = React.useState(1);
+    const [viewCenterPoint, setViewCenterPoint] = React.useState({ x: sceneSize.width / 2, y: sceneSize.height / 2 });
+    const [minimapCenterPoint, setMinimapCenterPoint] = React.useState({
+        x: sceneSize.width / 2,
+        y: sceneSize.height / 2,
+    });
     const [boundaryBox, setBoundaryBox] = React.useState<Size>({
         width: sceneSize.width,
         height: sceneSize.height,
     });
     const { scale, resetScale } = useZoom({ ref: mapRef });
+
+    const previousScale = usePrevious<number>(scale) || 1;
+
+    React.useEffect(() => {
+        if (scale !== previousScale) {
+            const scaleDelta = scale - previousScale;
+            setMapScale(mapScale + scaleDelta);
+        }
+    }, [scale, previousScale]);
 
     React.useLayoutEffect(() => {
         setBoundaryBox({
@@ -60,9 +73,26 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
         [setMinimapCenterPoint]
     );
 
-    const handleMinimapCenterPointChange = (newCenterPoint: Point) => {
-        setViewCenterPoint(newCenterPoint);
-    };
+    const handleMinimapCenterPointChange = React.useCallback(
+        (newCenterPoint: Point) => {
+            setViewCenterPoint(newCenterPoint);
+        },
+        [setViewCenterPoint]
+    );
+
+    const handleActionTriggered = React.useCallback(
+        (action: MapActionType): void => {
+            if (action === MapActionType.ZoomIn) {
+                setMapScale(Math.min(3, mapScale + 0.1));
+            } else if (action === MapActionType.ZoomOut) {
+                setMapScale(Math.max(0.5, mapScale - 0.1));
+            } else if (action === MapActionType.CenterView) {
+                setViewCenterPoint({ x: (boundaryBox.width / 2) * scale, y: (boundaryBox.height / 2) * scale });
+                setMinimapCenterPoint({ x: (boundaryBox.width / 2) * scale, y: (boundaryBox.height / 2) * scale });
+            }
+        },
+        [setViewCenterPoint, setMinimapCenterPoint, mapScale]
+    );
 
     return (
         <div ref={mapRef} className="Map" style={{ width: width, height: height }}>
@@ -74,7 +104,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 boundaryBox={boundaryBox}
                 margin={margin}
                 onCenterPointChange={handleViewCenterPointChange}
-                scale={scale}
+                scale={mapScale}
                 id={id}
             />
             <Minimap
@@ -85,9 +115,9 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 Scene={Scene}
                 margin={margin}
                 onCenterPointChange={handleMinimapCenterPointChange}
-                scale={scale}
+                scale={mapScale}
             />
-            <MapActions />
+            <MapActions onActionTriggered={handleActionTriggered} />
         </div>
     );
 };

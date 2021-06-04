@@ -19,7 +19,7 @@ const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number
 
 export const waterinj: FlowDiagram = {
     id: "waterinj",
-    title: "",
+    title: "NORNE",
     nodes: [
         {
             id: "input",

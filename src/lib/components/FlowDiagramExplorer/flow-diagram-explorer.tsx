@@ -159,7 +159,6 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                                 {sceneProperties.sceneItems}
                             </Scene>
                         }
-                        initialCenterPoint={{ x: 400, y: 250 }}
                         width="100%"
                         height="95vh"
                         sceneSize={sceneProperties.sceneSize}

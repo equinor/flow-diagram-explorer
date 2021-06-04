@@ -4,6 +4,8 @@ import clsx from "clsx";
 import { Point } from "../../types/point";
 import { Size, Rectangle } from "../../types/dimensions";
 import { usePan } from "../../hooks/usePan";
+import { usePrevious } from "../../hooks/usePrevious";
+import { ORIGIN, pointDifference } from "../../utils/geometry";
 
 import "./minimap.css";
 import "./../../effects/effects.css";
@@ -68,9 +70,11 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
     const mapRef = React.useRef<HTMLDivElement>(null);
     const offset = usePan(viewRef);
 
+    const previousOffset = usePrevious<Point>(offset) || ORIGIN;
+
     React.useEffect(() => {
-        setCenterPoint({ x: initialCenterPoint.x * scale, y: initialCenterPoint.y * scale });
-    }, [initialCenterPoint, scale]);
+        setCenterPoint({ x: initialCenterPoint.x, y: initialCenterPoint.y });
+    }, [initialCenterPoint]);
 
     React.useEffect(() => {
         const handleMouseDown = (e: MouseEvent) => {
@@ -81,7 +85,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
             if (
                 onCenterPointChange &&
                 Math.sqrt(Math.pow(e.clientX - mouseDownPosition.x, 2) + Math.pow(e.clientY - mouseDownPosition.y, 2)) <
-                    13.11
+                    1
             ) {
                 const newCenterPoint = {
                     x: ((mouseDownPosition.x - mapRef.current!.getBoundingClientRect().left) / scaling) * scale,
@@ -110,19 +114,18 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
         };
     }, [mapRef, mouseDownPosition]);
 
-    console.log(offset);
-
     React.useEffect(() => {
-        const newCenterPoint = {
-            x: initialCenterPoint.x * scale - (offset.x / scaling) * scale,
-            y: initialCenterPoint.y * scale - (offset.y / scaling) * scale,
+        const delta = pointDifference(offset, previousOffset);
+
+        const adjustedCenterPoint = {
+            x: centerPoint.x - (delta.x / scaling) * scale,
+            y: centerPoint.y - (delta.y / scaling) * scale,
         };
-        const adjustedCenterPoint = newCenterPoint;
         setCenterPoint(adjustedCenterPoint);
         if (onCenterPointChange) {
             onCenterPointChange(adjustedCenterPoint);
         }
-    }, [offset, initialCenterPoint]);
+    }, [offset]);
 
     const rectangle = calcViewFrameWithinBoundaries(centerPoint, viewSize, boundaryBox, scale);
 
@@ -132,7 +135,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
             style={{ width: boundaryBox.width * scaling, height: boundaryBox.height * scaling }}
             ref={mapRef}
         >
-            <div style={{ transform: `scale(${scaling}, ${scaling})`, transformOrigin: "0 0" }}>
+            <div style={{ transform: `scale(${scaling})`, transformOrigin: "0 0" }}>
                 {React.cloneElement(Scene, {
                     centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
                     viewSize: { width: boundaryBox.width, height: boundaryBox.height },

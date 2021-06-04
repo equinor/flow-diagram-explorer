@@ -65,7 +65,7 @@ export const View: React.FC<ViewPropsType> = ({
             const mousePositionOffset = pointDifference(previousMousePosition, newMousePosition);
             setBuffer((buffer) => pointSum(buffer, mousePositionOffset));
         }
-    }, [scale, previousScale, mousePosition]);
+    }, [previousScale, mousePosition, scale]);
 
     if (previousScale === scale) {
         adjustedOffset.current = pointSum(adjustedOffset.current, pointScale(delta, 2 * scale));
@@ -75,17 +75,6 @@ export const View: React.FC<ViewPropsType> = ({
         const mousePositionOffset = pointDifference(previousMousePosition, newMousePosition);
         adjustedOffset.current = pointSum(adjustedOffset.current, mousePositionOffset);
     }
-
-    let transformOrigin = "0 0";
-
-    /*
-    if (viewSize.width >= boundaryBox.width * scale && viewSize.height >= boundaryBox.height * scale) {
-        adjustedOffset.current = {
-            x: 0,
-            y: 0,
-        };
-    }
-    */
 
     React.useLayoutEffect(() => {
         setBuffer({
@@ -97,20 +86,26 @@ export const View: React.FC<ViewPropsType> = ({
 
     React.useLayoutEffect(() => {
         adjustedOffset.current = {
-            x: initialCenterPoint.x - (viewSize.width / 2 - buffer.x) / scale,
-            y: initialCenterPoint.y - (viewSize.height / 2 - buffer.y) / scale,
+            x: initialCenterPoint.x / scale - boundaryBox.width / 2,
+            y: initialCenterPoint.y / scale - boundaryBox.height / 2,
         };
+        setBuffer({
+            x: (viewSize.width - boundaryBox.width * scale) / 2,
+            y: (viewSize.height - boundaryBox.height * scale) / 2,
+        });
+        setCenterPoint(initialCenterPoint);
     }, [initialCenterPoint]);
 
     React.useEffect(() => {
         const centerPoint = {
-            x: (viewSize.width / 2 - buffer.x) / scale + adjustedOffset.current.x,
-            y: (viewSize.height / 2 - buffer.y) / scale + adjustedOffset.current.y,
+            x: adjustedOffset.current.x + (boundaryBox.width / 2) * scale,
+            y: adjustedOffset.current.y + (boundaryBox.height / 2) * scale,
         };
+        setCenterPoint(centerPoint);
         if (onCenterPointChange) {
             onCenterPointChange(centerPoint);
         }
-    }, [offset, onCenterPointChange, buffer]);
+    }, [onCenterPointChange, buffer, offset]);
 
     return (
         <div className="View" ref={viewRef} style={{ width: width, height: height }}>
@@ -119,7 +114,7 @@ export const View: React.FC<ViewPropsType> = ({
                 style={{
                     transform: `scale(${scale}) translate(${-adjustedOffset.current.x}px, ${-adjustedOffset.current
                         .y}px)`,
-                    transformOrigin: transformOrigin,
+                    transformOrigin: "0 0",
                     position: "absolute",
                     left: buffer.x,
                     top: buffer.y,
@@ -128,9 +123,22 @@ export const View: React.FC<ViewPropsType> = ({
                 }}
             >
                 {React.cloneElement(Scene, {
-                    centerPoint: { x: centerPoint.x, y: centerPoint.y },
-                    viewSize: { width: viewSize.width, height: viewSize.height },
+                    centerPoint: { x: centerPoint.x / scale, y: centerPoint.y / scale },
+                    viewSize: { width: viewSize.width / scale, height: viewSize.height / scale },
                 })}
+                <div
+                    style={{
+                        position: "absolute",
+                        left: centerPoint.x * scale,
+                        top: centerPoint.y * scale,
+                        backgroundColor: "black",
+                        width: 6,
+                        height: 6,
+                        marginLeft: -3,
+                        marginTop: -3,
+                        zIndex: 30,
+                    }}
+                ></div>
             </div>
         </div>
     );
