@@ -2,7 +2,7 @@ import React from "react";
 
 import { SceneItemPropsType } from "../SceneItem";
 import { Point } from "../../types/point";
-import { Size } from "../../types/dimensions";
+import { Size } from "../../types/size";
 
 import "./scene.css";
 

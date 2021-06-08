@@ -3,14 +3,23 @@ import React from "react";
 import { DiagramDrawer, Diagram } from "../../utils/diagram-drawer";
 import { Scene } from "../Scene";
 import { Map } from "../Map";
-import { FlowDiagram } from "../../types/nodes";
+import { FlowDiagram } from "../../types/diagram";
 import { DiagramSkeleton } from "../DiagramSkeleton/diagram-skeleton";
 import { Breadcrumbs } from "@equinor/eds-core-react";
+import { DiagramConfig } from "../../types/diagram";
 
 import "./flow-diagram-explorer.css";
 
+const defaultDiagramConfig: DiagramConfig = {
+    horizontalSpacing: 80,
+    verticalSpacing: 50,
+    highlightColor: "#DF323D",
+    backgroundColor: "#F7F7F7",
+};
+
 type FlowDiagramExplorerPropsType = {
     flowDiagram: FlowDiagram;
+    diagramConfig?: DiagramConfig;
     onNodeClick?: (nodeId: string) => void;
     onDiagramChange?: (title: string) => void;
 };
@@ -18,6 +27,7 @@ type FlowDiagramExplorerPropsType = {
 const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
     props: FlowDiagramExplorerPropsType
 ): JSX.Element => {
+    const diagramConfig = props.diagramConfig || defaultDiagramConfig;
     const [levels, setLevels] = React.useState<{ title: string; diagram: Diagram }[]>([]);
     const [sceneProperties, setSceneProperties] = React.useState<Diagram | null>(null);
     const [highlightedSceneItems, setHighlightedSceneItems] = React.useState<
@@ -25,11 +35,10 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
     >([]);
     const mapRef = React.useRef<HTMLDivElement>(null);
 
-    const highlightColor = "#DF323D";
-
     React.useEffect(() => {
         const result = DiagramDrawer({
             flowDiagram: props.flowDiagram,
+            config: diagramConfig,
         });
         setSceneProperties(result);
         const index = levels.findIndex((el) => el.title === props.flowDiagram.title);
@@ -38,7 +47,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
         } else {
             setLevels([{ title: props.flowDiagram.title, diagram: result }]);
         }
-    }, [props.flowDiagram]);
+    }, [props.flowDiagram, diagramConfig]);
 
     const handleMouseEnter = React.useCallback(
         (id: string) => {
@@ -72,7 +81,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                                 originalColor: (polyline as SVGPolylineElement).getAttribute("stroke")!,
                                 originalZIndex: (child as SVGElement).style.zIndex,
                             });
-                            polyline.setAttribute("stroke", highlightColor);
+                            polyline.setAttribute("stroke", diagramConfig.highlightColor);
                             if (polyline.getAttribute("marker-end")) {
                                 polyline.setAttribute(
                                     "marker-end",
@@ -162,8 +171,8 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                         width="100%"
                         height="95vh"
                         sceneSize={sceneProperties.sceneSize}
-                        margin={200}
                         id={props.flowDiagram.id}
+                        config={diagramConfig}
                     />
                 </>
             ) : (

@@ -5,10 +5,10 @@ import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 
 import { Point } from "../../types/point";
 import { usePan } from "../../hooks/usePan";
-import { Size } from "../../types/dimensions";
+import { Size } from "../../types/size";
 import { useMousePosition } from "../../hooks/useMousePosition";
 import { usePrevious } from "../../hooks/usePrevious";
-import { ORIGIN, pointDifference, pointMultiplyWithScalar, pointScale, pointSum } from "../../utils/geometry";
+import { ORIGIN, pointDifference, pointMultiplyWithScalar, pointSum } from "../../utils/geometry";
 
 type ViewPropsType = {
     initialCenterPoint: Point;
@@ -17,9 +17,9 @@ type ViewPropsType = {
     boundaryBox: Size;
     width: number | string;
     height: number | string;
-    margin: number;
     scale: number;
     id: string;
+    backgroundColor: string;
 };
 
 export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, viewSize: Size, boundaryBox: Size): Point => {
@@ -40,6 +40,7 @@ export const View: React.FC<ViewPropsType> = ({
     width,
     height,
     scale,
+    backgroundColor,
 }) => {
     const [adjustedOffset, setAdjustedOffset] = React.useState<Point>(ORIGIN);
     const viewRef = React.useRef<HTMLDivElement>(null);
@@ -63,7 +64,6 @@ export const View: React.FC<ViewPropsType> = ({
     }, [offset, scale]);
 
     React.useEffect(() => {
-        console.log(initialCenterPoint);
         setAdjustedOffset({
             x: viewSize.width / 2 - initialCenterPoint.x,
             y: viewSize.height / 2 - initialCenterPoint.y,
@@ -81,7 +81,7 @@ export const View: React.FC<ViewPropsType> = ({
     }, [onCenterPointChange, scale, adjustedOffset]);
 
     return (
-        <div className="View" ref={viewRef} style={{ width: width, height: height }}>
+        <div className="View" ref={viewRef} style={{ width: width, height: height, backgroundColor: backgroundColor }}>
             <div
                 style={{
                     position: "absolute",

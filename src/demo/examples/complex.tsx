@@ -1,8 +1,8 @@
 import React from "react";
-import { FlowDiagram, FDNode } from "../../lib/types/nodes";
+import { FlowDiagram } from "../../lib/types/diagram";
 import { windTurbineSystemRenderer, installationRenderer, cableRenderer } from "../../lib/render-library";
 
-const renderInputOutputNode = (node: FDNode): { html: JSX.Element; width: number; height: number } => {
+const renderInputOutputNode = (): { html: JSX.Element; width: number; height: number } => {
     return {
         html: (
             <div

@@ -3,24 +3,26 @@ import { View } from "../View";
 import { Minimap } from "../Minimap";
 import { MapActions, MapActionType } from "../MapActions";
 import { Point } from "../../types/point";
-import { Size } from "../../types/dimensions";
+import { Size } from "../../types/size";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 import { useZoom } from "../../hooks/useZoom";
 import { usePrevious } from "../../hooks/usePrevious";
 import { pointScale } from "../../utils/geometry";
+import { DiagramConfig } from "lib/types/diagram";
 
 import "./map.css";
+
 type MapPropsType = {
     Scene: React.ReactElement;
     sceneSize: Size;
     width: number | string;
     height: number | string;
-    margin: number;
     id: string;
+    config: DiagramConfig;
 };
 
 export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element => {
-    const { sceneSize, Scene, width, height, margin, id } = props;
+    const { sceneSize, Scene, width, height, id, config } = props;
     const mapRef = React.useRef<HTMLDivElement>(null);
     const size = useContainerDimensions(mapRef);
     const [mapScale, setMapScale] = React.useState(1);
@@ -37,7 +39,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
         width: sceneSize.width,
         height: sceneSize.height,
     });
-    const { scale, resetScale } = useZoom({ ref: mapRef });
+    const { scale } = useZoom({ ref: mapRef });
 
     const previousScale = usePrevious<number>(scale) || 1;
 
@@ -53,7 +55,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
             width: sceneSize.width,
             height: sceneSize.height,
         });
-        resetScale();
+        setMapScale(1);
     }, [sceneSize]);
 
     React.useEffect(() => {
@@ -88,7 +90,6 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
             if (action === MapActionType.ZoomIn) {
                 const newMapScale = Math.min(3, mapScale + 0.1);
                 setMapScale(newMapScale);
-                console.log(centerPoint);
                 setViewCenterPoint(pointScale(pointScale(centerPoint, mapScale), 1 / newMapScale));
                 setMinimapCenterPoint(centerPoint);
             } else if (action === MapActionType.ZoomOut) {
@@ -100,10 +101,18 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                     y: (boundaryBox.height / 2) * newMapScale,
                 });
             } else if (action === MapActionType.CenterView) {
-                setViewCenterPoint({ x: (boundaryBox.width / 2) * mapScale, y: (boundaryBox.height / 2) * mapScale });
+                const newMapScale = Math.max(
+                    Math.floor(Math.min(size.height / boundaryBox.height, size.width / boundaryBox.width) / 0.1) * 0.1,
+                    0.5
+                );
+                setMapScale(newMapScale);
+                setViewCenterPoint({
+                    x: (boundaryBox.width / 2) * newMapScale,
+                    y: (boundaryBox.height / 2) * newMapScale,
+                });
                 setMinimapCenterPoint({
-                    x: (boundaryBox.width / 2) * mapScale,
-                    y: (boundaryBox.height / 2) * mapScale,
+                    x: (boundaryBox.width / 2) * newMapScale,
+                    y: (boundaryBox.height / 2) * newMapScale,
                 });
             }
         },
@@ -118,18 +127,16 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                 height={height}
                 Scene={Scene}
                 boundaryBox={boundaryBox}
-                margin={margin}
                 onCenterPointChange={handleViewCenterPointChange}
                 scale={mapScale}
                 id={id}
+                backgroundColor={config.backgroundColor}
             />
             <Minimap
                 initialCenterPoint={minimapCenterPoint}
-                scaling={0.1}
                 viewSize={size}
                 boundaryBox={boundaryBox}
                 Scene={Scene}
-                margin={margin}
                 onCenterPointChange={handleMinimapCenterPointChange}
                 scale={mapScale}
             />

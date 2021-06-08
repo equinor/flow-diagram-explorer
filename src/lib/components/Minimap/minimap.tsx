@@ -2,7 +2,8 @@ import React from "react";
 import clsx from "clsx";
 
 import { Point } from "../../types/point";
-import { Size, Rectangle } from "../../types/dimensions";
+import { Size } from "../../types/size";
+import { Rectangle } from "../../types/rectangle";
 import { usePan } from "../../hooks/usePan";
 import { usePrevious } from "../../hooks/usePrevious";
 import { ORIGIN, pointDifference } from "../../utils/geometry";
@@ -13,20 +14,13 @@ import "./../../effects/effects.css";
 type MinimapPropsType = {
     initialCenterPoint: Point;
     Scene: React.ReactElement;
-    scaling: number;
     viewSize: Size;
     boundaryBox: Size;
     onCenterPointChange?: (newCenterPoint: Point) => void;
-    margin: number;
     scale: number;
 };
 
-export const calcCenterPointWithinBoundaryBox = (
-    centerPoint: Point,
-    viewSize: Size,
-    boundaryBox: Size,
-    scale: number
-): Point => {
+export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, boundaryBox: Size, scale: number): Point => {
     const minX = 0;
     const maxX = boundaryBox.width * scale;
     const minY = 0;
@@ -61,7 +55,9 @@ export const calcViewFrameWithinBoundaries = (
 };
 
 export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JSX.Element => {
-    const { initialCenterPoint, Scene, scaling, viewSize, boundaryBox, onCenterPointChange, margin, scale } = props;
+    const { initialCenterPoint, Scene, viewSize, boundaryBox, onCenterPointChange, scale } = props;
+
+    const scaling = Math.min(0.1, 150 / Math.max(boundaryBox.width, boundaryBox.height));
 
     const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
     const [mouseDownPosition, setMouseDownPosition] = React.useState({ x: 0, y: 0 });
@@ -91,12 +87,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                     x: ((mouseDownPosition.x - mapRef.current!.getBoundingClientRect().left) / scaling) * scale,
                     y: ((mouseDownPosition.y - mapRef.current!.getBoundingClientRect().top) / scaling) * scale,
                 };
-                const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(
-                    newCenterPoint,
-                    viewSize,
-                    boundaryBox,
-                    scale
-                );
+                const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, boundaryBox, scale);
                 setCenterPoint(adjustedCenterPoint);
                 onCenterPointChange(adjustedCenterPoint);
             }

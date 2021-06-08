@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Point } from "../../types/point";
-import { Size } from "../../types/dimensions";
+import { Size } from "../../types/size";
+
 import "./scene-item.css";
 
 export type SceneItemPropsType = {

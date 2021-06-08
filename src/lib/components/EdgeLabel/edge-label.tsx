@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Size } from "../../types/dimensions";
+import { Size } from "../../types/size";
 
 import "./edge-label.css";
 
