@@ -8,7 +8,7 @@ import { usePan } from "../../hooks/usePan";
 import { Size } from "../../types/dimensions";
 import { useMousePosition } from "../../hooks/useMousePosition";
 import { usePrevious } from "../../hooks/usePrevious";
-import { ORIGIN, pointDifference, pointScale, pointSum } from "../../utils/geometry";
+import { ORIGIN, pointDifference, pointMultiplyWithScalar, pointScale, pointSum } from "../../utils/geometry";
 
 type ViewPropsType = {
     initialCenterPoint: Point;
@@ -39,106 +39,73 @@ export const View: React.FC<ViewPropsType> = ({
     boundaryBox,
     width,
     height,
-    margin,
     scale,
-    id,
 }) => {
+    const [adjustedOffset, setAdjustedOffset] = React.useState<Point>(ORIGIN);
     const viewRef = React.useRef<HTMLDivElement>(null);
     const paneRef = React.useRef<HTMLDivElement>(null);
-    const [centerPoint, setCenterPoint] = React.useState(initialCenterPoint);
-    const [buffer, setBuffer] = React.useState<Point>({ x: 0, y: 0 });
     const viewSize = useContainerDimensions(viewRef);
     const offset = usePan(viewRef);
-    const mousePosition = useMousePosition(paneRef);
+    const mousePosition = useMousePosition(viewRef);
 
     const previousOffset = usePrevious<Point>(offset) || ORIGIN;
     const previousScale = usePrevious<number>(scale) || 1;
 
-    const delta = pointDifference(offset, previousOffset);
-
-    const adjustedOffset = React.useRef<Point>(pointDifference(pointSum(offset, delta), buffer));
-
     React.useLayoutEffect(() => {
-        if (previousScale !== scale) {
-            const previousMousePosition = pointScale(mousePosition, previousScale);
-            const newMousePosition = pointScale(mousePosition, scale);
-            const mousePositionOffset = pointDifference(previousMousePosition, newMousePosition);
-            setBuffer((buffer) => pointSum(buffer, mousePositionOffset));
+        const delta = pointDifference(previousOffset, offset);
+        if (previousScale === scale) {
+            setAdjustedOffset(pointSum(adjustedOffset, delta));
+        } else {
+            const factor = scale / previousScale;
+            const d = pointMultiplyWithScalar(pointDifference(mousePosition, adjustedOffset), factor - 1);
+            setAdjustedOffset(pointDifference(adjustedOffset, d));
         }
-    }, [previousScale, mousePosition, scale]);
+    }, [offset, scale]);
 
-    if (previousScale === scale) {
-        adjustedOffset.current = pointSum(adjustedOffset.current, pointScale(delta, 2 * scale));
-    } else {
-        const previousMousePosition = pointScale(mousePosition, previousScale);
-        const newMousePosition = pointScale(mousePosition, scale);
-        const mousePositionOffset = pointDifference(previousMousePosition, newMousePosition);
-        adjustedOffset.current = pointSum(adjustedOffset.current, mousePositionOffset);
-    }
-
-    React.useLayoutEffect(() => {
-        setBuffer({
-            x: (viewSize.width - boundaryBox.width * scale) / 2,
-            y: (viewSize.height - boundaryBox.height * scale) / 2,
+    React.useEffect(() => {
+        console.log(initialCenterPoint);
+        setAdjustedOffset({
+            x: viewSize.width / 2 - initialCenterPoint.x,
+            y: viewSize.height / 2 - initialCenterPoint.y,
         });
-        adjustedOffset.current = { x: 0, y: 0 };
-    }, [viewSize, setBuffer, boundaryBox]);
-
-    React.useLayoutEffect(() => {
-        adjustedOffset.current = {
-            x: initialCenterPoint.x / scale - boundaryBox.width / 2,
-            y: initialCenterPoint.y / scale - boundaryBox.height / 2,
-        };
-        setBuffer({
-            x: (viewSize.width - boundaryBox.width * scale) / 2,
-            y: (viewSize.height - boundaryBox.height * scale) / 2,
-        });
-        setCenterPoint(initialCenterPoint);
-    }, [initialCenterPoint]);
+    }, [initialCenterPoint, viewSize, setAdjustedOffset]);
 
     React.useEffect(() => {
         const centerPoint = {
-            x: adjustedOffset.current.x + (boundaryBox.width / 2) * scale,
-            y: adjustedOffset.current.y + (boundaryBox.height / 2) * scale,
+            x: viewSize.width / 2 - adjustedOffset.x,
+            y: viewSize.height / 2 - adjustedOffset.y,
         };
-        setCenterPoint(centerPoint);
         if (onCenterPointChange) {
             onCenterPointChange(centerPoint);
         }
-    }, [onCenterPointChange, buffer, offset]);
+    }, [onCenterPointChange, scale, adjustedOffset]);
 
     return (
         <div className="View" ref={viewRef} style={{ width: width, height: height }}>
             <div
-                ref={paneRef}
                 style={{
-                    transform: `scale(${scale}) translate(${-adjustedOffset.current.x}px, ${-adjustedOffset.current
-                        .y}px)`,
-                    transformOrigin: "0 0",
                     position: "absolute",
-                    left: buffer.x,
-                    top: buffer.y,
-                    width: boundaryBox.width,
-                    height: boundaryBox.height,
+                    left: Math.floor(adjustedOffset.x),
+                    top: Math.floor(adjustedOffset.y),
                 }}
             >
-                {React.cloneElement(Scene, {
-                    centerPoint: { x: centerPoint.x / scale, y: centerPoint.y / scale },
-                    viewSize: { width: viewSize.width / scale, height: viewSize.height / scale },
-                })}
                 <div
+                    ref={paneRef}
                     style={{
+                        transform: `scale(${scale})`,
+                        transformOrigin: "0 0",
                         position: "absolute",
-                        left: centerPoint.x * scale,
-                        top: centerPoint.y * scale,
-                        backgroundColor: "black",
-                        width: 6,
-                        height: 6,
-                        marginLeft: -3,
-                        marginTop: -3,
-                        zIndex: 30,
+                        width: boundaryBox.width,
+                        height: boundaryBox.height,
+                        left: 0,
+                        top: 0,
                     }}
-                ></div>
+                >
+                    {React.cloneElement(Scene, {
+                        centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
+                        viewSize: { width: boundaryBox.width, height: boundaryBox.height },
+                    })}
+                </div>
             </div>
         </div>
     );

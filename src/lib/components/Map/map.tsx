@@ -7,9 +7,9 @@ import { Size } from "../../types/dimensions";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 import { useZoom } from "../../hooks/useZoom";
 import { usePrevious } from "../../hooks/usePrevious";
+import { pointScale } from "../../utils/geometry";
 
 import "./map.css";
-
 type MapPropsType = {
     Scene: React.ReactElement;
     sceneSize: Size;
@@ -29,6 +29,10 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
         x: sceneSize.width / 2,
         y: sceneSize.height / 2,
     });
+    const [centerPoint, setCenterPoint] = React.useState({
+        x: sceneSize.width / 2,
+        y: sceneSize.height / 2,
+    });
     const [boundaryBox, setBoundaryBox] = React.useState<Size>({
         width: sceneSize.width,
         height: sceneSize.height,
@@ -44,7 +48,7 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
         }
     }, [scale, previousScale]);
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
         setBoundaryBox({
             width: sceneSize.width,
             height: sceneSize.height,
@@ -53,45 +57,57 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
     }, [sceneSize]);
 
     React.useEffect(() => {
-        const adjustedViewCenterPoint = {
-            x: Math.min(Math.max(viewCenterPoint.x, size.width / 2), boundaryBox.width - size.width / 2),
-            y: Math.min(Math.max(viewCenterPoint.y, size.height / 2), boundaryBox.height - size.height / 2),
-        };
-        setViewCenterPoint(adjustedViewCenterPoint);
-
-        const adjustedMinimapCenterPoint = {
-            x: Math.min(Math.max(minimapCenterPoint.x, size.width / 2), boundaryBox.width - size.width / 2),
-            y: Math.min(Math.max(minimapCenterPoint.y, size.height / 2), boundaryBox.height - size.height / 2),
-        };
-        setMinimapCenterPoint(adjustedMinimapCenterPoint);
-    }, [size]);
+        setViewCenterPoint({
+            x: (boundaryBox.width / 2) * mapScale,
+            y: (boundaryBox.height / 2) * mapScale,
+        });
+        setMinimapCenterPoint({
+            x: (boundaryBox.width / 2) * mapScale,
+            y: (boundaryBox.height / 2) * mapScale,
+        });
+    }, [size, boundaryBox]);
 
     const handleViewCenterPointChange = React.useCallback(
         (newCenterPoint: Point) => {
             setMinimapCenterPoint(newCenterPoint);
+            setCenterPoint(newCenterPoint);
         },
-        [setMinimapCenterPoint]
+        [setMinimapCenterPoint, setCenterPoint]
     );
 
     const handleMinimapCenterPointChange = React.useCallback(
         (newCenterPoint: Point) => {
             setViewCenterPoint(newCenterPoint);
+            setCenterPoint(newCenterPoint);
         },
-        [setViewCenterPoint]
+        [setViewCenterPoint, setCenterPoint]
     );
 
     const handleActionTriggered = React.useCallback(
         (action: MapActionType): void => {
             if (action === MapActionType.ZoomIn) {
-                setMapScale(Math.min(3, mapScale + 0.1));
+                const newMapScale = Math.min(3, mapScale + 0.1);
+                setMapScale(newMapScale);
+                console.log(centerPoint);
+                setViewCenterPoint(pointScale(pointScale(centerPoint, mapScale), 1 / newMapScale));
+                setMinimapCenterPoint(centerPoint);
             } else if (action === MapActionType.ZoomOut) {
-                setMapScale(Math.max(0.5, mapScale - 0.1));
+                const newMapScale = Math.max(0.5, mapScale - 0.1);
+                setMapScale(newMapScale);
+                setViewCenterPoint(pointScale(pointScale(centerPoint, mapScale), 1 / newMapScale));
+                setMinimapCenterPoint({
+                    x: (boundaryBox.width / 2) * newMapScale,
+                    y: (boundaryBox.height / 2) * newMapScale,
+                });
             } else if (action === MapActionType.CenterView) {
-                setViewCenterPoint({ x: (boundaryBox.width / 2) * scale, y: (boundaryBox.height / 2) * scale });
-                setMinimapCenterPoint({ x: (boundaryBox.width / 2) * scale, y: (boundaryBox.height / 2) * scale });
+                setViewCenterPoint({ x: (boundaryBox.width / 2) * mapScale, y: (boundaryBox.height / 2) * mapScale });
+                setMinimapCenterPoint({
+                    x: (boundaryBox.width / 2) * mapScale,
+                    y: (boundaryBox.height / 2) * mapScale,
+                });
             }
         },
-        [setViewCenterPoint, setMinimapCenterPoint, mapScale]
+        [setViewCenterPoint, setMinimapCenterPoint, mapScale, centerPoint]
     );
 
     return (

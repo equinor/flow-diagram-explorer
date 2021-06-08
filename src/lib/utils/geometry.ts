@@ -26,3 +26,7 @@ export const pointAddScalar = (point: Point, scalar: number): Point => {
 export const pointScale = (point: Point, factor: number): Point => {
     return { x: point.x / factor, y: point.y / factor };
 };
+
+export const pointMultiplyWithScalar = (point: Point, scalar: number): Point => {
+    return { x: point.x * scalar, y: point.y * scalar };
+};
