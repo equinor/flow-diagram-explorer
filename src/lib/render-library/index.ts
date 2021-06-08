@@ -21,20 +21,20 @@ import { turbineGeneratorSetRenderer } from "./TurbineGeneratorSet";
 import { windTurbineRenderer } from "./WindTurbine";
 import { windTurbineSystemRenderer } from "./WindTurbineSystem";
 
-export { 
-    cableRenderer, 
-    compressorRenderer, 
-    compressorSystemRenderer, 
-    directRenderer, 
-    engineRenderer, 
-    engineGeneratorSetRenderer, 
-    generatorRenderer, 
-    installationRenderer, 
-    pumpRenderer, 
-    pumpSystemRenderer, 
-    tabulatedRenderer, 
-    turbineRenderer, 
-    turbineGeneratorSetRenderer, 
-    windTurbineRenderer, 
-    windTurbineSystemRenderer
+export {
+    cableRenderer,
+    compressorRenderer,
+    compressorSystemRenderer,
+    directRenderer,
+    engineRenderer,
+    engineGeneratorSetRenderer,
+    generatorRenderer,
+    installationRenderer,
+    pumpRenderer,
+    pumpSystemRenderer,
+    tabulatedRenderer,
+    turbineRenderer,
+    turbineGeneratorSetRenderer,
+    windTurbineRenderer,
+    windTurbineSystemRenderer,
 };

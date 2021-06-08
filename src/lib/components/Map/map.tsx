@@ -101,9 +101,18 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
                     y: (boundaryBox.height / 2) * newMapScale,
                 });
             } else if (action === MapActionType.CenterView) {
-                const newMapScale = Math.max(
-                    Math.floor(Math.min(size.height / boundaryBox.height, size.width / boundaryBox.width) / 0.1) * 0.1,
-                    0.5
+                const newMapScale = Math.min(
+                    Math.min(
+                        Math.max(
+                            Math.floor(
+                                Math.min(size.height / boundaryBox.height, size.width / boundaryBox.width) / 0.1
+                            ) *
+                                0.1 -
+                                0.1,
+                            0.5
+                        ),
+                        mapScale
+                    )
                 );
                 setMapScale(newMapScale);
                 setViewCenterPoint({
