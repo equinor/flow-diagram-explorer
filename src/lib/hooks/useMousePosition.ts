@@ -8,8 +8,8 @@ export const useMousePosition = (ref: React.RefObject<HTMLElement>): Point => {
 
     React.useEffect(() => {
         const handleMouseMoveEvent = (e: MouseEvent) => {
-            const left = ref.current ? ref.current!.getBoundingClientRect().left : 0;
-            const top = ref.current ? ref.current!.getBoundingClientRect().top : 0;
+            const left = ref.current ? ref.current.getBoundingClientRect().left : 0;
+            const top = ref.current ? ref.current.getBoundingClientRect().top : 0;
             setPosition({
                 x: e.pageX - left,
                 y: e.pageY - top,

@@ -83,13 +83,15 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
                 Math.sqrt(Math.pow(e.clientX - mouseDownPosition.x, 2) + Math.pow(e.clientY - mouseDownPosition.y, 2)) <
                     1
             ) {
-                const newCenterPoint = {
-                    x: ((mouseDownPosition.x - mapRef.current!.getBoundingClientRect().left) / scaling) * scale,
-                    y: ((mouseDownPosition.y - mapRef.current!.getBoundingClientRect().top) / scaling) * scale,
-                };
-                const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, boundaryBox, scale);
-                setCenterPoint(adjustedCenterPoint);
-                onCenterPointChange(adjustedCenterPoint);
+                if (mapRef.current) {
+                    const newCenterPoint = {
+                        x: ((mouseDownPosition.x - mapRef.current.getBoundingClientRect().left) / scaling) * scale,
+                        y: ((mouseDownPosition.y - mapRef.current.getBoundingClientRect().top) / scaling) * scale,
+                    };
+                    const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, boundaryBox, scale);
+                    setCenterPoint(adjustedCenterPoint);
+                    onCenterPointChange(adjustedCenterPoint);
+                }
             }
         };
 

@@ -5,4 +5,4 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export { windTurbineSystemRenderer} from "./wind-turbine-system";
+export { windTurbineSystemRenderer } from "./wind-turbine-system";

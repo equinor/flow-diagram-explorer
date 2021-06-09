@@ -15,6 +15,10 @@ const defaultDiagramConfig: DiagramConfig = {
     verticalSpacing: 50,
     highlightColor: "#DF323D",
     backgroundColor: "#F7F7F7",
+    defaultEdgeStrokeWidth: 2,
+    defaultEdgeArrowSize: 16,
+    defaultEdgeStrokeColor: "#000",
+    defaultEdgeStrokeStyle: "0",
 };
 
 type FlowDiagramExplorerPropsType = {
@@ -36,22 +40,19 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
     const mapRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        const result = DiagramDrawer({
-            flowDiagram: props.flowDiagram,
-            config: diagramConfig,
-        });
-        setSceneProperties(result);
+        const drawer = new DiagramDrawer(props.flowDiagram, diagramConfig);
+        setSceneProperties(drawer.diagram());
         const index = levels.findIndex((el) => el.title === props.flowDiagram.title);
         if (index === -1) {
-            setLevels([...levels, { title: props.flowDiagram.title, diagram: result }]);
+            setLevels([...levels, { title: props.flowDiagram.title, diagram: drawer.diagram() }]);
         } else {
-            setLevels([{ title: props.flowDiagram.title, diagram: result }]);
+            setLevels([{ title: props.flowDiagram.title, diagram: drawer.diagram() }]);
         }
     }, [props.flowDiagram, diagramConfig]);
 
     const handleMouseEnter = React.useCallback(
         (id: string) => {
-            if (mapRef.current && sceneProperties != null) {
+            if (mapRef.current && sceneProperties !== null) {
                 const highlighted: { svg: SVGElement; originalColor: string; originalZIndex: string }[] = [];
                 const sceneItems: HTMLElement[] = [].filter.call(
                     mapRef.current.getElementsByClassName("SceneItem"),
@@ -61,35 +62,37 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                             return nodeEdges.edgeIndices.some(
                                 (el) =>
                                     htmlElement.getAttribute("data-id") &&
-                                    htmlElement.getAttribute("data-id")! === `edge-${el}`
+                                    htmlElement.getAttribute("data-id") === `edge-${el}`
                             );
                         }
                         return false;
                     }
                 );
                 sceneItems.forEach((item) => {
-                    const child = item.children![0];
-                    if (child.tagName.toLowerCase() === "svg") {
-                        const polyline =
-                            child.children.length > 0 &&
-                            child.children[child.children.length - 1].tagName.toLowerCase() === "polyline"
-                                ? child.children[child.children.length - 1]
-                                : undefined;
-                        if (polyline) {
-                            highlighted.push({
-                                svg: child as SVGElement,
-                                originalColor: (polyline as SVGPolylineElement).getAttribute("stroke")!,
-                                originalZIndex: (child as SVGElement).style.zIndex,
-                            });
-                            polyline.setAttribute("stroke", diagramConfig.highlightColor);
-                            if (polyline.getAttribute("marker-end")) {
-                                polyline.setAttribute(
-                                    "marker-end",
-                                    polyline.getAttribute("marker-end")!.replace(")", "-hover)")
-                                );
-                            }
-                            if (child.parentElement) {
-                                child.parentElement.style.zIndex = "5";
+                    if (item.children) {
+                        const child = item.children[0];
+                        if (child.tagName.toLowerCase() === "svg") {
+                            const polyline =
+                                child.children.length > 0 &&
+                                child.children[child.children.length - 1].tagName.toLowerCase() === "polyline"
+                                    ? child.children[child.children.length - 1]
+                                    : undefined;
+                            if (polyline) {
+                                highlighted.push({
+                                    svg: child as SVGElement,
+                                    originalColor: (polyline as SVGPolylineElement).getAttribute("stroke") || "black",
+                                    originalZIndex: (child as SVGElement).style.zIndex,
+                                });
+                                polyline.setAttribute("stroke", diagramConfig.highlightColor);
+                                if (polyline.getAttribute("marker-end")) {
+                                    polyline.setAttribute(
+                                        "marker-end",
+                                        (polyline.getAttribute("marker-end") as string).replace(")", "-hover)")
+                                    );
+                                }
+                                if (child.parentElement) {
+                                    child.parentElement.style.zIndex = "5";
+                                }
                             }
                         }
                     }
@@ -107,7 +110,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
             if ((line as SVGPolylineElement).getAttribute("marker-end")) {
                 (line as SVGPolylineElement).setAttribute(
                     "marker-end",
-                    (line as SVGPolylineElement).getAttribute("marker-end")!.replace("-hover", "")
+                    ((line as SVGPolylineElement).getAttribute("marker-end") as string).replace("-hover", "")
                 );
             }
             if (svg.parentElement) {

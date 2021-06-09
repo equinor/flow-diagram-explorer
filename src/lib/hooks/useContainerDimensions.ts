@@ -2,7 +2,7 @@ import React from "react";
 
 import { Size } from "../types/size";
 
-export const useContainerDimensions = (ref: React.RefObject<HTMLElement>) => {
+export const useContainerDimensions = (ref: React.RefObject<HTMLElement>): Size => {
     const [dimensions, setDimensions] = React.useState<Size>({ width: 0, height: 0 });
 
     React.useEffect(() => {

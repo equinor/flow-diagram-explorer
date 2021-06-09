@@ -34,6 +34,10 @@ export type DiagramConfig = {
     verticalSpacing: number;
     highlightColor: string;
     backgroundColor: string;
+    defaultEdgeStrokeWidth: number;
+    defaultEdgeArrowSize: number;
+    defaultEdgeStrokeColor: string;
+    defaultEdgeStrokeStyle: string;
 };
 
 export type NodeElement = {
