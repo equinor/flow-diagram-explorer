@@ -7,7 +7,6 @@ import { Size } from "../../types/size";
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 import { useZoom } from "../../hooks/useZoom";
 import { usePrevious } from "../../hooks/usePrevious";
-import { pointScale } from "../../utils/geometry";
 import { DiagramConfig } from "lib/types/diagram";
 
 import "./map.css";
