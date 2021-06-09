@@ -381,9 +381,6 @@ export class DiagramDrawer {
                             y: graph.edge(edge).points[graph.edge(edge).points.length - 1].y,
                         },
                     });
-                    if (!this.flowNodeEdgeIndicesMap.find((el) => el.id === edge.v)) {
-                        console.log("bla");
-                    }
                     (
                         this.flowNodeEdgeIndicesMap.find((el) => el.id === edge.v) as FlowNodeEdgeIndicesMapItem
                     ).edgeIndices.push(edgeIndex);
