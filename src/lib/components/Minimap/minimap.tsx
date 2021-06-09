@@ -20,11 +20,11 @@ type MinimapPropsType = {
     scale: number;
 };
 
-export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, boundaryBox: Size, scale: number): Point => {
+export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, boundaryBox: Size): Point => {
     const minX = 0;
-    const maxX = boundaryBox.width * scale;
+    const maxX = boundaryBox.width;
     const minY = 0;
-    const maxY = boundaryBox.height * scale;
+    const maxY = boundaryBox.height;
     const x = Math.max(minX, Math.min(maxX, centerPoint.x));
     const y = Math.max(minY, Math.min(maxY, centerPoint.y));
     return { x: x, y: y };
@@ -36,10 +36,10 @@ export const calcViewFrameWithinBoundaries = (
     boundaryBox: Size,
     scale: number
 ): Rectangle => {
-    const unboundLeft = (centerPoint.x - viewSize.width / 2) / scale;
-    const unboundTop = (centerPoint.y - viewSize.height / 2) / scale;
-    const unboundRight = (centerPoint.x + viewSize.width / 2) / scale;
-    const unboundBottom = (centerPoint.y + viewSize.height / 2) / scale;
+    const unboundLeft = centerPoint.x - viewSize.width / 2 / scale;
+    const unboundTop = centerPoint.y - viewSize.height / 2 / scale;
+    const unboundRight = centerPoint.x + viewSize.width / 2 / scale;
+    const unboundBottom = centerPoint.y + viewSize.height / 2 / scale;
 
     const left = Math.min(Math.max(unboundLeft, 0), boundaryBox.width);
     const top = Math.min(Math.max(unboundTop, 0), boundaryBox.height);
@@ -85,10 +85,18 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
             ) {
                 if (mapRef.current) {
                     const newCenterPoint = {
-                        x: ((mouseDownPosition.x - mapRef.current.getBoundingClientRect().left) / scaling) * scale,
-                        y: ((mouseDownPosition.y - mapRef.current.getBoundingClientRect().top) / scaling) * scale,
+                        x:
+                            (mouseDownPosition.x -
+                                mapRef.current.getBoundingClientRect().left -
+                                parseInt(window.getComputedStyle(mapRef.current).getPropertyValue("padding-left"))) /
+                            scaling,
+                        y:
+                            (mouseDownPosition.y -
+                                mapRef.current.getBoundingClientRect().top -
+                                parseInt(window.getComputedStyle(mapRef.current).getPropertyValue("padding-top"))) /
+                            scaling,
                     };
-                    const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, boundaryBox, scale);
+                    const adjustedCenterPoint = calcCenterPointWithinBoundaryBox(newCenterPoint, boundaryBox);
                     setCenterPoint(adjustedCenterPoint);
                     onCenterPointChange(adjustedCenterPoint);
                 }
@@ -111,8 +119,8 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
         const delta = pointDifference(offset, previousOffset);
 
         const adjustedCenterPoint = {
-            x: centerPoint.x - (delta.x / scaling) * scale,
-            y: centerPoint.y - (delta.y / scaling) * scale,
+            x: centerPoint.x - delta.x / scaling,
+            y: centerPoint.y - delta.y / scaling,
         };
         setCenterPoint(adjustedCenterPoint);
         if (onCenterPointChange) {
@@ -124,7 +132,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
 
     return (
         <div
-            className={clsx("Minimap", "effects__unselectable")}
+            className={clsx("Minimap", "FlowDiagramExplorer__effects__unselectable")}
             style={{ width: boundaryBox.width * scaling, height: boundaryBox.height * scaling }}
             ref={mapRef}
         >

@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Point } from "../types/point";
-import "./../effects/effects.css";
 
 export const useMousePosition = (ref: React.RefObject<HTMLElement>): Point => {
     const [position, setPosition] = React.useState<Point>({ x: 0, y: 0 });

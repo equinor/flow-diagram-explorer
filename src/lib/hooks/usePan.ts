@@ -31,7 +31,7 @@ export const usePan = (ref: React.RefObject<HTMLElement>): Point => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
         panningStarted.current = false;
-        document.body.classList.remove("effects__unselectable");
+        document.body.classList.remove("FlowDiagramExplorer__effects__unselectable");
     }, [handleMouseMove, panningStarted]);
 
     const handleMouseDown = React.useCallback(
@@ -39,7 +39,7 @@ export const usePan = (ref: React.RefObject<HTMLElement>): Point => {
             document.addEventListener("mousemove", handleMouseMove);
             document.addEventListener("mouseup", handleMouseUp);
             referencePositionRef.current = { x: e.pageX, y: e.pageY };
-            document.body.classList.add("effects__unselectable");
+            document.body.classList.add("FlowDiagramExplorer__effects__unselectable");
         },
         [handleMouseMove, handleMouseUp]
     );

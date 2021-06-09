@@ -65,15 +65,15 @@ export const View: React.FC<ViewPropsType> = ({
 
     React.useEffect(() => {
         setAdjustedOffset({
-            x: viewSize.width / 2 - initialCenterPoint.x,
-            y: viewSize.height / 2 - initialCenterPoint.y,
+            x: viewSize.width / 2 - initialCenterPoint.x * scale,
+            y: viewSize.height / 2 - initialCenterPoint.y * scale,
         });
     }, [initialCenterPoint, viewSize, setAdjustedOffset]);
 
     React.useEffect(() => {
         const centerPoint = {
-            x: viewSize.width / 2 - adjustedOffset.x,
-            y: viewSize.height / 2 - adjustedOffset.y,
+            x: (viewSize.width / 2 - adjustedOffset.x) / scale,
+            y: (viewSize.height / 2 - adjustedOffset.y) / scale,
         };
         if (onCenterPointChange) {
             onCenterPointChange(centerPoint);

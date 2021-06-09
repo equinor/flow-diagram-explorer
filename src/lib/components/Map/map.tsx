@@ -90,12 +90,12 @@ export const Map: React.FC<MapPropsType> = (props: MapPropsType): JSX.Element =>
             if (action === MapActionType.ZoomIn) {
                 const newMapScale = Math.min(3, mapScale + 0.1);
                 setMapScale(newMapScale);
-                setViewCenterPoint(pointScale(pointScale(centerPoint, mapScale), 1 / newMapScale));
+                setViewCenterPoint(centerPoint);
                 setMinimapCenterPoint(centerPoint);
             } else if (action === MapActionType.ZoomOut) {
                 const newMapScale = Math.max(0.5, mapScale - 0.1);
                 setMapScale(newMapScale);
-                setViewCenterPoint(pointScale(pointScale(centerPoint, mapScale), 1 / newMapScale));
+                setViewCenterPoint(centerPoint);
                 setMinimapCenterPoint({
                     x: (boundaryBox.width / 2) * newMapScale,
                     y: (boundaryBox.height / 2) * newMapScale,
