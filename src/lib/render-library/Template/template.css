@@ -1,4 +1,4 @@
-.DiagramNode {
+.RenderLibrary__DiagramNode {
     padding: 24px;
     width: 202px;
     height: 52px;
@@ -11,29 +11,29 @@
     align-items: center;
     color: #233746;
     border-radius: 4px;
-    font-size: 1.0em;
+    font-size: 1em;
 }
 
-.DiagramNode:hover {
-    border-color: #E51139;
+.RenderLibrary__DiagramNode:hover {
+    border-color: #e51139;
     transform: scale(1.01, 1.01);
     transform-origin: center;
 }
 
-.DiagramNode:hover .DiagramSymbol * {
-    stroke: #E51139;
+.RenderLibrary__DiagramNode:hover .RenderLibrary__DiagramSymbol * {
+    stroke: #e51139;
 }
 
-.DiagramSymbol {
+.RenderLibrary__DiagramSymbol {
     max-width: 50px;
     max-height: 50x;
     margin-right: 24px;
 }
 
-.DiagramSymbol * {
+.RenderLibrary__DiagramSymbol * {
     stroke-width: 8px;
-    stroke: #3E9299;
+    stroke: #3e9299;
 }
-.DiagramSymbol *:not([fill="none"]) *:not([fill="none"]) *:not([fill="none"]) {
-    fill: #3E9299;
+.RenderLibrary__DiagramSymbol *:not([fill="none"]) *:not([fill="none"]) *:not([fill="none"]) {
+    fill: #3e9299;
 }

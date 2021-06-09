@@ -8,8 +8,8 @@ const createRenderFunction = (
 ): ((node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number }) => {
     return (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => ({
         html: (
-            <div className="DiagramNode">
-                <NodeSymbol className="DiagramSymbol" />
+            <div className="RenderLibrary__DiagramNode">
+                <NodeSymbol className="RenderLibrary__DiagramSymbol" />
                 {node.title}
             </div>
         ),

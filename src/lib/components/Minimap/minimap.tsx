@@ -128,7 +128,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JS
             style={{ width: boundaryBox.width * scaling, height: boundaryBox.height * scaling }}
             ref={mapRef}
         >
-            <div style={{ transform: `scale(${scaling})`, transformOrigin: "0 0" }}>
+            <div style={{ transform: `scale(${scaling})` }}>
                 {React.cloneElement(Scene, {
                     centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
                     viewSize: { width: boundaryBox.width, height: boundaryBox.height },

@@ -84,7 +84,6 @@ export const View: React.FC<ViewPropsType> = ({
         <div className="View" ref={viewRef} style={{ width: width, height: height, backgroundColor: backgroundColor }}>
             <div
                 style={{
-                    position: "absolute",
                     left: Math.floor(adjustedOffset.x),
                     top: Math.floor(adjustedOffset.y),
                 }}
@@ -93,12 +92,8 @@ export const View: React.FC<ViewPropsType> = ({
                     ref={paneRef}
                     style={{
                         transform: `scale(${scale})`,
-                        transformOrigin: "0 0",
-                        position: "absolute",
                         width: boundaryBox.width,
                         height: boundaryBox.height,
-                        left: 0,
-                        top: 0,
                     }}
                 >
                     {React.cloneElement(Scene, {
