@@ -17,8 +17,8 @@ const renderInputOutputNode = (): { html: JSX.Element; width: number; height: nu
     };
 };
 
-export const norneComplex: FlowDiagram = {
-    id: "complex",
+export const installation: FlowDiagram = {
+    id: "installation",
     title: "World",
     nodes: [
         {
@@ -47,8 +47,8 @@ export const norneComplex: FlowDiagram = {
             render: cableRenderer,
         },
         {
-            id: "norne",
-            title: "NORNE",
+            id: "installation",
+            title: "Installation",
             render: installationRenderer,
         },
         {
@@ -83,13 +83,13 @@ export const norneComplex: FlowDiagram = {
         { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
     ],
     edges: [
-        { flow: "electricity-import", from: "windfarm1", to: "norne" },
-        { flow: "electricity-import", from: "windfarm2", to: "norne" },
-        { flow: "electricity-import", from: "windfarm3", to: "norne" },
-        { flow: "electricity-import", from: "power-from-shore", to: "norne" },
-        { flow: "fuel", from: "input", to: "norne" },
-        { flow: "emissions", from: "norne", to: "emissions-output" },
-        { flow: "oil", from: "norne", to: "oil-output" },
-        { flow: "electricity-export", from: "norne", to: "electricity-output" },
+        { flow: "electricity-import", from: "windfarm1", to: "installation" },
+        { flow: "electricity-import", from: "windfarm2", to: "installation" },
+        { flow: "electricity-import", from: "windfarm3", to: "installation" },
+        { flow: "electricity-import", from: "power-from-shore", to: "installation" },
+        { flow: "fuel", from: "input", to: "installation" },
+        { flow: "emissions", from: "installation", to: "emissions-output" },
+        { flow: "oil", from: "installation", to: "oil-output" },
+        { flow: "electricity-export", from: "installation", to: "electricity-output" },
     ],
 };

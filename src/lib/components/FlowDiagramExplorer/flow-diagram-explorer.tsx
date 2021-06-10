@@ -32,7 +32,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
     props: FlowDiagramExplorerPropsType
 ): JSX.Element => {
     const diagramConfig = props.diagramConfig || defaultDiagramConfig;
-    const [levels, setLevels] = React.useState<{ title: string; diagram: Diagram }[]>([]);
+    const [levels, setLevels] = React.useState<{ id: string; title: string; diagram: Diagram }[]>([]);
     const [sceneProperties, setSceneProperties] = React.useState<Diagram | null>(null);
     const [highlightedSceneItems, setHighlightedSceneItems] = React.useState<
         { svg: SVGElement; originalColor: string; originalZIndex: string }[]
@@ -44,9 +44,12 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
         setSceneProperties(drawer.diagram());
         const index = levels.findIndex((el) => el.title === props.flowDiagram.title);
         if (index === -1) {
-            setLevels([...levels, { title: props.flowDiagram.title, diagram: drawer.diagram() }]);
+            setLevels([
+                ...levels,
+                { id: props.flowDiagram.id, title: props.flowDiagram.title, diagram: drawer.diagram() },
+            ]);
         } else {
-            setLevels([{ title: props.flowDiagram.title, diagram: drawer.diagram() }]);
+            setLevels([{ id: props.flowDiagram.id, title: props.flowDiagram.title, diagram: drawer.diagram() }]);
         }
     }, [props.flowDiagram, diagramConfig]);
 
@@ -119,11 +122,14 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
         });
     }, [highlightedSceneItems, setHighlightedSceneItems]);
 
-    const handleLevelClicked = (e: React.MouseEvent<HTMLAnchorElement>, level: { title: string; diagram: Diagram }) => {
+    const handleLevelClicked = (
+        e: React.MouseEvent<HTMLAnchorElement>,
+        level: { id: string; title: string; diagram: Diagram }
+    ) => {
         const index = levels.findIndex((el) => el.title === level.title);
         setLevels(levels.filter((_, idx) => idx <= index));
         if (props.onDiagramChange) {
-            props.onDiagramChange(level.title);
+            props.onDiagramChange(level.id);
         }
         e.preventDefault();
     };
@@ -138,7 +144,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
                                 if (index === array.length - 1) {
                                     return (
                                         <Breadcrumbs.Breadcrumb
-                                            key={level.title}
+                                            key={level.id}
                                             href="#"
                                             onClick={(e: React.MouseEvent<HTMLAnchorElement>) => e.preventDefault()}
                                         >

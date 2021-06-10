@@ -6,25 +6,24 @@
  */
 
 import React from "react";
-import { norne } from "./examples/norne";
-import { waterinj } from "./examples/waterinj";
-import { norneComplex } from "./examples/complex";
+import { installation } from "./examples/installation";
+import { installationDetails } from "./examples/waterinj";
 import { FlowDiagramExplorer } from "../lib";
 
 function App(): JSX.Element {
-    const [diagram, setDiagram] = React.useState(norneComplex);
+    const [diagram, setDiagram] = React.useState(installation);
 
     const handleNodeClick = (nodeId: string) => {
-        if (nodeId === "norne") {
-            setDiagram(waterinj);
+        if (nodeId === "installation") {
+            setDiagram(installationDetails);
         }
     };
 
     const handleDiagramChange = (title: string) => {
-        if (title === "norne") {
-            setDiagram(waterinj);
+        if (title === "Installation") {
+            setDiagram(installationDetails);
         } else {
-            setDiagram(norne);
+            setDiagram(installation);
         }
     };
 

@@ -17,9 +17,9 @@ const renderInputOutputNode = (): { html: JSX.Element; width: number; height: nu
     };
 };
 
-export const waterinj: FlowDiagram = {
-    id: "waterinj",
-    title: "NORNE",
+export const installationDetails: FlowDiagram = {
+    id: "installation",
+    title: "Installation",
     nodes: [
         {
             id: "input",
