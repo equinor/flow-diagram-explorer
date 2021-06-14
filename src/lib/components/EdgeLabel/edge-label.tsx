@@ -9,7 +9,7 @@ type EdgeLabelPropsType = {
     size: Size;
 };
 
-export const EdgeLabel: React.FC<EdgeLabelPropsType> = (props: EdgeLabelPropsType): JSX.Element => {
+export const EdgeLabel: React.FC<EdgeLabelPropsType> = (props) => {
     const { label } = props;
     return <div className="EdgeLabel">{label}</div>;
 };

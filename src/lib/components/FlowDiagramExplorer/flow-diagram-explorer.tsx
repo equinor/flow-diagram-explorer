@@ -28,9 +28,7 @@ type FlowDiagramExplorerPropsType = {
     onDiagramChange?: (title: string) => void;
 };
 
-const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
-    props: FlowDiagramExplorerPropsType
-): JSX.Element => {
+const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
     const diagramConfig = props.diagramConfig || defaultDiagramConfig;
     const [levels, setLevels] = React.useState<{ id: string; title: string; diagram: Diagram }[]>([]);
     const [sceneProperties, setSceneProperties] = React.useState<Diagram | null>(null);
@@ -57,9 +55,8 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (
         (id: string) => {
             if (mapRef.current && sceneProperties !== null) {
                 const highlighted: { svg: SVGElement; originalColor: string; originalZIndex: string }[] = [];
-                const sceneItems: HTMLElement[] = [].filter.call(
-                    mapRef.current.getElementsByClassName("SceneItem"),
-                    (htmlElement: HTMLElement) => {
+                const sceneItems: Element[] = [...mapRef.current.getElementsByClassName("SceneItem")].filter(
+                    (htmlElement: Element) => {
                         const nodeEdges = sceneProperties.flowNodeEdgeMap.find((el) => el.id === id);
                         if (nodeEdges) {
                             return nodeEdges.edgeIndices.some(

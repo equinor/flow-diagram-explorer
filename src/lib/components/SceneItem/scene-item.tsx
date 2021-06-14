@@ -1,5 +1,6 @@
 import React from "react";
 
+import { isPartlyContained } from "../../utils/geometry";
 import { Point } from "../../types/point";
 import { Size } from "../../types/size";
 
@@ -20,19 +21,7 @@ export type SceneItemPropsType = {
     hoverable?: boolean;
 };
 
-const isPartlyContained = (centerPoint1: Point, dimensions1: Size, centerPoint2: Point, dimensions2: Size): boolean => {
-    if (
-        centerPoint1.x + dimensions1.width / 2 < centerPoint2.x - dimensions2.width / 2 ||
-        centerPoint1.x - dimensions1.width / 2 > centerPoint2.x + dimensions2.width / 2 ||
-        centerPoint1.y + dimensions1.height / 2 < centerPoint2.y - dimensions2.height / 2 ||
-        centerPoint1.y - dimensions1.height / 2 > centerPoint2.y + dimensions2.height / 2
-    ) {
-        return false;
-    }
-    return true;
-};
-
-export const SceneItem: React.FC<SceneItemPropsType> = (props: SceneItemPropsType): JSX.Element => {
+export const SceneItem: React.FC<SceneItemPropsType> = (props) => {
     const { id, position, size, zIndex, onClick, viewCenterPoint, viewSize, clickable, onMouseEnter, onMouseLeave } =
         props;
     const hoverable = props.hoverable || false;

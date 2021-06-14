@@ -10,7 +10,7 @@ export const useZoom = ({
     minScale?: number;
     maxScale?: number;
     delta?: number;
-}): { scale: number; resetScale: () => void } => {
+}): { scale: number; resetScale: () => void; setNewScale: (newScale: number) => void } => {
     const [scale, setScale] = React.useState(1);
 
     React.useEffect(() => {
@@ -34,5 +34,12 @@ export const useZoom = ({
         setScale(1);
     }, []);
 
-    return { scale: scale, resetScale: resetScale };
+    const setNewScale = React.useCallback(
+        (newScale: number) => {
+            setScale(newScale);
+        },
+        [setScale]
+    );
+
+    return { scale: scale, resetScale: resetScale, setNewScale: setNewScale };
 };

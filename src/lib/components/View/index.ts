@@ -1,1 +1,1 @@
-export { View, calcCenterPointWithinBoundaryBox } from "./view";
+export { View } from "./view";

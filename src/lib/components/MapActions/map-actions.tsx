@@ -13,9 +13,11 @@ export enum MapActionType {
     CenterView,
 }
 
-export const MapActions = (props: {
+type MapActionsProps = {
     onActionTriggered: (action: MapActionType, data?: { [key: string]: string | boolean | number }) => void;
-}): JSX.Element => {
+};
+
+export const MapActions: React.FC<MapActionsProps> = (props) => {
     const handleActionTriggered = React.useCallback(
         (action: MapActionType) => {
             props.onActionTriggered(action);

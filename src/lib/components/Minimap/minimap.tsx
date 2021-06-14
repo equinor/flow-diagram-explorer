@@ -54,7 +54,7 @@ export const calcViewFrameWithinBoundaries = (
     return { left: left, top: top, width: width, height: height };
 };
 
-export const Minimap: React.FC<MinimapPropsType> = (props: MinimapPropsType): JSX.Element => {
+export const Minimap: React.FC<MinimapPropsType> = (props) => {
     const { initialCenterPoint, Scene, viewSize, boundaryBox, onCenterPointChange, scale } = props;
 
     const scaling = Math.min(0.1, 150 / Math.max(boundaryBox.width, boundaryBox.height));

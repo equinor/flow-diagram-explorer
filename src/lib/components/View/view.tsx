@@ -22,16 +22,6 @@ type ViewPropsType = {
     backgroundColor: string;
 };
 
-export const calcCenterPointWithinBoundaryBox = (centerPoint: Point, viewSize: Size, boundaryBox: Size): Point => {
-    const minX = viewSize.width / 2;
-    const maxX = boundaryBox.width - viewSize.width / 2;
-    const minY = viewSize.height / 2;
-    const maxY = boundaryBox.height - viewSize.height / 2;
-    const x = Math.max(minX, Math.min(maxX, centerPoint.x));
-    const y = Math.max(minY, Math.min(maxY, centerPoint.y));
-    return { x: x, y: y };
-};
-
 export const View: React.FC<ViewPropsType> = ({
     initialCenterPoint,
     onCenterPointChange,
