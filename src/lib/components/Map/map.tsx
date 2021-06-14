@@ -24,10 +24,6 @@ export const Map: React.FC<MapPropsType> = (props) => {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const size = useContainerDimensions(mapRef);
     const [viewCenterPoint, setViewCenterPoint] = React.useState({ x: sceneSize.width / 2, y: sceneSize.height / 2 });
-    const [minimapCenterPoint, setMinimapCenterPoint] = React.useState({
-        x: sceneSize.width / 2,
-        y: sceneSize.height / 2,
-    });
     const [centerPoint, setCenterPoint] = React.useState({
         x: sceneSize.width / 2,
         y: sceneSize.height / 2,
@@ -51,7 +47,7 @@ export const Map: React.FC<MapPropsType> = (props) => {
             x: (boundaryBox.width / 2) * scale,
             y: (boundaryBox.height / 2) * scale,
         });
-        setMinimapCenterPoint({
+        setCenterPoint({
             x: (boundaryBox.width / 2) * scale,
             y: (boundaryBox.height / 2) * scale,
         });
@@ -59,10 +55,9 @@ export const Map: React.FC<MapPropsType> = (props) => {
 
     const handleViewCenterPointChange = React.useCallback(
         (newCenterPoint: Point) => {
-            setMinimapCenterPoint(newCenterPoint);
             setCenterPoint(newCenterPoint);
         },
-        [setMinimapCenterPoint, setCenterPoint]
+        [setCenterPoint]
     );
 
     const handleMinimapCenterPointChange = React.useCallback(
@@ -80,13 +75,13 @@ export const Map: React.FC<MapPropsType> = (props) => {
                     const newScale = Math.min(3, scale + 0.1);
                     setNewScale(newScale);
                     setViewCenterPoint(centerPoint);
-                    setMinimapCenterPoint(centerPoint);
+                    setCenterPoint(centerPoint);
                 },
                 [MapActionType.ZoomOut]: () => {
                     const newScale = Math.max(0.5, scale - 0.1);
                     setNewScale(newScale);
                     setViewCenterPoint(centerPoint);
-                    setMinimapCenterPoint({
+                    setCenterPoint({
                         x: (boundaryBox.width / 2) * newScale,
                         y: (boundaryBox.height / 2) * newScale,
                     });
@@ -101,7 +96,7 @@ export const Map: React.FC<MapPropsType> = (props) => {
                         x: boundaryBox.width / 2,
                         y: boundaryBox.height / 2,
                     });
-                    setMinimapCenterPoint({
+                    setCenterPoint({
                         x: boundaryBox.width / 2,
                         y: boundaryBox.height / 2,
                     });
@@ -109,7 +104,7 @@ export const Map: React.FC<MapPropsType> = (props) => {
             };
             actions[action]();
         },
-        [setViewCenterPoint, setMinimapCenterPoint, scale, centerPoint, setNewScale, size, boundaryBox]
+        [setViewCenterPoint, setCenterPoint, scale, centerPoint, setNewScale, size, boundaryBox]
     );
 
     return (
@@ -126,7 +121,7 @@ export const Map: React.FC<MapPropsType> = (props) => {
                 backgroundColor={config.backgroundColor}
             />
             <Minimap
-                initialCenterPoint={minimapCenterPoint}
+                initialCenterPoint={centerPoint}
                 viewSize={size}
                 boundaryBox={boundaryBox}
                 Scene={Scene}
