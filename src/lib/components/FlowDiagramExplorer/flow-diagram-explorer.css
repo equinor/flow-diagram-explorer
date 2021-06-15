@@ -19,7 +19,7 @@
 .FlowDiagramExplorer .TimelineContainer {
     position: absolute;
     bottom: 16px;
-    right: 160px;
+    right: 150px;
+    left: 250px;
     z-index: 10;
-    width: 50%;
 }

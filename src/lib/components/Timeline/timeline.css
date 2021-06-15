@@ -10,30 +10,39 @@
     border-radius: 8px;
 }
 
-.FlowDiagramExplorer .Timeline .LabelContainer {
+.FlowDiagramExplorer .Timeline .CurrentSelectionLabel {
     position: absolute;
+    left: 50%;
+    margin-left: -120px;
+    width: 204px;
     top: -75px;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.FlowDiagramExplorer .Timeline .LabelContainer div {
-    padding: 4px;
-    padding-left: 16px;
+    padding-top: 12px;
+    padding-bottom: 4px;
+    padding-left: 24px;
+    padding-right: 48px;
     background-color: white;
     box-shadow: 0px 3px 5px #888888;
     display: block;
     border-radius: 8px;
     white-space: nowrap;
+    text-align: center;
 }
 
-.FlowDiagramExplorer .Timeline .LabelContainer .LabelText {
-    margin-right: 8px;
+.FlowDiagramExplorer .Timeline .CurrentSelectionLabel > svg {
+    margin-right: 16px;
 }
+
+.FlowDiagramExplorer .Timeline .CurrentSelectionLabel .Toggle {
+    margin-top: -7px;
+}
+
+.FlowDiagramExplorer .Timeline .CurrentSelectionLabel .DatePicker {
+    width: 170px;
+}
+
 .FlowDiagramExplorer .Timeline .Frames {
     display: flex;
+    position: relative;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
@@ -43,25 +52,38 @@
     height: 38px;
 }
 
-.FlowDiagramExplorer .Timeline .Frames div {
+.FlowDiagramExplorer .Timeline .Slider {
+    background-color: black;
+    border: 1px white solid;
+    width: 7px;
+    margin-left: -3px;
+    height: 45px;
+    display: block;
+    position: absolute;
+    cursor: ew-resize;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.FlowDiagramExplorer .Timeline .Frame {
     background-color: #deedee;
     height: 30px;
     border-radius: 4px;
     margin-left: 2px;
     margin-right: 2px;
-    cursor: pointer;
+    cursor: text;
     box-sizing: border-box;
 }
 
-.FlowDiagramExplorer .Timeline .Frames div:first-child {
+.FlowDiagramExplorer .Timeline .Frame:first-child {
     margin-left: 0px;
 }
 
-.FlowDiagramExplorer .Timeline .Frames div:last-child {
+.FlowDiagramExplorer .Timeline .Frame:last-child {
     margin-right: 0px;
 }
 
-.FlowDiagramExplorer .Timeline .Frames div:hover {
+.FlowDiagramExplorer .Timeline .Frame:hover {
     background-color: #73b1b5;
 }
 
@@ -92,6 +114,15 @@
     white-space: nowrap;
     font-size: 12px;
     top: 0;
+}
+
+.FlowDiagramExplorer .Timeline .Axis .Tick {
+    top: 0px;
+    width: 1px;
+    height: 5px;
+    background-color: #e0e0e0;
+    position: absolute;
+    display: block;
 }
 
 .FlowDiagramExplorer .Timeline .Axis .Label::after {
