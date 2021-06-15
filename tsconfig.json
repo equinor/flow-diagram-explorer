@@ -22,5 +22,5 @@
     "sourceMap": true,
     "outDir": "./dist"
   },
-  "include": ["./src/lib"]
+  "include": ["./src/lib", "./src/lib/types/custom.d.ts"]
 }

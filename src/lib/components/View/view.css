@@ -1,0 +1,10 @@
+.FlowDiagramExplorer .View {
+    overflow: hidden;
+    position: relative;
+}
+
+.FlowDiagramExplorer .View > div,
+.FlowDiagramExplorer .View > div > div {
+    position: absolute;
+    transform-origin: 0 0;
+}

@@ -1,0 +1,1 @@
+export { tabulatedRenderer } from "./tabulated";

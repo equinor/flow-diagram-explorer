@@ -1,0 +1,11 @@
+.FlowDiagramExplorer .EdgeLabel {
+    display: inline;
+    color: black;
+    background-color: #f7f7f7;
+    padding: 8px;
+    width: auto;
+    height: 20px;
+    margin-left: -50%;
+    margin-top: -10px;
+    white-space: nowrap;
+}

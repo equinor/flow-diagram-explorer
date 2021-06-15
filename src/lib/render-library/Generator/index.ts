@@ -1,0 +1,1 @@
+export { generatorRenderer } from "./generator";

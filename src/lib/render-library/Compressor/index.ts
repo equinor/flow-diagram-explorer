@@ -1,0 +1,1 @@
+export { compressorRenderer } from "./compressor";

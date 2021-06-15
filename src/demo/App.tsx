@@ -6,13 +6,34 @@
  */
 
 import React from "react";
+import { installation } from "./examples/installation";
+import { installationDetails } from "./examples/waterinj";
+import { FlowDiagramExplorer } from "../lib";
 
 function App(): JSX.Element {
+    const [diagram, setDiagram] = React.useState(installation);
+
+    const handleNodeClick = (nodeId: string) => {
+        if (nodeId === "installation") {
+            setDiagram(installationDetails);
+        }
+    };
+
+    const handleDiagramChange = (title: string) => {
+        if (title === "Installation") {
+            setDiagram(installationDetails);
+        } else {
+            setDiagram(installation);
+        }
+    };
+
     return (
         <React.StrictMode>
-            <div className="App">
-                <header className="App-header">Here we are going to display the flow diagram explorer.</header>
-            </div>
+            <FlowDiagramExplorer
+                flowDiagram={diagram}
+                onNodeClick={handleNodeClick}
+                onDiagramChange={handleDiagramChange}
+            />
         </React.StrictMode>
     );
 }

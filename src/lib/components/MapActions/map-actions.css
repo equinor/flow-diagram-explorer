@@ -1,0 +1,12 @@
+.FlowDiagramExplorer .MapActions {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.FlowDiagramExplorer .MapActions > * {
+    margin: 16px;
+    background-color: white;
+    color: #246e78;
+    display: flex;
+}

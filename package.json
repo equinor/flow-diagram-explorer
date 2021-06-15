@@ -1,102 +1,119 @@
 {
-  "name": "@equinor/flow-diagram-explorer",
-  "description": "Explorer for flow diagrams",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/equinor/flow-diagram-explorer"
-  },
-  "bugs": {
-    "url": "https://github.com/equinor/flow-diagram-explorer/issues"
-  },
-  "homepage": "https://github.com/equinor/flow-diagram-explorer",
-  "license": "MPL-2.0",
-  "author": {
-    "name": "Equinor",
-    "email": "noreply@equinor.com"
-  },
-  "engines": {
-    "node": ">=14.16.1",
-    "npm": ">=7.10.0"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/**/*"
-  ],
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "scripts": {
-    "preinstall": "npx npm-force-resolutions",
-    "start": "webpack serve --mode development --devtool inline-source-map --entry ./src/demo/index.tsx --open",
-    "build": "webpack --mode production --entry ./src/demo/index.tsx",
-    "prepack": "tsc",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "test": "jest",
-    "typecheck": "tsc --noEmit",
-    "format": "eslint --fix 'src/**/*.+(ts|tsx|json|css|js|jsx)'",
-    "lint": "eslint 'src/**/*.+(ts|tsx|json|css|js|jsx)'",
-    "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+    "name": "@equinor/flow-diagram-explorer",
+    "description": "Explorer for flow diagrams",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/equinor/flow-diagram-explorer"
+    },
+    "bugs": {
+        "url": "https://github.com/equinor/flow-diagram-explorer/issues"
+    },
+    "homepage": "https://github.com/equinor/flow-diagram-explorer",
+    "license": "MPL-2.0",
+    "author": {
+        "name": "Equinor",
+        "email": "noreply@equinor.com"
+    },
+    "engines": {
+        "node": ">=14.16.1",
+        "npm": ">=7.10.0"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist/**/*"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.14.1",
-    "@babel/preset-react": "^7.13.13",
-    "@babel/preset-typescript": "^7.13.0",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.8",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^12.20.12",
-    "@types/react": "^17.0.5",
-    "@types/react-dom": "^17.0.4",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.25.0",
-    "babel-jest": "^26.6.3",
-    "babel-loader": "^8.2.2",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "copy-webpack-plugin": "^8.1.1",
-    "css-minimizer-webpack-plugin": "^2.0.0",
-    "eslint": "^7.26.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "html-webpack-plugin": "^5.3.1",
-    "jest": "^26.6.3",
-    "mini-css-extract-plugin": "^1.6.0",
-    "onchange": "^7.1.0",
-    "prettier": "^2.3.0",
-    "react-test-renderer": "^17.0.2",
-    "style-loader": "^2.0.0",
-    "ts-loader": "^8.0.18",
-    "typescript": "^4.2.4",
-    "url-loader": "^4.1.1",
-    "web-vitals": "^1.1.2",
-    "webpack": "^5.27.2",
-    "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2"
-  },
-  "resolutions": {
-    "dns-packet": ">=5.2.2"
-  }
+    "dependencies": {
+        "@equinor/eds-core-react": "^0.12.0",
+        "@material-ui/core": "^4.11.4",
+        "@material-ui/icons": "^4.11.2",
+        "clsx": "^1.1.1",
+        "dagre": "^0.8.5",
+        "javascript-lp-solver": "^0.4.24",
+        "mathjs": "^9.3.2",
+        "process": "^0.11.10",
+        "react": "^17.0.2",
+        "react-content-loader": "^6.0.3",
+        "react-dom": "^17.0.2",
+        "styled-components": "^5.3.0"
+    },
+    "scripts": {
+        "preinstall": "npx npm-force-resolutions",
+        "start": "webpack serve --mode development --devtool inline-source-map --entry ./src/demo/index.tsx --open",
+        "build": "webpack --mode production --entry ./src/demo/index.tsx",
+        "prepack": "tsc",
+        "prepublishOnly": "npm test && npm run lint",
+        "preversion": "npm run lint",
+        "test": "jest",
+        "typecheck": "tsc --noEmit",
+        "format": "eslint --fix 'src/**/*.+(ts|tsx|json|css|js|jsx)'",
+        "lint": "eslint 'src/**/*.+(ts|tsx|json|js|jsx)'",
+        "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+        "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "browser": {
+        "child_process": false,
+        "fs": false
+    },
+    "devDependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/preset-env": "^7.14.1",
+        "@babel/preset-react": "^7.13.13",
+        "@babel/preset-typescript": "^7.13.0",
+        "@svgr/webpack": "^5.5.0",
+        "@testing-library/jest-dom": "^5.12.0",
+        "@testing-library/react": "^11.2.6",
+        "@testing-library/user-event": "^13.1.8",
+        "@types/dagre": "^0.7.44",
+        "@types/jest": "^26.0.23",
+        "@types/node": "^12.20.12",
+        "@types/react": "^17.0.5",
+        "@types/react-dom": "^17.0.4",
+        "@typescript-eslint/eslint-plugin": "^4.23.0",
+        "@typescript-eslint/parser": "^4.25.0",
+        "babel-jest": "^26.6.3",
+        "babel-loader": "^8.2.2",
+        "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+        "copy-webpack-plugin": "^8.1.1",
+        "css-loader": "^5.2.4",
+        "css-minimizer-webpack-plugin": "^2.0.0",
+        "eslint": "^7.26.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "html-webpack-plugin": "^5.3.1",
+        "jest": "^26.6.3",
+        "mini-css-extract-plugin": "^1.6.0",
+        "onchange": "^7.1.0",
+        "prettier": "^2.3.0",
+        "react-test-renderer": "^17.0.2",
+        "style-loader": "^2.0.0",
+        "ts-loader": "^8.0.18",
+        "typescript": "^4.2.4",
+        "url-loader": "^4.1.1",
+        "web-vitals": "^1.1.2",
+        "webpack": "^5.27.2",
+        "webpack-cli": "^4.7.0",
+        "webpack-dev-server": "^3.11.2"
+    },
+    "resolutions": {
+        "dns-packet": ">=5.2.2"
+    }
 }
