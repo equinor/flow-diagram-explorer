@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs from "dayjs";
 
 import { DiagramDrawer, Diagram } from "../../utils/diagram-drawer";
 import { Scene } from "../Scene";
@@ -7,6 +8,7 @@ import { FlowDiagram } from "../../types/diagram";
 import { DiagramSkeleton } from "../DiagramSkeleton/diagram-skeleton";
 import { Breadcrumbs } from "@equinor/eds-core-react";
 import { DiagramConfig } from "../../types/diagram";
+import { Timeline } from "../Timeline";
 
 import "./flow-diagram-explorer.css";
 
@@ -162,6 +164,62 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
                                 }
                             })}
                         </Breadcrumbs>
+                    </div>
+                    <div className="TimelineContainer">
+                        <Timeline
+                            timeFrames={[
+                                {
+                                    id: "0",
+                                    fromDate: dayjs("12-18-2018"),
+                                    toDate: dayjs("05-01-2019"),
+                                },
+                                {
+                                    id: "1",
+                                    fromDate: dayjs("05-02-2019"),
+                                    toDate: dayjs("06-20-2019"),
+                                },
+                                {
+                                    id: "2",
+                                    fromDate: dayjs("06-21-2019"),
+                                    toDate: dayjs("09-01-2019"),
+                                },
+                                {
+                                    id: "3",
+                                    fromDate: dayjs("09-02-2019"),
+                                    toDate: dayjs("02-21-2020"),
+                                },
+                                {
+                                    id: "4",
+                                    fromDate: dayjs("02-22-2020"),
+                                    toDate: dayjs("04-01-2020"),
+                                },
+                                {
+                                    id: "5",
+                                    fromDate: dayjs("04-02-2020"),
+                                    toDate: dayjs("04-25-2020"),
+                                },
+                                {
+                                    id: "6",
+                                    fromDate: dayjs("04-26-2020"),
+                                    toDate: dayjs("05-20-2020"),
+                                },
+                                {
+                                    id: "7",
+                                    fromDate: dayjs("05-21-2020"),
+                                    toDate: dayjs("08-15-2020"),
+                                },
+                                {
+                                    id: "8",
+                                    fromDate: dayjs("08-16-2020"),
+                                    toDate: dayjs("08-30-2020"),
+                                },
+                                {
+                                    id: "9",
+                                    fromDate: dayjs("08-31-2020"),
+                                    toDate: dayjs("09-10-2020"),
+                                },
+                            ]}
+                        />
                     </div>
                     <Map
                         Scene={

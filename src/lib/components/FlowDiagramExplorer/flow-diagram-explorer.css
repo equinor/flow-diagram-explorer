@@ -1,5 +1,6 @@
 .FlowDiagramExplorer {
     font-family: sans-serif;
+    position: relative;
 }
 
 .FlowDiagramExplorer .Levels {
@@ -13,4 +14,12 @@
     display: block;
     border-radius: 4px;
     z-index: 10;
+}
+
+.FlowDiagramExplorer .TimelineContainer {
+    position: absolute;
+    bottom: 16px;
+    right: 160px;
+    z-index: 10;
+    width: 50%;
 }

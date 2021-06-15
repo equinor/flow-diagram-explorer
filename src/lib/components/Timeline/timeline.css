@@ -1,0 +1,106 @@
+.FlowDiagramExplorer .Timeline {
+    position: relative;
+}
+
+.FlowDiagramExplorer .InnerTimeline {
+    padding: 16px;
+    background-color: white;
+    box-shadow: 0px 3px 5px #888888;
+    display: block;
+    border-radius: 8px;
+}
+
+.FlowDiagramExplorer .Timeline .LabelContainer {
+    position: absolute;
+    top: -75px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.FlowDiagramExplorer .Timeline .LabelContainer div {
+    padding: 4px;
+    padding-left: 16px;
+    background-color: white;
+    box-shadow: 0px 3px 5px #888888;
+    display: block;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.FlowDiagramExplorer .Timeline .LabelContainer .LabelText {
+    margin-right: 8px;
+}
+.FlowDiagramExplorer .Timeline .Frames {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 16px;
+    margin-left: 25px;
+    margin-right: 25px;
+    height: 38px;
+}
+
+.FlowDiagramExplorer .Timeline .Frames div {
+    background-color: #deedee;
+    height: 30px;
+    border-radius: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.FlowDiagramExplorer .Timeline .Frames div:first-child {
+    margin-left: 0px;
+}
+
+.FlowDiagramExplorer .Timeline .Frames div:last-child {
+    margin-right: 0px;
+}
+
+.FlowDiagramExplorer .Timeline .Frames div:hover {
+    background-color: #73b1b5;
+}
+
+.FlowDiagramExplorer .Timeline .Frames .active,
+.FlowDiagramExplorer .Timeline .Frames .active:hover {
+    background-color: #007079;
+    height: 38px;
+    transition: height 0.25s;
+    transition-timing-function: ease-in-out;
+}
+
+.FlowDiagramExplorer .Timeline .Axis {
+    border-top: 1px #e0e0e0 solid;
+    margin-left: 25px;
+    margin-right: 25px;
+    position: relative;
+    height: 35px;
+}
+
+.FlowDiagramExplorer .Timeline .Axis .Label {
+    padding-top: 20px;
+    position: absolute;
+    display: block;
+    margin-left: -25px;
+    width: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-size: 12px;
+    top: 0;
+}
+
+.FlowDiagramExplorer .Timeline .Axis .Label::after {
+    top: 0px;
+    left: 25px;
+    width: 1px;
+    height: 15px;
+    background-color: #e0e0e0;
+    position: absolute;
+    display: block;
+    content: "";
+}
