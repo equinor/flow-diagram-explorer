@@ -20,6 +20,8 @@ const renderInputOutputNode = (): { html: JSX.Element; width: number; height: nu
 export const installation: FlowDiagram = {
     id: "installation",
     title: "World",
+    startDate: "2018-12-18",
+    endDate: "2019-05-05",
     nodes: [
         {
             id: "input",
@@ -87,6 +89,73 @@ export const installation: FlowDiagram = {
         { flow: "electricity-import", from: "windfarm2", to: "installation" },
         { flow: "electricity-import", from: "windfarm3", to: "installation" },
         { flow: "electricity-import", from: "power-from-shore", to: "installation" },
+        { flow: "fuel", from: "input", to: "installation" },
+        { flow: "emissions", from: "installation", to: "emissions-output" },
+        { flow: "oil", from: "installation", to: "oil-output" },
+        { flow: "electricity-export", from: "installation", to: "electricity-output" },
+    ],
+};
+
+export const installation2: FlowDiagram = {
+    id: "installation",
+    title: "World",
+    startDate: "2019-05-05",
+    endDate: "2020-01-04",
+    nodes: [
+        {
+            id: "input",
+            title: "Input",
+            render: renderInputOutputNode,
+        },
+        {
+            id: "windfarm1",
+            title: "Wind farm 1",
+            render: windTurbineSystemRenderer,
+        },
+        {
+            id: "windfarm2",
+            title: "Wind farm 2",
+            render: windTurbineSystemRenderer,
+        },
+        {
+            id: "installation",
+            title: "Installation",
+            render: installationRenderer,
+        },
+        {
+            id: "oil-output",
+            title: "Oil output",
+            render: renderInputOutputNode,
+        },
+        {
+            id: "emissions-output",
+            title: "Output",
+            render: renderInputOutputNode,
+        },
+        {
+            id: "electricity-output",
+            title: "Output",
+            render: renderInputOutputNode,
+        },
+    ],
+    flows: [
+        {
+            id: "electricity-import",
+            label: "Electricity import",
+            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+        },
+        {
+            id: "electricity-export",
+            label: "Electricity export",
+            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+        },
+        { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
+        { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
+        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
+    ],
+    edges: [
+        { flow: "electricity-import", from: "windfarm1", to: "installation" },
+        { flow: "electricity-import", from: "windfarm2", to: "installation" },
         { flow: "fuel", from: "input", to: "installation" },
         { flow: "emissions", from: "installation", to: "emissions-output" },
         { flow: "oil", from: "installation", to: "oil-output" },

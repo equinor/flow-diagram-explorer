@@ -35,6 +35,7 @@ type AxisTick = {
 
 type TimelineProps = {
     timeFrames?: TimeFrame[];
+    onDateChange?: (date: Dayjs) => void;
 };
 
 export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Element => {
@@ -62,13 +63,19 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
     }, [size]);
 
     React.useEffect(() => {
+        if (props.onDateChange && currentDate) {
+            props.onDateChange(currentDate);
+        }
+    }, [props.onDateChange, currentDate]);
+
+    React.useEffect(() => {
         if (visible && framesRef.current) {
             setTimelineWidth(framesRef.current.offsetWidth);
         }
     }, [visible]);
 
     React.useEffect(() => {
-        if (props.timeFrames) {
+        if (props.timeFrames && props.timeFrames.length > 0) {
             const sortedFrames = props.timeFrames.sort(
                 (a: TimeFrame, b: TimeFrame): number => a.fromDate.valueOf() - b.fromDate.valueOf()
             );
@@ -79,7 +86,7 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
     }, [props.timeFrames]);
 
     React.useEffect(() => {
-        if (props.timeFrames && timelineWidth > 0) {
+        if (props.timeFrames && props.timeFrames.length > 0 && timelineWidth > 0) {
             const startTimestamp = sortedTimeFrames[0].fromDate;
             const endTimestamp = sortedTimeFrames[sortedTimeFrames.length - 1].toDate;
 
@@ -214,7 +221,7 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
         <div className="Timeline">
             {currentDate && (
                 <div className="CurrentSelectionLabel">
-                    <Icon name="calendar" title="Hide" size={16} />
+                    <Icon name="calendar" title="Current date" size={16} />
                     <MuiPickersUtilsProvider utils={DayjsUtils}>
                         <DatePicker
                             disableToolbar

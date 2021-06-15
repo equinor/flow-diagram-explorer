@@ -4,6 +4,8 @@ import { Point } from "./point";
 export interface FlowDiagram {
     id: string;
     title: string;
+    startDate?: string;
+    endDate?: string;
     nodes: FlowDiagramNode[];
     flows: FlowDiagramFlow[];
     edges: FlowDiagramEdge[];

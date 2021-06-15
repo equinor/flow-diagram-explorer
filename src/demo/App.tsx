@@ -6,12 +6,12 @@
  */
 
 import React from "react";
-import { installation } from "./examples/installation";
+import { installation, installation2 } from "./examples/installation";
 import { installationDetails } from "./examples/waterinj";
-import { FlowDiagramExplorer } from "../lib";
+import { FlowDiagramExplorer, FlowDiagram } from "../lib";
 
 function App(): JSX.Element {
-    const [diagram, setDiagram] = React.useState(installation);
+    const [diagram, setDiagram] = React.useState<FlowDiagram[] | FlowDiagram>([installation, installation2]);
 
     const handleNodeClick = (nodeId: string) => {
         if (nodeId === "installation") {
