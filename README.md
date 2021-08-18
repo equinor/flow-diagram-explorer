@@ -6,7 +6,89 @@
 
 # flow-diagram-explorer
 
-flow-diagram-explorer is a React component that provides both visualization of and navigation within flow diagrams.
+| :gear: [Live demo application](https://equinor.github.io/flow-diagram-explorer/)
+
+## Introduction
+
+`flow-diagram-explorer` is a React component library providing layouting, visualization and navigation for flow diagrams.
+
+## Installation
+
+The easiest way of installing `flow-diagram-explorer` is to run
+
+```
+npm i @equinor/flow-diagram-explorer
+```
+
+Find package on npm: https://www.npmjs.com/package/@equinor/flow-diagram-explorer
+
+## Usage
+
+### Simple usage example
+
+Import the `flow-diagram-explorer` in your project:
+
+```
+import { FlowDiagram, FlowDiagramExplorer} from "@equinor/flow-diagram-explorer";
+```
+
+Create a new diagram:
+
+```
+const myDiagram: FlowDiagram = {
+    id: "MyDiagram",
+    title: "My Diagram",
+    nodes: [
+        {
+            id: "node1",
+            title: "Node 1",
+        },
+        {
+            id: "node2",
+            title: "Node 2",
+        },
+    ],
+    flows: [
+        {
+            id: "flow",
+            label: "Flow",
+            style: { strokeColor: "blue" }
+        }
+    ],
+    edges: [
+        {
+            flow: "flow",
+            from: "node1",
+            to: "node2"
+        }
+    ]
+}
+```
+
+Include the `flow-diagram-explorer` with your new diagram:
+
+```
+<FlowDiagramExplorer
+    flowDiagram={myDiagram}
+    animationsOn={true}
+    width="100%"
+    height="95vh"
+>
+```
+
+## Contributing
+
+If you want to build and develop yourself, you should fork and clone the repository.
+
+Then install all npm dependencies.
+
+```
+npm install
+```
+
+Write new custom code in `src/lib/`. The demo application is located in the `src/demo/` directory. You can start the demo
+app by running `npm start`. In order to add new custom diagram examples, move the diagram file to the `src/demo/examples/` folder and
+import and add the diagram in the `App.tsx` file to the `diagramMap` list.
 
 ## Available Scripts
 
