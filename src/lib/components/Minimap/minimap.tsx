@@ -136,28 +136,31 @@ export const Minimap: React.FC<MinimapPropsType> = (props) => {
             style={{ width: boundaryBox.width * scaling, height: boundaryBox.height * scaling }}
             ref={mapRef}
         >
-            <div style={{ transform: `scale(${scaling})` }}>
-                {React.cloneElement(Scene, {
-                    centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
-                    viewSize: { width: boundaryBox.width, height: boundaryBox.height },
-                })}
-                <div
-                    ref={viewRef}
-                    className="Minimap__View"
-                    style={{
-                        width: rectangle.width,
-                        height: rectangle.height,
-                        left: rectangle.left,
-                        top: rectangle.top,
-                    }}
-                ></div>
-                <div
-                    className="NoHoverLayer"
-                    style={{
-                        width: boundaryBox.width,
-                        height: boundaryBox.height,
-                    }}
-                />
+            <div>
+                <div style={{ transform: `scale(${scaling})` }}>
+                    {React.cloneElement(Scene, {
+                        animationsOn: false,
+                        centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
+                        viewSize: { width: boundaryBox.width, height: boundaryBox.height },
+                    })}
+                    <div
+                        ref={viewRef}
+                        className="Minimap__View"
+                        style={{
+                            width: rectangle.width,
+                            height: rectangle.height,
+                            left: rectangle.left,
+                            top: rectangle.top,
+                        }}
+                    ></div>
+                    <div
+                        className="NoHoverLayer"
+                        style={{
+                            width: boundaryBox.width,
+                            height: boundaryBox.height,
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );

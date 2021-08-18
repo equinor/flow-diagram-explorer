@@ -18,7 +18,6 @@ type ViewPropsType = {
     width: number | string;
     height: number | string;
     scale: number;
-    id: string;
     backgroundColor: string;
 };
 
@@ -33,6 +32,7 @@ export const View: React.FC<ViewPropsType> = ({
     backgroundColor,
 }) => {
     const [adjustedOffset, setAdjustedOffset] = React.useState<Point>(ORIGIN);
+    const [rendered, setRendered] = React.useState<boolean>(false);
     const viewRef = React.useRef<HTMLDivElement>(null);
     const paneRef = React.useRef<HTMLDivElement>(null);
     const viewSize = useContainerDimensions(viewRef);
@@ -58,6 +58,7 @@ export const View: React.FC<ViewPropsType> = ({
             x: viewSize.width / 2 - initialCenterPoint.x * scale,
             y: viewSize.height / 2 - initialCenterPoint.y * scale,
         });
+        setRendered(true);
     }, [initialCenterPoint, viewSize, setAdjustedOffset]);
 
     React.useEffect(() => {
@@ -86,10 +87,14 @@ export const View: React.FC<ViewPropsType> = ({
                         height: boundaryBox.height,
                     }}
                 >
-                    {React.cloneElement(Scene, {
-                        centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
-                        viewSize: { width: boundaryBox.width, height: boundaryBox.height },
-                    })}
+                    {rendered ? (
+                        React.cloneElement(Scene, {
+                            centerPoint: { x: boundaryBox.width / 2, y: boundaryBox.height / 2 },
+                            viewSize: { width: boundaryBox.width, height: boundaryBox.height },
+                        })
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
         </div>

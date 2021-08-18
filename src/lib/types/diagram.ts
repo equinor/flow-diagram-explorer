@@ -27,7 +27,7 @@ export type FlowDiagramNode = {
     id: string;
     title?: string;
     icon?: string;
-    subdiagram?: FlowDiagram;
+    subdiagram?: FlowDiagram | FlowDiagram[];
     render?: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
 };
 

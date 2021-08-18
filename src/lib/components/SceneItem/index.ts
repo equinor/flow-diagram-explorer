@@ -1,2 +1,2 @@
-export type { SceneItemPropsType } from "./scene-item";
-export { SceneItem } from "./scene-item";
+export type { SceneItemPropsType, SceneItemAnimationType } from "./scene-item";
+export { SceneItem, SceneItemType } from "./scene-item";

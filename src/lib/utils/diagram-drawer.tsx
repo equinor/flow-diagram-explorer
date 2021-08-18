@@ -4,7 +4,7 @@ import dagre from "dagre";
 import { FlowDiagram, FlowDiagramNode } from "../types/diagram";
 import { DiagramConfig } from "../types/diagram";
 import { Size } from "../types/size";
-import { SceneItem, SceneItemPropsType } from "../components/SceneItem";
+import { SceneItem, SceneItemPropsType, SceneItemType } from "../components/SceneItem";
 import { EdgeLabel } from "../components/EdgeLabel";
 import { Point } from "../types/point";
 import { DebugConsole } from "./debug";
@@ -237,6 +237,7 @@ export class DiagramDrawer {
                 <SceneItem
                     key={v}
                     id={v}
+                    type={SceneItemType.Node}
                     size={{ width: width, height: height }}
                     position={{ x: graph.node(v).x, y: graph.node(v).y }}
                     zIndex={8}
@@ -291,6 +292,7 @@ export class DiagramDrawer {
                 <SceneItem
                     key={`${flow.id}-defs`}
                     id={`${flow.id}-defs`}
+                    type={SceneItemType.Definition}
                     size={{ width: this.sceneSize.width, height: this.sceneSize.height }}
                     position={{ x: 0, y: 0 }}
                     zIndex={0}
@@ -359,25 +361,24 @@ export class DiagramDrawer {
                 const points: Point[] = [];
                 if (!this.additionalFlowNodes.includes(edge.v) && this.additionalFlowNodes.includes(edge.w)) {
                     const delta = this.config.horizontalSpacing / targetNodes.length;
+                    const xShift =
+                        delta *
+                        Math.abs(
+                            targetNodes.findIndex((el) => el.node === edge.w) - Math.floor(targetNodes.length / 2)
+                        );
                     points.push(outputPoint);
                     points.push({
-                        x:
-                            graph.edge(edge).points[graph.edge(edge).points.length - 1].x +
-                            delta * targetNodes.findIndex((el) => el.node === edge.w),
+                        x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x - xShift,
                         y: outputPoint.y,
                     });
                     points.push({
-                        x:
-                            graph.edge(edge).points[graph.edge(edge).points.length - 1].x +
-                            delta * targetNodes.findIndex((el) => el.node === edge.w),
+                        x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x - xShift,
                         y: graph.edge(edge).points[graph.edge(edge).points.length - 1].y,
                     });
                     adjustedPoints.push({
                         startNode: edge.w,
                         position: {
-                            x:
-                                graph.edge(edge).points[graph.edge(edge).points.length - 1].x +
-                                delta * targetNodes.findIndex((el) => el.node === edge.w),
+                            x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x - xShift,
                             y: graph.edge(edge).points[graph.edge(edge).points.length - 1].y,
                         },
                     });
@@ -422,13 +423,18 @@ export class DiagramDrawer {
                     });
                 } else if (this.additionalFlowNodes.includes(edge.v) && !this.additionalFlowNodes.includes(edge.w)) {
                     const delta = this.config.horizontalSpacing / sourceNodes.length;
+                    const xShift =
+                        delta *
+                        Math.abs(
+                            sourceNodes.findIndex((el) => el.node === edge.v) - Math.floor(sourceNodes.length / 2)
+                        );
                     points.push(graph.edge(edge).points[0]);
                     points.push({
-                        x: graph.edge(edge).points[0].x + delta * sourceNodes.findIndex((el) => el.node === edge.v),
+                        x: graph.edge(edge).points[0].x + xShift,
                         y: graph.edge(edge).points[0].y,
                     });
                     points.push({
-                        x: graph.edge(edge).points[0].x + delta * sourceNodes.findIndex((el) => el.node === edge.v),
+                        x: graph.edge(edge).points[0].x + xShift,
                         y: inputPoint.y,
                     });
                     points.push(inputPoint);
@@ -507,6 +513,7 @@ export class DiagramDrawer {
                     <SceneItem
                         key={`${flow.id}:${edge.v}-${edge.w}-edge`}
                         id={`edge-${edgeIndex}`}
+                        type={SceneItemType.Flow}
                         size={{ width: width, height: height }}
                         position={{ x: left + width / 2, y: top + height / 2 }}
                         zIndex={2}
@@ -533,6 +540,7 @@ export class DiagramDrawer {
                         <SceneItem
                             key={`${flow.id}:${edge.v}-${edge.w}-label`}
                             id={`flow-${flow.id}`}
+                            type={SceneItemType.Label}
                             size={{ width: graph.edge(edge)["width"], height: graph.edge(edge)["height"] }}
                             position={{
                                 x: node1.x + (node2.x - node1.x) / 2,

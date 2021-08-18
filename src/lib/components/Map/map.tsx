@@ -1,4 +1,5 @@
 import React from "react";
+
 import { View } from "../View";
 import { Minimap } from "../Minimap";
 import { MapActions, MapActionType } from "../MapActions";
@@ -9,9 +10,11 @@ import { useZoom } from "../../hooks/useZoom";
 import { DiagramConfig } from "lib/types/diagram";
 
 import "./map.css";
+import { usePrevious } from "../../hooks/usePrevious";
 
 type MapPropsType = {
     Scene: React.ReactElement;
+    ActionHandler: React.ReactElement;
     sceneSize: Size;
     width: number | string;
     height: number | string;
@@ -33,25 +36,31 @@ export const Map: React.FC<MapPropsType> = (props) => {
         height: sceneSize.height,
     });
     const { scale, setNewScale } = useZoom({ ref: mapRef });
+    const previousId = usePrevious(id);
 
     React.useEffect(() => {
         setBoundaryBox({
             width: sceneSize.width,
             height: sceneSize.height,
         });
-        setNewScale(1);
     }, [sceneSize]);
 
     React.useEffect(() => {
+        const newBoundaryBox = {
+            width: sceneSize.width,
+            height: sceneSize.height,
+        };
+        setBoundaryBox(newBoundaryBox);
         setViewCenterPoint({
-            x: (boundaryBox.width / 2) * scale,
-            y: (boundaryBox.height / 2) * scale,
+            x: newBoundaryBox.width / 2,
+            y: newBoundaryBox.height / 2,
         });
         setCenterPoint({
-            x: (boundaryBox.width / 2) * scale,
-            y: (boundaryBox.height / 2) * scale,
+            x: newBoundaryBox.width / 2,
+            y: newBoundaryBox.height / 2,
         });
-    }, [size, boundaryBox]);
+        setNewScale(1);
+    }, [id]);
 
     const handleViewCenterPointChange = React.useCallback(
         (newCenterPoint: Point) => {
@@ -109,17 +118,20 @@ export const Map: React.FC<MapPropsType> = (props) => {
 
     return (
         <div ref={mapRef} className="Map" style={{ width: width, height: height }}>
-            <View
-                initialCenterPoint={viewCenterPoint}
-                width={width}
-                height={height}
-                Scene={Scene}
-                boundaryBox={boundaryBox}
-                onCenterPointChange={handleViewCenterPointChange}
-                scale={scale}
-                id={id}
-                backgroundColor={config.backgroundColor}
-            />
+            {id !== previousId ? (
+                <></>
+            ) : (
+                <View
+                    initialCenterPoint={viewCenterPoint}
+                    width={width}
+                    height={height}
+                    Scene={React.cloneElement(props.ActionHandler, {}, Scene)}
+                    boundaryBox={boundaryBox}
+                    onCenterPointChange={handleViewCenterPointChange}
+                    scale={scale}
+                    backgroundColor={config.backgroundColor}
+                />
+            )}
             <Minimap
                 initialCenterPoint={centerPoint}
                 viewSize={size}
