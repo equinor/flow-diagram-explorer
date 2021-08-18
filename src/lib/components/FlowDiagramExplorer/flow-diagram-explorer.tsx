@@ -1,4 +1,5 @@
 import React from "react";
+import dayjs, { Dayjs } from "dayjs";
 
 import { DiagramDrawer, Diagram } from "../../utils/diagram-drawer";
 import { Scene } from "../Scene";
@@ -7,6 +8,7 @@ import { FlowDiagram } from "../../types/diagram";
 import { DiagramSkeleton } from "../DiagramSkeleton/diagram-skeleton";
 import { Breadcrumbs } from "@equinor/eds-core-react";
 import { DiagramConfig } from "../../types/diagram";
+import { Timeline } from "../Timeline";
 
 import "./flow-diagram-explorer.css";
 
@@ -22,7 +24,7 @@ const defaultDiagramConfig: DiagramConfig = {
 };
 
 type FlowDiagramExplorerPropsType = {
-    flowDiagram: FlowDiagram;
+    flowDiagram: FlowDiagram | FlowDiagram[];
     diagramConfig?: DiagramConfig;
     onNodeClick?: (nodeId: string) => void;
     onDiagramChange?: (title: string) => void;
@@ -30,6 +32,10 @@ type FlowDiagramExplorerPropsType = {
 
 const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
     const diagramConfig = props.diagramConfig || defaultDiagramConfig;
+    const [date, setDate] = React.useState<Dayjs | null>(null);
+    const [sortedFlowDiagrams, setSortedFlowDiagrams] = React.useState<FlowDiagram[]>([]);
+    const [currentFlowDiagram, setCurrentFlowDiagram] = React.useState(0);
+    const [timeFrames, setTimeFrames] = React.useState<{ id: string; fromDate: Dayjs; toDate: Dayjs }[]>([]);
     const [levels, setLevels] = React.useState<{ id: string; title: string; diagram: Diagram }[]>([]);
     const [sceneProperties, setSceneProperties] = React.useState<Diagram | null>(null);
     const [highlightedSceneItems, setHighlightedSceneItems] = React.useState<
@@ -38,18 +44,51 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
     const mapRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        const drawer = new DiagramDrawer(props.flowDiagram, diagramConfig);
-        setSceneProperties(drawer.diagram());
-        const index = levels.findIndex((el) => el.title === props.flowDiagram.title);
-        if (index === -1) {
-            setLevels([
-                ...levels,
-                { id: props.flowDiagram.id, title: props.flowDiagram.title, diagram: drawer.diagram() },
-            ]);
-        } else {
-            setLevels([{ id: props.flowDiagram.id, title: props.flowDiagram.title, diagram: drawer.diagram() }]);
+        if (Array.isArray(props.flowDiagram) && props.flowDiagram.length > 0 && props.flowDiagram[0].startDate) {
+            setDate(dayjs(props.flowDiagram[0].startDate));
+            const newSortedFlowDiagrams = props.flowDiagram.sort(
+                (a: FlowDiagram, b: FlowDiagram): number => dayjs(a.startDate).valueOf() - dayjs(b.startDate).valueOf()
+            );
+            setSortedFlowDiagrams(newSortedFlowDiagrams);
+
+            const timeFrames: { id: string; fromDate: Dayjs; toDate: Dayjs }[] = [];
+
+            newSortedFlowDiagrams.forEach((el) => {
+                timeFrames.push({ id: el.id, fromDate: dayjs(el.startDate), toDate: dayjs(el.endDate) });
+            });
+            setTimeFrames(timeFrames);
+        } else if (!Array.isArray(props.flowDiagram)) {
+            setSortedFlowDiagrams([props.flowDiagram]);
         }
-    }, [props.flowDiagram, diagramConfig]);
+        setCurrentFlowDiagram(0);
+    }, [props.flowDiagram, setTimeFrames, setSortedFlowDiagrams, setDate]);
+
+    React.useEffect(() => {
+        if (
+            Array.isArray(props.flowDiagram) &&
+            props.flowDiagram.length > 0 &&
+            props.flowDiagram[0].startDate &&
+            date
+        ) {
+            setCurrentFlowDiagram(
+                sortedFlowDiagrams.findIndex((el) => date.isBetween(dayjs(el.startDate), dayjs(el.endDate), null, "[]"))
+            );
+        }
+    }, [date]);
+
+    React.useEffect(() => {
+        const flowDiagram = Array.isArray(props.flowDiagram)
+            ? props.flowDiagram[currentFlowDiagram]
+            : props.flowDiagram;
+        const drawer = new DiagramDrawer(flowDiagram, diagramConfig);
+        setSceneProperties(drawer.diagram());
+        const index = levels.findIndex((el) => el.title === flowDiagram.title);
+        if (index === -1) {
+            setLevels([...levels, { id: flowDiagram.id, title: flowDiagram.title, diagram: drawer.diagram() }]);
+        } else {
+            setLevels([{ id: flowDiagram.id, title: flowDiagram.title, diagram: drawer.diagram() }]);
+        }
+    }, [props.flowDiagram, diagramConfig, currentFlowDiagram]);
 
     const handleMouseEnter = React.useCallback(
         (id: string) => {
@@ -131,6 +170,13 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
         e.preventDefault();
     };
 
+    const handleDateChange = React.useCallback(
+        (date: Dayjs) => {
+            setDate(date);
+        },
+        [setDate]
+    );
+
     return (
         <div className="FlowDiagramExplorer" ref={mapRef}>
             {sceneProperties !== null ? (
@@ -163,6 +209,11 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
                             })}
                         </Breadcrumbs>
                     </div>
+                    {timeFrames.length > 0 && (
+                        <div className="TimelineContainer">
+                            <Timeline onDateChange={handleDateChange} timeFrames={timeFrames} />
+                        </div>
+                    )}
                     <Map
                         Scene={
                             <Scene
@@ -177,7 +228,11 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
                         width="100%"
                         height="95vh"
                         sceneSize={sceneProperties.sceneSize}
-                        id={props.flowDiagram.id}
+                        id={
+                            sortedFlowDiagrams.length > currentFlowDiagram
+                                ? sortedFlowDiagrams[currentFlowDiagram].id
+                                : ""
+                        }
                         config={diagramConfig}
                     />
                 </>
