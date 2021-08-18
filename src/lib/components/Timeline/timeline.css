@@ -1,5 +1,6 @@
 .FlowDiagramExplorer .Timeline {
     position: relative;
+    user-select: none;
 }
 
 .FlowDiagramExplorer .InnerTimeline {
@@ -18,8 +19,8 @@
     top: -75px;
     padding-top: 12px;
     padding-bottom: 4px;
-    padding-left: 24px;
-    padding-right: 48px;
+    padding-left: 8px;
+    padding-right: 52px;
     background-color: white;
     box-shadow: 0px 3px 5px #888888;
     display: block;
@@ -28,8 +29,8 @@
     text-align: center;
 }
 
-.FlowDiagramExplorer .Timeline .CurrentSelectionLabel > svg {
-    margin-right: 16px;
+.FlowDiagramExplorer .Timeline .CurrentSelectionLabel button:first-of-type {
+    margin-right: 8px;
 }
 
 .FlowDiagramExplorer .Timeline .CurrentSelectionLabel .Toggle {
@@ -37,7 +38,7 @@
 }
 
 .FlowDiagramExplorer .Timeline .CurrentSelectionLabel .DatePicker {
-    width: 170px;
+    width: 160px;
 }
 
 .FlowDiagramExplorer .Timeline .Frames {
@@ -50,19 +51,49 @@
     margin-left: 25px;
     margin-right: 25px;
     height: 38px;
+    cursor: ew-resize;
 }
 
 .FlowDiagramExplorer .Timeline .Slider {
     background-color: black;
     border: 1px white solid;
     width: 7px;
-    margin-left: -3px;
+    margin-left: -4px;
     height: 45px;
     display: block;
     position: absolute;
     cursor: ew-resize;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+    z-index: 12;
+}
+
+.FlowDiagramExplorer .Timeline .HoverSlider {
+    background-color: black;
+    opacity: 0.3;
+    border: 1px white solid;
+    width: 7px;
+    margin-left: -4px;
+    height: 45px;
+    display: block;
+    position: absolute;
+    cursor: ew-resize;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    z-index: 11;
+}
+
+.FlowDiagramExplorer .Timeline .HoverSlider .Tooltip {
+    position: absolute;
+    top: -30px;
+    background-color: black;
+    color: white;
+    left: -60px;
+    width: 120px;
+    padding: 5px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.8em;
 }
 
 .FlowDiagramExplorer .Timeline .Frame {
@@ -71,7 +102,6 @@
     border-radius: 4px;
     margin-left: 2px;
     margin-right: 2px;
-    cursor: text;
     box-sizing: border-box;
 }
 
@@ -81,10 +111,6 @@
 
 .FlowDiagramExplorer .Timeline .Frame:last-child {
     margin-right: 0px;
-}
-
-.FlowDiagramExplorer .Timeline .Frame:hover {
-    background-color: #73b1b5;
 }
 
 .FlowDiagramExplorer .Timeline .Frames .active,

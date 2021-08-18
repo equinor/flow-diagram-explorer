@@ -18,7 +18,7 @@ const renderInputOutputNode = (): { html: JSX.Element; width: number; height: nu
 };
 
 export const installationDetails: FlowDiagram = {
-    id: "installation",
+    id: "installation1",
     title: "Installation",
     nodes: [
         {

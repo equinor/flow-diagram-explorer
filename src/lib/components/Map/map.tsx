@@ -1,4 +1,5 @@
 import React from "react";
+
 import { View } from "../View";
 import { Minimap } from "../Minimap";
 import { MapActions, MapActionType } from "../MapActions";
@@ -12,6 +13,7 @@ import "./map.css";
 
 type MapPropsType = {
     Scene: React.ReactElement;
+    ActionHandler: React.ReactElement;
     sceneSize: Size;
     width: number | string;
     height: number | string;
@@ -39,19 +41,24 @@ export const Map: React.FC<MapPropsType> = (props) => {
             width: sceneSize.width,
             height: sceneSize.height,
         });
-        setNewScale(1);
     }, [sceneSize]);
 
     React.useEffect(() => {
+        const newBoundaryBox = {
+            width: sceneSize.width,
+            height: sceneSize.height,
+        };
+        setBoundaryBox(newBoundaryBox);
         setViewCenterPoint({
-            x: (boundaryBox.width / 2) * scale,
-            y: (boundaryBox.height / 2) * scale,
+            x: newBoundaryBox.width / 2,
+            y: newBoundaryBox.height / 2,
         });
         setCenterPoint({
-            x: (boundaryBox.width / 2) * scale,
-            y: (boundaryBox.height / 2) * scale,
+            x: newBoundaryBox.width / 2,
+            y: newBoundaryBox.height / 2,
         });
-    }, [size, boundaryBox]);
+        setNewScale(1);
+    }, [id]);
 
     const handleViewCenterPointChange = React.useCallback(
         (newCenterPoint: Point) => {
@@ -113,11 +120,10 @@ export const Map: React.FC<MapPropsType> = (props) => {
                 initialCenterPoint={viewCenterPoint}
                 width={width}
                 height={height}
-                Scene={Scene}
+                Scene={React.cloneElement(props.ActionHandler, {}, Scene)}
                 boundaryBox={boundaryBox}
                 onCenterPointChange={handleViewCenterPointChange}
                 scale={scale}
-                id={id}
                 backgroundColor={config.backgroundColor}
             />
             <Minimap

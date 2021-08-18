@@ -29,28 +29,36 @@ export const usePan = (ref: React.RefObject<HTMLElement>): Point => {
 
     const handleMouseUp = React.useCallback(() => {
         document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-        panningStarted.current = false;
+        document.removeEventListener("mouseup", handleMouseUp, true);
         document.body.classList.remove("FlowDiagramExplorer__effects__unselectable");
     }, [handleMouseMove, panningStarted]);
 
     const handleMouseDown = React.useCallback(
         (e: MouseEvent) => {
             document.addEventListener("mousemove", handleMouseMove);
-            document.addEventListener("mouseup", handleMouseUp);
+            document.addEventListener("mouseup", handleMouseUp, true);
             referencePositionRef.current = { x: e.pageX, y: e.pageY };
             document.body.classList.add("FlowDiagramExplorer__effects__unselectable");
         },
         [handleMouseMove, handleMouseUp]
     );
 
+    const handleMouseClick = (e: MouseEvent) => {
+        if (panningStarted.current === true) {
+            e.stopPropagation();
+        }
+        panningStarted.current = false;
+    };
+
     React.useEffect(() => {
         if (ref.current) {
             ref.current.addEventListener("mousedown", handleMouseDown);
+            window.addEventListener("click", handleMouseClick, true);
         }
         return () => {
             if (ref.current) {
                 ref.current.removeEventListener("mousedown", handleMouseDown);
+                window.removeEventListener("click", handleMouseClick, true);
             }
         };
     }, []);

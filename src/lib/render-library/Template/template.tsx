@@ -13,8 +13,8 @@ const createRenderFunction = (
                 {node.title}
             </div>
         ),
-        width: 250,
-        height: 100,
+        width: 220,
+        height: 140,
     });
 };
 

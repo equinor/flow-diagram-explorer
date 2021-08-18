@@ -48,3 +48,20 @@ export const isPartlyContained = (
     }
     return true;
 };
+
+export const sizeSum = (size1: Size, size2: Size): Size => {
+    return { width: size1.width + size2.width, height: size1.width + size2.width };
+};
+
+export const sizeDifference = (size1: Size, size2: Size): Size => {
+    return { width: size1.width - size2.width, height: size1.width - size2.width };
+};
+
+export const sizeMultiplyWithScalar = (size1: Size, scalar: number): Size => {
+    return { width: size1.width * scalar, height: size1.width * scalar };
+};
+
+export const pointsAreEqual = (point1: Point, point2: Point): boolean => point1.x === point2.x && point1.y === point2.y;
+
+export const sizesAreEqual = (size1: Size, size2: Size): boolean =>
+    size1.width === size2.width && size1.height === size2.height;

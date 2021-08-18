@@ -1,1 +1,1 @@
-export { default } from "./flow-diagram-explorer";
+export { default, DiagramConfigContext } from "./flow-diagram-explorer";
