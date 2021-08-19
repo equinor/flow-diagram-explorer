@@ -22,19 +22,17 @@ npm i @equinor/flow-diagram-explorer
 
 Find package on npm: https://www.npmjs.com/package/@equinor/flow-diagram-explorer
 
-## Usage
+## Quick start
 
-### Simple usage example
+1. Import the `flow-diagram-explorer` in your project:
 
-Import the `flow-diagram-explorer` in your project:
-
-```
-import { FlowDiagram, FlowDiagramExplorer} from "@equinor/flow-diagram-explorer";
+```typescript
+import { FlowDiagram, FlowDiagramExplorer } from "@equinor/flow-diagram-explorer";
 ```
 
-Create a new diagram:
+2. Create a new diagram:
 
-```
+```typescript
 const myDiagram: FlowDiagram = {
     id: "MyDiagram",
     title: "My Diagram",
@@ -52,28 +50,55 @@ const myDiagram: FlowDiagram = {
         {
             id: "flow",
             label: "Flow",
-            style: { strokeColor: "blue" }
-        }
+            style: { strokeColor: "blue" },
+        },
     ],
     edges: [
         {
             flow: "flow",
-            from: "node1",
-            to: "node2"
-        }
-    ]
-}
+            fromNode: "node1",
+            toNode: "node2",
+        },
+    ],
+};
 ```
 
-Include the `flow-diagram-explorer` with your new diagram:
+3. Include the `flow-diagram-explorer` with your new diagram:
 
-```
+```typescript
 <FlowDiagramExplorer
     flowDiagram={myDiagram}
     animationsOn={true}
     width="100%"
     height="95vh"
 >
+```
+
+## Advanced usage
+
+### Flow diagram options
+
+A flow diagram consists of a unique `id`, a `title` and a list for each `nodes`, `flows` and `edges`.
+
+#### `id`
+
+The `id` is used to identify the diagram, e.g. in click, timeline or level change events. It should be unique but should be shared by diagram objects that represent the status of a diagram in different time intervals.
+
+#### `title`
+
+The title is used in the breadcrumb menu on the top left of the diagram explorer to identify the current location in the diagram structure.
+
+#### `flows`
+
+Flow objects define the different flows within a flow diagram (e.g. _emissions_ or _electricity_). A flow object consists of an `id`, a `label` and a `style` object. The `id` is used as a reference for the diagram's edges and the `label` is shown for each edge (e.g. `Emission`). The `style` object can be used to apply custom a appearance to all edges connected to the particular flow. The properties of the `style`object are:
+
+```typescript
+style: {
+    strokeColor: string; // Color of the edges' stroke
+    strokewidth: number; // Width of the edges' stroke
+    arrowHeadSize: number; // Size (in px) of the arrows at the end of the flow's edges
+    strokeStyle: string; // A series of numbers separated by whitespaces defining the length of strokes and spaces (see here for examples https://www.w3schools.com/graphics/svg_stroking.asp - NOTE: use whitespaces instead of commas)
+}
 ```
 
 ## Contributing
