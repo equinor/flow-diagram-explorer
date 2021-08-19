@@ -90,7 +90,7 @@ The title is used in the breadcrumb menu on the top left of the diagram explorer
 
 #### `flows`
 
-Flow objects define the different flows within a flow diagram (e.g. _emissions_ or _electricity_). A flow object consists of an `id`, a `label` and a `style` object. The `id` is used as a reference for the diagram's edges and the `label` is shown for each edge (e.g. `Emission`). The `style` object can be used to apply custom a appearance to all edges connected to the particular flow. The properties of the `style`object are:
+Flow objects define the different flows within a flow diagram (e.g. _emissions_ or _electricity_). A flow object consists of an `id`, a `label` and a `style` object. The `id` is used as a reference for the diagram's edges and the `label` is shown for each edge (e.g. `Emission`). The `style` object can be used to apply a custom appearance to all edges connected to the particular flow. The properties of the `style`object are:
 
 ```typescript
 style: {
