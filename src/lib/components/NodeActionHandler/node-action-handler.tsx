@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Diagram } from "../../utils/diagram-drawer-advanced";
+import { Diagram } from "../../utils/diagram-drawer";
 import { DiagramConfigContext } from "../FlowDiagramExplorer/flow-diagram-explorer";
 import { Point } from "../../types/point";
 import { Size } from "../../types/size";

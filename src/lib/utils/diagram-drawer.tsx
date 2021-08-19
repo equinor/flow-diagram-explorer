@@ -7,18 +7,32 @@ import { Size } from "../types/size";
 import { SceneItem, SceneItemPropsType, SceneItemType } from "../components/SceneItem";
 import { EdgeLabel } from "../components/EdgeLabel";
 import { Point } from "../types/point";
-import { DebugConsole } from "./debug";
+import { pointSum, pointScale } from "./geometry";
 
-type NodeFlowEdgeMap = {
-    node: string;
+enum EdgeLayer {
+    Source = 0,
+    JointSplit,
+    Target,
+}
+
+type FlowNodeEdgeIndicesMapItem = { id: string; edgeIndices: number[] };
+type RankNodeItem = { rank: number; nodes: string[] };
+type EdgePointsItem = {
+    id: string;
+    flow: string;
+    points: Point[];
+    layer: EdgeLayer;
+    rank: number;
+    edges: dagre.Edge[];
     sourceNodes: string[];
     targetNodes: string[];
-    flow: string;
 };
-
-type AdditionalFlowNodesMapItem = { sourceNodes: string[]; targetNodes: string[]; edgeId: string };
-type FlowNodeEdgeIndicesMapItem = { id: string; edgeIndices: number[] };
-type AdjustedPoint = { startNode: string; position: Point };
+type AdditionalEdgesMapItem = {
+    sourceNode: string;
+    targetNode: string;
+    flow: string;
+    edges: { v: string; w: string }[];
+};
 
 export type Diagram = {
     sceneItems: React.ReactElement<SceneItemPropsType>[];
@@ -68,146 +82,117 @@ export class DiagramDrawer {
             height: 100,
         };
     };
-    private additionalFlowNodes: string[];
-    private additionalFlowNodesMap: AdditionalFlowNodesMapItem[];
     private flowNodeEdgeIndicesMap: FlowNodeEdgeIndicesMapItem[];
     private sceneItems: React.ReactElement<SceneItemPropsType>[];
     private sceneSize: Size;
+    private rankNodeMap: RankNodeItem[];
+    private numRanks: number;
+    private edgePoints: EdgePointsItem[];
+    private additionalEdgesMap: AdditionalEdgesMapItem[];
 
     constructor(flowDiagram: FlowDiagram, config: DiagramConfig) {
         this.flowDiagram = flowDiagram;
         this.config = config;
         this.sceneItems = [];
-        this.additionalFlowNodes = [];
-        this.additionalFlowNodesMap = [];
         this.flowNodeEdgeIndicesMap = [];
         this.sceneSize = { width: 0, height: 0 };
+        this.rankNodeMap = [];
+        this.numRanks = 0;
+        this.edgePoints = [];
+        this.additionalEdgesMap = [];
     }
 
-    private compareNodeArrays(array1: string[], array2: string[]): boolean {
-        if (array1.length !== array2.length) {
-            return false;
-        }
-        const newArray2 = [...array2];
-        array1.forEach((value) => {
-            const index = newArray2.indexOf(value, 0);
-            if (index !== -1) {
-                newArray2.splice(index, 1);
-            }
+    private makeInitialFlowNodes(graph: dagre.graphlib.Graph): void {
+        this.flowDiagram.edges.forEach((edge) => {
+            graph.setEdge(
+                `${edge.fromNode}`,
+                `${edge.toNode}`,
+                { label: edge.flow, width: 300, height: 10, labelpos: "l", labeloffset: 12 },
+                edge.flow
+            );
         });
-        return newArray2.length === 0;
     }
 
-    private sortNodesByYCoordinate(
-        nodeA: { node: string; position: Point },
-        nodeB: { node: string; position: Point }
-    ): number {
-        return nodeA.position.y - nodeB.position.y;
+    private addAdditionalEdge(
+        sourceNode: string,
+        targetNode: string,
+        flow: string,
+        edge: { v: string; w: string }
+    ): void {
+        const item = this.additionalEdgesMap.find(
+            (el) => el.sourceNode === sourceNode && el.targetNode === targetNode && el.flow === flow
+        );
+        if (item) {
+            item.edges.push(edge);
+        } else {
+            this.additionalEdgesMap.push({ sourceNode: sourceNode, targetNode: targetNode, flow: flow, edges: [edge] });
+        }
     }
 
     private makeAdditionalFlowNodes(graph: dagre.graphlib.Graph): void {
-        this.additionalFlowNodes = [];
-        this.additionalFlowNodesMap = [];
+        this.makeRankNodeMap(graph);
+        this.additionalEdgesMap = [];
+        let edgesGoingBeyondRank: dagre.Edge[] = [];
+        for (let rank = 0; rank < this.numRanks - 1; rank++) {
+            const currentRankNodes = this.rankNodeMap.find((el) => el.rank === rank);
+            let currentRankEdges: dagre.Edge[] = [];
+            if (currentRankNodes) {
+                currentRankNodes.nodes.forEach((node) => {
+                    const outEdges = graph.outEdges(node);
+                    if (outEdges) {
+                        currentRankEdges.push(...outEdges);
+                    }
+                });
+            }
+            const nextRankNodes = this.rankNodeMap.find((el) => el.rank === rank + 1);
+            if (nextRankNodes) {
+                nextRankNodes.nodes.forEach((node) => {
+                    currentRankEdges = currentRankEdges.filter((el) => el.w !== node);
+                    edgesGoingBeyondRank
+                        .filter((el) => el.w === node)
+                        .forEach((edge) => {
+                            graph.setEdge(
+                                `${edge.w}-rank-${rank - 1}`,
+                                node,
+                                { label: edge.name, width: 300, height: 10, labelpos: "l", labeloffset: 12 },
+                                edge.name
+                            );
+                            this.addAdditionalEdge(edge.v, edge.w, edge.name || "", {
+                                v: `${edge.w}-rank-${rank - 1}`,
+                                w: edge.w,
+                            });
+                        });
+                    edgesGoingBeyondRank = edgesGoingBeyondRank.filter((el) => el.w !== node);
+                });
+            }
 
-        const nodeFlowEdgeMap: NodeFlowEdgeMap[] = [];
-        this.flowDiagram.nodes.forEach((node) => {
-            this.flowDiagram.flows.forEach((flow) => {
-                const sourceNodes: string[] = [];
-                const targetNodes: string[] = [];
-                const edges = [...this.flowDiagram.edges.filter((edge) => edge.flow === flow.id)];
-                let i = 0;
-                while (i < edges.length) {
-                    const edge = edges[i];
-                    let edgeUsed = false;
-                    if (sourceNodes.includes(edge.from) || edge.from === node.id) {
-                        if (!targetNodes.includes(edge.to)) {
-                            targetNodes.push(edge.to);
-                        }
-                        edgeUsed = true;
-                    }
-                    if (targetNodes.includes(edge.to)) {
-                        if (!sourceNodes.includes(edge.from)) {
-                            sourceNodes.push(edge.from);
-                        }
-                        edgeUsed = true;
-                    }
-                    if (edgeUsed) {
-                        edges.splice(i, 1);
-                        i = 0;
-                    } else {
-                        i++;
-                    }
-                }
-                nodeFlowEdgeMap.push({
-                    node: node.id,
-                    sourceNodes: sourceNodes,
-                    targetNodes: targetNodes,
-                    flow: flow.id,
+            currentRankEdges.forEach((edge) => {
+                graph.setNode(`${edge.w}-rank-${rank}`, { label: "", width: 0, height: 100 });
+                graph.setEdge(
+                    `${edge.v}`,
+                    `${edge.w}-rank-${rank}`,
+                    { label: edge.name, width: 300, height: 10, labelpos: "l", labeloffset: 12 },
+                    edge.name
+                );
+                this.addAdditionalEdge(edge.v, edge.w, edge.name || "", { v: edge.v, w: `${edge.w}-rank-${rank}` });
+            });
+
+            edgesGoingBeyondRank.forEach((edge) => {
+                graph.setNode(`${edge.w}-rank-${rank}`, { label: "", width: 0, height: 100 });
+                graph.setEdge(
+                    `${edge.w}-rank-${rank - 1}`,
+                    `${edge.w}-rank-${rank}`,
+                    { label: edge.name, width: 300, height: 10, labelpos: "l", labeloffset: 12 },
+                    edge.name
+                );
+                this.addAdditionalEdge(edge.v, edge.w, edge.name || "", {
+                    v: `${edge.w}-rank-${rank - 1}`,
+                    w: `${edge.w}-rank-${rank}`,
                 });
             });
-        });
 
-        const uniqueNodeFlowEdgeMap: NodeFlowEdgeMap[] = nodeFlowEdgeMap.reduce(
-            (filtered: NodeFlowEdgeMap[], el: NodeFlowEdgeMap) => {
-                if (
-                    !filtered.some(
-                        (nf) =>
-                            this.compareNodeArrays(nf.sourceNodes, el.sourceNodes) &&
-                            this.compareNodeArrays(nf.targetNodes, el.targetNodes) &&
-                            nf.flow === el.flow
-                    ) &&
-                    el.sourceNodes.length !== 0 &&
-                    el.targetNodes.length !== 0
-                ) {
-                    filtered.push(el);
-                }
-                return filtered;
-            },
-            []
-        );
-
-        uniqueNodeFlowEdgeMap.forEach((el) => {
-            const flow = this.flowDiagram.flows.find((flow) => flow.id === el.flow);
-            if (flow) {
-                const nodeMeta = this.renderJointNode();
-                graph.setNode(`${el.flow}-joint-${el.sourceNodes.join("-")}`, {
-                    label: "",
-                    width: nodeMeta.width,
-                    height: nodeMeta.height,
-                });
-                graph.setNode(`${el.flow}-split-${el.targetNodes.join("-")}`, {
-                    label: "",
-                    width: nodeMeta.width,
-                    height: nodeMeta.height,
-                });
-                this.additionalFlowNodes.push(`${el.flow}-joint-${el.sourceNodes.join("-")}`);
-                this.additionalFlowNodes.push(`${el.flow}-split-${el.targetNodes.join("-")}`);
-                this.additionalFlowNodesMap.push({
-                    sourceNodes: el.sourceNodes,
-                    targetNodes: el.targetNodes,
-                    edgeId: `${el.flow}-joint-${el.sourceNodes.join("-")}`,
-                });
-                this.additionalFlowNodesMap.push({
-                    sourceNodes: el.sourceNodes,
-                    targetNodes: el.targetNodes,
-                    edgeId: `${el.flow}-split-${el.targetNodes.join("-")}`,
-                });
-                el.sourceNodes.forEach((node) => {
-                    graph.setEdge(node, `${el.flow}-joint-${el.sourceNodes.join("-")}`, {}, el.flow);
-                });
-                el.targetNodes.forEach((node) => {
-                    graph.setEdge(`${el.flow}-split-${el.targetNodes.join("-")}`, node, {}, el.flow);
-                });
-                graph.setEdge(
-                    `${el.flow}-joint-${el.sourceNodes.join("-")}`,
-                    `${el.flow}-split-${el.targetNodes.join("-")}`,
-                    { label: flow.label, width: 300, height: 10, labelpos: "l", labeloffset: 12 },
-                    el.flow
-                );
-            } else {
-                DebugConsole.error(`Could not find flow with id '${el.flow}' - skipping.`);
-            }
-        });
+            edgesGoingBeyondRank.push(...currentRankEdges);
+        }
     }
 
     private makeGraph(): dagre.graphlib.Graph {
@@ -219,9 +204,17 @@ export class DiagramDrawer {
             graph.setNode(node.id, { label: node.title, width: nodeMeta.width, height: nodeMeta.height });
         });
 
+        this.makeInitialFlowNodes(graph);
+
+        dagre.layout(graph, {
+            rankdir: "LR",
+        });
+
         this.makeAdditionalFlowNodes(graph);
 
-        dagre.layout(graph, { rankdir: "LR" });
+        dagre.layout(graph, {
+            rankdir: "LR",
+        });
 
         return graph;
     }
@@ -247,6 +240,293 @@ export class DiagramDrawer {
                 />
             );
         });
+    }
+
+    private makeRankNodeMap(graph: dagre.graphlib.Graph): void {
+        this.rankNodeMap.length = 0;
+        const sortedNodes = graph.nodes().sort((a: string, b: string) => graph.node(a).x - graph.node(b).x);
+        const positionRankMap: { x: number; rank: number }[] = [];
+        let rank = 0;
+        sortedNodes.forEach((node) => {
+            const positionRank = positionRankMap.find((el) => el.x === graph.node(node).x);
+            if (!positionRank) {
+                positionRankMap.push({ x: graph.node(node).x, rank: rank });
+                this.rankNodeMap.push({ rank: rank, nodes: [node] });
+                this.numRanks = rank + 1;
+                rank++;
+            } else {
+                const rankNodeMapItem = this.rankNodeMap.find((el) => el.rank === positionRank.rank);
+                if (rankNodeMapItem) {
+                    rankNodeMapItem.nodes.push(node);
+                }
+            }
+        });
+    }
+
+    private makeEdgeId(from: string, to: string, flow: string, layer: EdgeLayer): string {
+        const layerStringMap = new Map<number, string>([
+            [EdgeLayer.Source, "Source"],
+            [EdgeLayer.JointSplit, "JointSplit"],
+            [EdgeLayer.Target, "Target"],
+        ]);
+        return `${flow}:${from}-${to}:${layerStringMap.get(layer)}`;
+    }
+
+    private makeFlowEdges(edges: dagre.Edge[] | undefined, flow: string): dagre.Edge[] | undefined {
+        return (
+            edges &&
+            edges.reduce((reducedEdges: dagre.Edge[], edge: dagre.Edge) => {
+                if (edge.name === flow) {
+                    reducedEdges.push(edge);
+                }
+                return reducedEdges;
+            }, [])
+        );
+    }
+
+    private makeUniqueFlowEdges(edges: dagre.Edge[] | undefined): dagre.Edge[] | undefined {
+        return (
+            edges &&
+            edges.reduce((reducedEdges: dagre.Edge[], edge: dagre.Edge) => {
+                if (!reducedEdges.find((el) => el.name === edge.name)) {
+                    reducedEdges.push(edge);
+                }
+                return reducedEdges;
+            }, [])
+        );
+    }
+
+    private makeEdgePoints(graph: dagre.graphlib.Graph): void {
+        this.makeRankNodeMap(graph);
+        for (let rank = 0; rank < this.numRanks - 1; rank++) {
+            const nodes = this.rankNodeMap.find((el) => el.rank === rank);
+            if (nodes) {
+                const nextRankNodes = this.rankNodeMap.find((el) => el.rank === rank + 1);
+                let nextRankXPosition = 0;
+                if (nextRankNodes) {
+                    nextRankXPosition = Math.min(
+                        ...nextRankNodes.nodes.map((el) => graph.node(el).x - graph.node(el).width / 2)
+                    );
+                }
+
+                const edges: dagre.Edge[] = [];
+
+                // First layer: edges leaving nodes and possibly uniting flows
+                const flows: string[] = [];
+                let xStartPosition = 0;
+                nodes.nodes.forEach((node) => {
+                    const outEdges = this.makeUniqueFlowEdges(graph.outEdges(node));
+                    if (outEdges) {
+                        const localFlows = outEdges.reduce((reducedFlows: string[], el) => {
+                            if (el.name && !reducedFlows.includes(el.name)) {
+                                reducedFlows.push(el.name);
+                            }
+                            return reducedFlows;
+                        }, []);
+                        localFlows.forEach((localFlow) => {
+                            if (!flows.includes(localFlow)) {
+                                flows.push(localFlow);
+                            }
+                        });
+                    }
+                    xStartPosition = Math.max(xStartPosition, graph.node(node).x + graph.node(node).width / 2);
+                });
+
+                const deltaLayerPositions = (nextRankXPosition - xStartPosition) / 4;
+                nodes.nodes.forEach((node) => {
+                    const outEdges = this.makeUniqueFlowEdges(graph.outEdges(node));
+                    if (outEdges) {
+                        edges.push(...outEdges);
+                        const upperRightCorner = {
+                            x: graph.node(node).x + graph.node(node).width / 2,
+                            y: graph.node(node).y - graph.node(node).height / 2,
+                        };
+                        outEdges.forEach((edge, index) => {
+                            const startPoint = pointSum(upperRightCorner, {
+                                x: 0,
+                                y: ((index + 1) * graph.node(node).height) / (outEdges.length + 1),
+                            });
+                            const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.name);
+                            if (flow) {
+                                const flowIndex = flows.findIndex((el) => el === flow.id) || 0;
+
+                                const endPoint = pointSum(
+                                    { x: xStartPosition, y: upperRightCorner.y },
+                                    {
+                                        x: ((flowIndex + 1) / flows.length) * deltaLayerPositions,
+                                        y: ((index + 1) * graph.node(node).height) / (outEdges.length + 1),
+                                    }
+                                );
+
+                                const id = this.makeEdgeId(edge.v, edge.w, flow.id, EdgeLayer.Source);
+                                const edgePointItem = this.edgePoints.find(
+                                    (el) => el.id === id && el.layer === EdgeLayer.Source
+                                );
+                                if (edgePointItem) {
+                                    edgePointItem.points.push(startPoint);
+                                    edgePointItem.points.push(endPoint);
+                                } else {
+                                    this.edgePoints.push({
+                                        id: id,
+                                        points: [startPoint, endPoint],
+                                        flow: flow.id,
+                                        layer: EdgeLayer.Source,
+                                        rank: rank,
+                                        edges: this.makeFlowEdges(graph.outEdges(node), flow.id) || [],
+                                        sourceNodes: [node],
+                                        targetNodes: [],
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+
+                // First layer: joining flows
+                flows.forEach((flow) => {
+                    const otherFlowEdgePoints = this.edgePoints.reduce(
+                        (reduced: EdgePointsItem[], el: EdgePointsItem) => {
+                            if (el.rank === rank && el.flow === flow && el.layer === EdgeLayer.Source) {
+                                reduced.push(el);
+                            }
+                            return reduced;
+                        },
+                        []
+                    );
+                    const jointPoint = this.calcAveragePoint(
+                        otherFlowEdgePoints.map((el) => el.points[el.points.length - 1])
+                    );
+                    otherFlowEdgePoints.forEach((el) => el.points.push(jointPoint));
+                });
+
+                if (nextRankNodes) {
+                    // Third layer: edges arriving at nodes
+                    nextRankNodes.nodes.forEach((node) => {
+                        const inEdges = this.makeUniqueFlowEdges(graph.inEdges(node));
+                        if (inEdges) {
+                            const upperLeftCorner = {
+                                x: graph.node(node).x - graph.node(node).width / 2,
+                                y: graph.node(node).y - graph.node(node).height / 2,
+                            };
+                            inEdges.forEach((edge, index) => {
+                                const endPoint = pointSum(upperLeftCorner, {
+                                    x: 0,
+                                    y: ((index + 1) * graph.node(node).height) / (inEdges.length + 1),
+                                });
+                                const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.name);
+                                if (flow) {
+                                    const flowIndex = flows.findIndex((el) => el === flow.id) || 0;
+
+                                    const startPoint = pointSum(
+                                        { x: nextRankXPosition, y: upperLeftCorner.y },
+                                        {
+                                            x: -((flowIndex + 1) / flows.length) * deltaLayerPositions,
+                                            y: ((index + 1) * graph.node(node).height) / (inEdges.length + 1),
+                                        }
+                                    );
+
+                                    const id = this.makeEdgeId(edge.v, edge.w, flow.id, EdgeLayer.Target);
+                                    const edgePointItem = this.edgePoints.find(
+                                        (el) => el.id === id && el.layer === EdgeLayer.Target
+                                    );
+                                    if (edgePointItem) {
+                                        edgePointItem.points.push(startPoint);
+                                        edgePointItem.points.push(endPoint);
+                                    } else {
+                                        this.edgePoints.push({
+                                            id: id,
+                                            points: [startPoint, endPoint],
+                                            flow: flow.id,
+                                            layer: EdgeLayer.Target,
+                                            rank: rank,
+                                            edges: this.makeFlowEdges(graph.inEdges(node), flow.id) || [],
+                                            sourceNodes: [],
+                                            targetNodes: [node],
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    flows.length = 0;
+
+                    nextRankNodes.nodes.forEach((node) => {
+                        const outEdges = this.makeUniqueFlowEdges(graph.inEdges(node));
+                        if (outEdges) {
+                            const localFlows = outEdges.reduce((reducedFlows: string[], el) => {
+                                if (el.name && !reducedFlows.includes(el.name)) {
+                                    reducedFlows.push(el.name);
+                                }
+                                return reducedFlows;
+                            }, []);
+                            localFlows.forEach((localFlow) => {
+                                if (!flows.includes(localFlow)) {
+                                    flows.push(localFlow);
+                                }
+                            });
+                        }
+                    });
+                    flows.forEach((flow) => {
+                        const otherFlowEdgePoints = this.edgePoints.reduce(
+                            (reduced: EdgePointsItem[], el: EdgePointsItem) => {
+                                if (el.rank === rank && el.flow === flow && el.layer === EdgeLayer.Target) {
+                                    reduced.push(el);
+                                }
+                                return reduced;
+                            },
+                            []
+                        );
+                        const jointPoint = this.calcAveragePoint(otherFlowEdgePoints.map((el) => el.points[0]));
+                        otherFlowEdgePoints.forEach((el) => el.points.unshift(jointPoint));
+                    });
+
+                    // Connect edges
+                    this.edgePoints.forEach((edgePoint) => {
+                        if (edgePoint.rank === rank && edgePoint.layer === EdgeLayer.Source) {
+                            const targetPoints = this.edgePoints.filter(
+                                (el) => el.rank === rank && el.layer === EdgeLayer.Target && el.flow === edgePoint.flow
+                            );
+                            targetPoints.forEach((targetPoint) => {
+                                const id = this.makeEdgeId(
+                                    edgePoint.id,
+                                    targetPoint.id,
+                                    edgePoint.flow,
+                                    EdgeLayer.JointSplit
+                                );
+                                const firstPoint = edgePoint.points[edgePoint.points.length - 1];
+                                const lastPoint = targetPoint.points[0];
+                                const averagePoint = this.calcAveragePoint([firstPoint, lastPoint]);
+                                this.edgePoints.push({
+                                    id: id,
+                                    points: [
+                                        firstPoint,
+                                        { x: averagePoint.x, y: firstPoint.y },
+                                        { x: averagePoint.x, y: lastPoint.y },
+                                        lastPoint,
+                                    ],
+                                    flow: edgePoint.flow,
+                                    layer: EdgeLayer.JointSplit,
+                                    rank: rank,
+                                    edges: edgePoint.edges,
+                                    sourceNodes: [],
+                                    targetNodes: [],
+                                });
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private calcAveragePoint(points: Point[]): Point {
+        const averagePoint = { x: 0, y: 0 };
+        points.forEach((point) => {
+            averagePoint.x += point.x;
+            averagePoint.y += point.y;
+        });
+        return pointScale(averagePoint, points.length);
     }
 
     private makeFlows(): void {
@@ -306,8 +586,8 @@ export class DiagramDrawer {
     private makeEdges(graph: dagre.graphlib.Graph): void {
         let edgeIndex = 0;
 
-        this.flowNodeEdgeIndicesMap = this.flowDiagram.nodes.map((node) => ({
-            id: node.id,
+        this.flowNodeEdgeIndicesMap = graph.nodes().map((node) => ({
+            id: node,
             edgeIndices: [],
         }));
 
@@ -315,145 +595,14 @@ export class DiagramDrawer {
             this.flowNodeEdgeIndicesMap.push({ id: `flow-${flow.id}`, edgeIndices: [] });
         });
 
-        const adjustedPoints: AdjustedPoint[] = [];
-
-        graph.edges().forEach((edge) => {
-            const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.name);
+        this.edgePoints.forEach((edge) => {
+            const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.flow);
             if (flow) {
-                const sourceNodes: { node: string; position: Point }[] = graph
-                    .edges()
-                    .filter((el) => el.w === edge.w)
-                    .map((el) => ({ node: el.v, position: graph.edge(el).points[0] }));
-                sourceNodes.sort(this.sortNodesByYCoordinate);
-
-                const targetNodes: { node: string; position: Point }[] = graph
-                    .edges()
-                    .filter((el) => el.v === edge.v)
-                    .map((el) => ({ node: el.w, position: graph.edge(el).points[graph.edge(el).points.length - 1] }));
-                targetNodes.sort(this.sortNodesByYCoordinate);
-
                 const strokeWidth = flow.style.strokeWidth || this.config.defaultEdgeStrokeWidth;
                 const arrowWidth = flow.style.arrowHeadSize || this.config.defaultEdgeArrowSize;
                 const strokeColor = flow.style.strokeColor || this.config.defaultEdgeStrokeColor;
                 const strokeStyle = flow.style.strokeStyle || this.config.defaultEdgeStrokeStyle;
-
-                const inputPoint = this.additionalFlowNodes.includes(edge.w)
-                    ? graph.edge(edge).points[graph.edge(edge).points.length - 1]
-                    : {
-                          x: graph.node(edge.w).x - graph.node(edge.w).width / 2,
-                          y:
-                              graph.node(edge.w).y -
-                              graph.node(edge.w).height / 2 +
-                              (graph.node(edge.w).height / (sourceNodes.length + 1)) *
-                                  (sourceNodes.findIndex((el) => el.node === edge.v) + 1),
-                      };
-                const outputPoint = this.additionalFlowNodes.includes(edge.v)
-                    ? graph.edge(edge).points[0]
-                    : {
-                          x: graph.node(edge.v).x + graph.node(edge.v).width / 2,
-                          y:
-                              graph.node(edge.v).y -
-                              graph.node(edge.v).height / 2 +
-                              (graph.node(edge.v).height / (targetNodes.length + 1)) *
-                                  (targetNodes.findIndex((el) => el.node === edge.w) + 1),
-                      };
-
-                const points: Point[] = [];
-                if (!this.additionalFlowNodes.includes(edge.v) && this.additionalFlowNodes.includes(edge.w)) {
-                    const delta = this.config.horizontalSpacing / targetNodes.length;
-                    const xShift =
-                        delta *
-                        Math.abs(
-                            targetNodes.findIndex((el) => el.node === edge.w) - Math.floor(targetNodes.length / 2)
-                        );
-                    points.push(outputPoint);
-                    points.push({
-                        x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x - xShift,
-                        y: outputPoint.y,
-                    });
-                    points.push({
-                        x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x - xShift,
-                        y: graph.edge(edge).points[graph.edge(edge).points.length - 1].y,
-                    });
-                    adjustedPoints.push({
-                        startNode: edge.w,
-                        position: {
-                            x: graph.edge(edge).points[graph.edge(edge).points.length - 1].x - xShift,
-                            y: graph.edge(edge).points[graph.edge(edge).points.length - 1].y,
-                        },
-                    });
-                    (
-                        this.flowNodeEdgeIndicesMap.find((el) => el.id === edge.v) as FlowNodeEdgeIndicesMapItem
-                    ).edgeIndices.push(edgeIndex);
-                    this.additionalFlowNodesMap.forEach((el) => {
-                        if (el.edgeId === edge.w) {
-                            el.targetNodes.forEach((node) =>
-                                (
-                                    this.flowNodeEdgeIndicesMap.find(
-                                        (entry) => entry.id === node
-                                    ) as FlowNodeEdgeIndicesMapItem
-                                ).edgeIndices.push(edgeIndex)
-                            );
-                        }
-                    });
-                } else if (this.additionalFlowNodes.includes(edge.v) && this.additionalFlowNodes.includes(edge.w)) {
-                    points.push(
-                        adjustedPoints.some((el) => el.startNode === edge.v)
-                            ? (adjustedPoints.find((el) => el.startNode === edge.v) as AdjustedPoint).position
-                            : graph.edge(edge).points[0]
-                    );
-                    points.push(graph.edge(edge).points[graph.edge(edge).points.length - 1]);
-                    this.additionalFlowNodesMap.forEach((el) => {
-                        if (el.edgeId === edge.w || el.edgeId === edge.v) {
-                            el.targetNodes.forEach((node) =>
-                                (
-                                    this.flowNodeEdgeIndicesMap.find(
-                                        (entry) => entry.id === node
-                                    ) as FlowNodeEdgeIndicesMapItem
-                                ).edgeIndices.push(edgeIndex)
-                            );
-                            el.sourceNodes.forEach((node) =>
-                                (
-                                    this.flowNodeEdgeIndicesMap.find(
-                                        (entry) => entry.id === node
-                                    ) as FlowNodeEdgeIndicesMapItem
-                                ).edgeIndices.push(edgeIndex)
-                            );
-                        }
-                    });
-                } else if (this.additionalFlowNodes.includes(edge.v) && !this.additionalFlowNodes.includes(edge.w)) {
-                    const delta = this.config.horizontalSpacing / sourceNodes.length;
-                    const xShift =
-                        delta *
-                        Math.abs(
-                            sourceNodes.findIndex((el) => el.node === edge.v) - Math.floor(sourceNodes.length / 2)
-                        );
-                    points.push(graph.edge(edge).points[0]);
-                    points.push({
-                        x: graph.edge(edge).points[0].x + xShift,
-                        y: graph.edge(edge).points[0].y,
-                    });
-                    points.push({
-                        x: graph.edge(edge).points[0].x + xShift,
-                        y: inputPoint.y,
-                    });
-                    points.push(inputPoint);
-                    (
-                        this.flowNodeEdgeIndicesMap.find((el) => el.id === edge.w) as FlowNodeEdgeIndicesMapItem
-                    ).edgeIndices.push(edgeIndex);
-                    this.additionalFlowNodesMap.forEach((el) => {
-                        if (el.edgeId === edge.v) {
-                            el.sourceNodes.forEach((node) =>
-                                (
-                                    this.flowNodeEdgeIndicesMap.find(
-                                        (entry) => entry.id === node
-                                    ) as FlowNodeEdgeIndicesMapItem
-                                ).edgeIndices.push(edgeIndex)
-                            );
-                        }
-                    });
-                }
-
+                const points = edge.points;
                 const width =
                     Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x))) +
                     2 * arrowWidth;
@@ -462,7 +611,6 @@ export class DiagramDrawer {
                     2 * arrowWidth;
                 const left = Math.min(...points.map((point) => point.x)) - arrowWidth;
                 const top = Math.min(...points.map((point) => point.y)) - arrowWidth;
-
                 let svg = (
                     <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
                         <polyline
@@ -472,7 +620,7 @@ export class DiagramDrawer {
                             strokeWidth={strokeWidth}
                             strokeDasharray={strokeStyle}
                             markerEnd={
-                                this.additionalFlowNodes.includes(edge.v) && !this.additionalFlowNodes.includes(edge.w)
+                                edge.layer === EdgeLayer.Target && !edge.id.includes("-rank-")
                                     ? `url(#arrow-${flow.id})`
                                     : undefined
                             }
@@ -500,8 +648,7 @@ export class DiagramDrawer {
                                 strokeWidth={strokeWidth}
                                 strokeDasharray={strokeStyle}
                                 markerEnd={
-                                    this.additionalFlowNodes.includes(edge.v) &&
-                                    !this.additionalFlowNodes.includes(edge.w)
+                                    edge.layer === EdgeLayer.Target && !edge.id.includes("-rank-")
                                         ? `url(#arrow-${flow.id})`
                                         : undefined
                                 }
@@ -511,7 +658,7 @@ export class DiagramDrawer {
                 }
                 this.sceneItems.push(
                     <SceneItem
-                        key={`${flow.id}:${edge.v}-${edge.w}-edge`}
+                        key={`${edge.id}-edge`}
                         id={`edge-${edgeIndex}`}
                         type={SceneItemType.Flow}
                         size={{ width: width, height: height }}
@@ -522,29 +669,62 @@ export class DiagramDrawer {
                     />
                 );
 
+                if (edge.edges) {
+                    edge.edges.forEach((item) => {
+                        (
+                            this.flowNodeEdgeIndicesMap.find((el) => el.id === item.v) as FlowNodeEdgeIndicesMapItem
+                        ).edgeIndices.push(edgeIndex);
+
+                        (
+                            this.flowNodeEdgeIndicesMap.find((el) => el.id === item.w) as FlowNodeEdgeIndicesMapItem
+                        ).edgeIndices.push(edgeIndex);
+
+                        this.additionalEdgesMap.forEach((el) => {
+                            if (el.flow === flow.id && el.edges.find((e) => e["v"] === item.v && e["w"] === item.w)) {
+                                (
+                                    this.flowNodeEdgeIndicesMap.find(
+                                        (e) => e.id === el.targetNode
+                                    ) as FlowNodeEdgeIndicesMapItem
+                                ).edgeIndices.push(edgeIndex);
+                                (
+                                    this.flowNodeEdgeIndicesMap.find(
+                                        (e) => e.id === el.sourceNode
+                                    ) as FlowNodeEdgeIndicesMapItem
+                                ).edgeIndices.push(edgeIndex);
+                            }
+                        });
+                    });
+                }
+
                 (
                     this.flowNodeEdgeIndicesMap.find((el) => el.id === `flow-${flow.id}`) as FlowNodeEdgeIndicesMapItem
                 ).edgeIndices.push(edgeIndex);
                 edgeIndex++;
 
-                if (this.additionalFlowNodes.includes(edge.v) && this.additionalFlowNodes.includes(edge.w)) {
+                if (edge.layer === EdgeLayer.JointSplit) {
                     const label = (
                         <EdgeLabel
                             label={flow.label}
-                            size={{ width: graph.edge(edge)["width"], height: graph.edge(edge)["height"] }}
+                            size={{
+                                width: graph.edge(edge.edges[0])["width"],
+                                height: graph.edge(edge.edges[0])["height"],
+                            }}
                         />
                     );
-                    const node1 = graph.node(edge.v);
-                    const node2 = graph.node(edge.w);
+                    const node1 = edge.points[0];
+                    const node2 = edge.points[edge.points.length - 1];
                     this.sceneItems.push(
                         <SceneItem
-                            key={`${flow.id}:${edge.v}-${edge.w}-label`}
+                            key={`${edge.id}-label`}
                             id={`flow-${flow.id}`}
                             type={SceneItemType.Label}
-                            size={{ width: graph.edge(edge)["width"], height: graph.edge(edge)["height"] }}
+                            size={{
+                                width: graph.edge(edge.edges[0])["width"],
+                                height: graph.edge(edge.edges[0])["height"],
+                            }}
                             position={{
                                 x: node1.x + (node2.x - node1.x) / 2,
-                                y: node1.y - graph.edge(edge)["height"],
+                                y: node1.y + (node2.y - node1.y) / 2 - graph.edge(edge.edges[0])["height"],
                             }}
                             zIndex={6}
                             children={label}
@@ -553,8 +733,6 @@ export class DiagramDrawer {
                         />
                     );
                 }
-            } else {
-                DebugConsole.error(`Could not find flow with id '${edge.name}' - skipping.`);
             }
         });
     }
@@ -572,6 +750,7 @@ export class DiagramDrawer {
         this.makeSceneSize(graph);
         this.makeNodes(graph);
         this.makeFlows();
+        this.makeEdgePoints(graph);
         this.makeEdges(graph);
     }
 

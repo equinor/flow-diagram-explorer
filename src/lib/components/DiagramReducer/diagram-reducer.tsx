@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 
 import { FlowDiagram, DiagramConfig } from "../../types/diagram";
-import { Diagram, DiagramDrawer } from "../../utils/diagram-drawer-advanced";
+import { Diagram, DiagramDrawer } from "../../utils/diagram-drawer";
 
 type ActionMap<M extends { [index: string]: { [key: string]: string | Dayjs | number | FlowDiagram[] } }> = {
     [Key in keyof M]: M[Key] extends undefined
