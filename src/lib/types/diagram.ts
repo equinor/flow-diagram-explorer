@@ -19,8 +19,8 @@ export type FlowDiagramFlow = {
 
 export type FlowDiagramEdge = {
     flow: string;
-    from: string;
-    to: string;
+    fromNode: string;
+    toNode: string;
 };
 
 export type FlowDiagramNode = {

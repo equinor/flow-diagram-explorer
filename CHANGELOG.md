@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - YYYY-MM-DD
 
+### Changed
+
+-   [#11](https://github.com/equinor/flow-diagram-explorer/pull/11) - Renamed `from` to `fromNode` and `to` to `toNode` in `FlowDiagramEdge`. Also replaced `diagram-drawer.tsx` with `diagram-drawer-advanced.tsx` and removed the latter.
+
+## [1.0.0-alpha] - 2021-08-18
+
 ### Added
 
 -   [#3](https://github.com/equinor/flow-diagram-explorer/pull/3) - Setup of build environment.

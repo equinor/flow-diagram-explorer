@@ -49,9 +49,9 @@ export const installationDetails: FlowDiagram = {
     ],
     flows: [{ id: "something", label: "Something", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } }],
     edges: [
-        { flow: "something", from: "input", to: "pump1" },
-        { flow: "something", from: "input", to: "pump2" },
-        { flow: "something", from: "input", to: "pump3" },
-        { flow: "something", from: "input", to: "pump4" },
+        { flow: "something", fromNode: "input", toNode: "pump1" },
+        { flow: "something", fromNode: "input", toNode: "pump2" },
+        { flow: "something", fromNode: "input", toNode: "pump3" },
+        { flow: "something", fromNode: "input", toNode: "pump4" },
     ],
 };
