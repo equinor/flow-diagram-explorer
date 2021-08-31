@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#12](https://github.com/equinor/flow-diagram-explorer/pull/12) - Removed `preinstall` script (when installing with npm >= 7.*, use `--legacy-peer-deps`).
+
+## [1.0.0-alpha1] - 2021-08-24
+
+### Changed
+
 -   [#11](https://github.com/equinor/flow-diagram-explorer/pull/11) - Renamed `from` to `fromNode` and `to` to `toNode` in `FlowDiagramEdge`. Also replaced `diagram-drawer.tsx` with `diagram-drawer-advanced.tsx` and removed the latter.
 
 ## [1.0.0-alpha] - 2021-08-18

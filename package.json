@@ -44,7 +44,6 @@
     "scripts": {
         "predeploy": "npm run build",
         "deploy": "gh-pages -d build",
-        "preinstall": "npx npm-force-resolutions",
         "start": "webpack serve --mode development --devtool inline-source-map --entry ./src/demo/index.tsx --open",
         "build": "webpack --mode production --entry ./src/demo/index.tsx",
         "prepack": "tsc",
