@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#13](https://github.com/equinor/flow-diagram-explorer/pull/12) - Set declaration files to be created and `css` and `svg` files to be copied on build.
+
+## [1.0.0-alpha2] - 2021-08-24
+
+### Changed
+
 - [#12](https://github.com/equinor/flow-diagram-explorer/pull/12) - Removed `preinstall` script (when installing with npm >= 7.*, use `--legacy-peer-deps`).
 
 ## [1.0.0-alpha1] - 2021-08-24
