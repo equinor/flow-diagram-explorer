@@ -27,7 +27,7 @@ export const NodeActionHandler: React.FC<NodeActionHandlerPropsType> = (props) =
         (id: string) => {
             if (childRef.current && props.sceneProperties !== null) {
                 const highlighted: { svg: SVGElement; originalColor: string; originalZIndex: string }[] = [];
-                const sceneItems: Element[] = [...childRef.current.getElementsByClassName("SceneItem")].filter(
+                const sceneItems: Element[] = [...childRef.current.getElementsByClassName("FlowDiagramExplorer__SceneItem")].filter(
                     (htmlElement: Element) => {
                         const nodeEdges = (props.sceneProperties as Diagram).flowNodeEdgeMap.find((el) => el.id === id);
                         if (nodeEdges) {

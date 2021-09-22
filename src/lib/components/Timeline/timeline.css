@@ -33,11 +33,11 @@
     margin-right: 8px;
 }
 
-.FlowDiagramExplorer__Timeline__CurrentSelectionLabel__Toggle {
+button.FlowDiagramExplorer__Timeline__Toggle {
     margin-top: -7px;
 }
 
-.FlowDiagramExplorer__Timeline__CurrentSelectionLabel__DatePicker {
+.FlowDiagramExplorer__Timeline__DatePicker {
     width: 160px;
 }
 
@@ -113,8 +113,8 @@
     margin-right: 0px;
 }
 
-.FlowDiagramExplorer__Timeline__Frames .active,
-.FlowDiagramExplorer__Timeline__Frames .active:hover {
+.FlowDiagramExplorer__Timeline__Frames--active,
+.FlowDiagramExplorer__Timeline__Frames--active:hover {
     background-color: #007079;
     height: 38px;
     transition: height 0.25s;
@@ -129,7 +129,7 @@
     height: 35px;
 }
 
-.FlowDiagramExplorer__Timeline__Axis__Label {
+.FlowDiagramExplorer__Timeline__AxisLabel {
     padding-top: 20px;
     position: absolute;
     display: block;
@@ -142,7 +142,7 @@
     top: 0;
 }
 
-.FlowDiagramExplorer__Timeline__Axis__Tick {
+.FlowDiagramExplorer__Timeline__AxisTick {
     top: 0px;
     width: 1px;
     height: 5px;
@@ -151,7 +151,7 @@
     display: block;
 }
 
-.FlowDiagramExplorer__Timeline__Axis__Label::after {
+.FlowDiagramExplorer__Timeline__AxisLabel::after {
     top: 0px;
     left: 25px;
     width: 1px;

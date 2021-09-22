@@ -4,7 +4,7 @@
     bottom: 0px;
 }
 
-.FlowDiagramExplorer__MapActions > * {
+button.FlowDiagramExplorer__FloatingActionButton {
     margin: 16px;
     background-color: white;
     color: #246e78;
