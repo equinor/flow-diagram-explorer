@@ -26,7 +26,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
     );
 
     return (
-        <div className="MapActions">
+        <div className="FlowDiagramExplorer__MapActions">
             <Tooltip title="Zoom in" placement="left">
                 <Fab aria-label="zoom in" onClick={() => handleActionTriggered(MapActionType.ZoomIn)}>
                     <ZoomInIcon />

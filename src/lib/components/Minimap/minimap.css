@@ -1,4 +1,4 @@
-.FlowDiagramExplorer .Minimap {
+.FlowDiagramExplorer__Minimap {
     position: absolute;
     padding: 8px;
     background-color: white;
@@ -11,18 +11,18 @@
     transition: height 1s;
 }
 
-.FlowDiagramExplorer .Minimap > div {
+.FlowDiagramExplorer__Minimap > div {
     overflow: hidden;
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.FlowDiagramExplorer .Minimap > div > div {
+.FlowDiagramExplorer__Minimap > div > div {
     transform-origin: 0 0;
 }
 
-.FlowDiagramExplorer .Minimap__View {
+.FlowDiagramExplorer__Minimap__View {
     position: absolute;
     display: block;
     z-index: 12;
@@ -30,7 +30,7 @@
     opacity: 0.1;
 }
 
-.FlowDiagramExplorer .NoHoverLayer {
+.FlowDiagramExplorer__NoHoverLayer {
     position: absolute;
     z-index: 11;
     border: 16px transparent solid;

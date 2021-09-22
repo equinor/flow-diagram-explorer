@@ -1,9 +1,9 @@
-.FlowDiagramExplorer .Timeline {
+.FlowDiagramExplorer__Timeline {
     position: relative;
     user-select: none;
 }
 
-.FlowDiagramExplorer .InnerTimeline {
+.FlowDiagramExplorer__InnerTimeline {
     padding: 16px;
     background-color: white;
     box-shadow: 0px 3px 5px #888888;
@@ -11,7 +11,7 @@
     border-radius: 8px;
 }
 
-.FlowDiagramExplorer .Timeline .CurrentSelectionLabel {
+.FlowDiagramExplorer__Timeline__CurrentSelectionLabel {
     position: absolute;
     left: 50%;
     margin-left: -120px;
@@ -29,19 +29,19 @@
     text-align: center;
 }
 
-.FlowDiagramExplorer .Timeline .CurrentSelectionLabel button:first-of-type {
+.FlowDiagramExplorer__Timeline__CurrentSelectionLabel button:first-of-type {
     margin-right: 8px;
 }
 
-.FlowDiagramExplorer .Timeline .CurrentSelectionLabel .Toggle {
+.FlowDiagramExplorer__Timeline__CurrentSelectionLabel__Toggle {
     margin-top: -7px;
 }
 
-.FlowDiagramExplorer .Timeline .CurrentSelectionLabel .DatePicker {
+.FlowDiagramExplorer__Timeline__CurrentSelectionLabel__DatePicker {
     width: 160px;
 }
 
-.FlowDiagramExplorer .Timeline .Frames {
+.FlowDiagramExplorer__Timeline__Frames {
     display: flex;
     position: relative;
     flex-direction: row;
@@ -54,7 +54,7 @@
     cursor: ew-resize;
 }
 
-.FlowDiagramExplorer .Timeline .Slider {
+.FlowDiagramExplorer__Timeline__Slider {
     background-color: black;
     border: 1px white solid;
     width: 7px;
@@ -68,7 +68,7 @@
     z-index: 12;
 }
 
-.FlowDiagramExplorer .Timeline .HoverSlider {
+.FlowDiagramExplorer__Timeline__HoverSlider {
     background-color: black;
     opacity: 0.3;
     border: 1px white solid;
@@ -83,7 +83,7 @@
     z-index: 11;
 }
 
-.FlowDiagramExplorer .Timeline .HoverSlider .Tooltip {
+.FlowDiagramExplorer__Timeline__HoverSlider__Tooltip {
     position: absolute;
     top: -30px;
     background-color: black;
@@ -96,7 +96,7 @@
     font-size: 0.8em;
 }
 
-.FlowDiagramExplorer .Timeline .Frame {
+.FlowDiagramExplorer__Timeline__Frame {
     background-color: #deedee;
     height: 30px;
     border-radius: 4px;
@@ -105,23 +105,23 @@
     box-sizing: border-box;
 }
 
-.FlowDiagramExplorer .Timeline .Frame:first-child {
+.FlowDiagramExplorer__Timeline__Frame:first-child {
     margin-left: 0px;
 }
 
-.FlowDiagramExplorer .Timeline .Frame:last-child {
+.FlowDiagramExplorer__Timeline__Frame:last-child {
     margin-right: 0px;
 }
 
-.FlowDiagramExplorer .Timeline .Frames .active,
-.FlowDiagramExplorer .Timeline .Frames .active:hover {
+.FlowDiagramExplorer__Timeline__Frames .active,
+.FlowDiagramExplorer__Timeline__Frames .active:hover {
     background-color: #007079;
     height: 38px;
     transition: height 0.25s;
     transition-timing-function: ease-in-out;
 }
 
-.FlowDiagramExplorer .Timeline .Axis {
+.FlowDiagramExplorer__Timeline__Axis {
     border-top: 1px #e0e0e0 solid;
     margin-left: 25px;
     margin-right: 25px;
@@ -129,7 +129,7 @@
     height: 35px;
 }
 
-.FlowDiagramExplorer .Timeline .Axis .Label {
+.FlowDiagramExplorer__Timeline__Axis__Label {
     padding-top: 20px;
     position: absolute;
     display: block;
@@ -142,7 +142,7 @@
     top: 0;
 }
 
-.FlowDiagramExplorer .Timeline .Axis .Tick {
+.FlowDiagramExplorer__Timeline__Axis__Tick {
     top: 0px;
     width: 1px;
     height: 5px;
@@ -151,7 +151,7 @@
     display: block;
 }
 
-.FlowDiagramExplorer .Timeline .Axis .Label::after {
+.FlowDiagramExplorer__Timeline__Axis__Label::after {
     top: 0px;
     left: 25px;
     width: 1px;

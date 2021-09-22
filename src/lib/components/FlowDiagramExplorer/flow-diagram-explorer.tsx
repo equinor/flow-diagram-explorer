@@ -56,7 +56,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
             <DiagramConfigContext.Provider value={diagramConfig}>
                 {flowDiagrams.length > 0 ? (
                     <>
-                        <div className="Levels">
+                        <div className="FlowDiagramExplorer__Levels">
                             <Breadcrumbs>
                                 {state.currentPath.map((pathElement, index, array) => {
                                     if (index === array.length - 1) {
@@ -90,7 +90,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
                                 })}
                             </Breadcrumbs>
                         </div>
-                        <div className="TimelineContainer">
+                        <div className="FlowDiagramExplorer__TimelineContainer">
                             <Timeline
                                 onDateChange={(date: Dayjs) =>
                                     dispatch({ type: DiagramActionTypes.ChangeDate, payload: { date: date } })

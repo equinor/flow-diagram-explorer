@@ -132,7 +132,7 @@ export const SceneItem: React.FC<SceneItemPropsType> = (props) => {
         return (
             <div
                 data-id={id}
-                className="SceneItem"
+                className="FlowDiagramExplorer__SceneItem"
                 style={{
                     left: position.x,
                     top: position.y,
