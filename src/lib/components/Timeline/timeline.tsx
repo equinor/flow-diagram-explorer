@@ -276,7 +276,11 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
             {currentDate && (
                 <div className="FlowDiagramExplorer__Timeline__CurrentSelectionLabel">
                     <Tooltip title="Open date picker dialog" placement="top">
-                        <Button className="FlowDiagramExplorer__Timeline__Toggle" variant="ghost_icon" onClick={toggleDatePickerDialogVisibility}>
+                        <Button
+                            className="FlowDiagramExplorer__Timeline__Toggle"
+                            variant="ghost_icon"
+                            onClick={toggleDatePickerDialogVisibility}
+                        >
                             <Icon name="calendar" title="Current date" size={16} />
                         </Button>
                     </Tooltip>
@@ -302,7 +306,11 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                         />
                     </MuiPickersUtilsProvider>
                     <Tooltip title={visible ? "Hide timeline" : "Show timeline"} placement="top">
-                        <Button className="FlowDiagramExplorer__Timeline__Toggle" variant="ghost_icon" onClick={handleToggleVisibility}>
+                        <Button
+                            className="FlowDiagramExplorer__Timeline__Toggle"
+                            variant="ghost_icon"
+                            onClick={handleToggleVisibility}
+                        >
                             {visible ? (
                                 <Icon name="visibility_off" title="Hide" size={16} />
                             ) : (
@@ -348,7 +356,9 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                         }}
                         onMouseUp={(e: React.MouseEvent<HTMLDivElement>) => handleFrameClick(e)}
                     >
-                        <div className="FlowDiagramExplorer__Timeline__HoverSlider__Tooltip">{currentHoverDate && currentHoverDate.format("MMMM DD, YYYY")}</div>
+                        <div className="FlowDiagramExplorer__Timeline__HoverSlider__Tooltip">
+                            {currentHoverDate && currentHoverDate.format("MMMM DD, YYYY")}
+                        </div>
                     </div>
                     {frames.map((frame) => (
                         <div
@@ -373,7 +383,11 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                 <div className="FlowDiagramExplorer__Timeline__Axis">
                     {axisTicks.map((tick) =>
                         tick.label ? (
-                            <div className="FlowDiagramExplorer__Timeline__AxisLabel" style={{ left: tick.position }} key={`axis-label-${tick.position}`}>
+                            <div
+                                className="FlowDiagramExplorer__Timeline__AxisLabel"
+                                style={{ left: tick.position }}
+                                key={`axis-label-${tick.position}`}
+                            >
                                 {tick.label}
                             </div>
                         ) : (
