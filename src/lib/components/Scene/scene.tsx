@@ -222,7 +222,10 @@ export const Scene: React.FC<ScenePropsType> = React.memo((props: ScenePropsType
         : size;
 
     return (
-        <div className="Scene" style={{ width: calculatedSize.width, height: calculatedSize.height }}>
+        <div
+            className="FlowDiagramExplorer__Scene"
+            style={{ width: calculatedSize.width, height: calculatedSize.height }}
+        >
             {animationFader < 1 &&
                 previousChildren &&
                 previousChildren.map((child: React.ReactElement<SceneItemPropsType>) => {

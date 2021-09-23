@@ -132,7 +132,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props) => {
 
     return (
         <div
-            className={clsx("Minimap", "FlowDiagramExplorer__effects__unselectable")}
+            className={clsx("FlowDiagramExplorer__Minimap", "FlowDiagramExplorer__effects__unselectable")}
             style={{ width: boundaryBox.width * scaling, height: boundaryBox.height * scaling }}
             ref={mapRef}
         >
@@ -145,7 +145,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props) => {
                     })}
                     <div
                         ref={viewRef}
-                        className="Minimap__View"
+                        className="FlowDiagramExplorer__Minimap__View"
                         style={{
                             width: rectangle.width,
                             height: rectangle.height,
@@ -154,7 +154,7 @@ export const Minimap: React.FC<MinimapPropsType> = (props) => {
                         }}
                     ></div>
                     <div
-                        className="NoHoverLayer"
+                        className="FlowDiagramExplorer__NoHoverLayer"
                         style={{
                             width: boundaryBox.width,
                             height: boundaryBox.height,

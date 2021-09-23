@@ -1,10 +1,10 @@
-.FlowDiagramExplorer .MapActions {
+.FlowDiagramExplorer__MapActions {
     position: absolute;
     right: 0px;
     bottom: 0px;
 }
 
-.FlowDiagramExplorer .MapActions > * {
+button.FlowDiagramExplorer__MapActions__Fab {
     margin: 16px;
     background-color: white;
     color: #246e78;

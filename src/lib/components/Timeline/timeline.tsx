@@ -272,11 +272,15 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
     };
 
     return (
-        <div className="Timeline">
+        <div className="FlowDiagramExplorer__Timeline">
             {currentDate && (
-                <div className="CurrentSelectionLabel">
+                <div className="FlowDiagramExplorer__Timeline__CurrentSelectionLabel">
                     <Tooltip title="Open date picker dialog" placement="top">
-                        <Button className="Toggle" variant="ghost_icon" onClick={toggleDatePickerDialogVisibility}>
+                        <Button
+                            className="FlowDiagramExplorer__Timeline__Toggle"
+                            variant="ghost_icon"
+                            onClick={toggleDatePickerDialogVisibility}
+                        >
                             <Icon name="calendar" title="Current date" size={16} />
                         </Button>
                     </Tooltip>
@@ -295,14 +299,18 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                             onOpen={() => setDatePickerOpen(true)}
                             onClose={() => setDatePickerOpen(false)}
                             minDate={sortedTimeFrames.length > 0 ? sortedTimeFrames[0].startDate : undefined}
-                            className="DatePicker"
+                            className="FlowDiagramExplorer__Timeline__DatePicker"
                             InputProps={{
                                 disableUnderline: true,
                             }}
                         />
                     </MuiPickersUtilsProvider>
                     <Tooltip title={visible ? "Hide timeline" : "Show timeline"} placement="top">
-                        <Button className="Toggle" variant="ghost_icon" onClick={handleToggleVisibility}>
+                        <Button
+                            className="FlowDiagramExplorer__Timeline__Toggle"
+                            variant="ghost_icon"
+                            onClick={handleToggleVisibility}
+                        >
                             {visible ? (
                                 <Icon name="visibility_off" title="Hide" size={16} />
                             ) : (
@@ -312,15 +320,15 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                     </Tooltip>
                 </div>
             )}
-            <div className="InnerTimeline" style={{ display: visible ? "block" : "none" }}>
+            <div className="FlowDiagramExplorer__InnerTimeline" style={{ display: visible ? "block" : "none" }}>
                 <div
-                    className="Frames"
+                    className="FlowDiagramExplorer__Timeline__Frames"
                     ref={framesRef}
                     onMouseOver={() => setHoverSliderVisible(true)}
                     onMouseOut={() => setHoverSliderVisible(false)}
                 >
                     <div
-                        className="Slider"
+                        className="FlowDiagramExplorer__Timeline__Slider"
                         style={{
                             left:
                                 currentDate && sortedTimeFrames.length > 0
@@ -334,7 +342,7 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                         onMouseDown={() => setSliderActive(true)}
                     ></div>
                     <div
-                        className="HoverSlider"
+                        className="FlowDiagramExplorer__Timeline__HoverSlider"
                         style={{
                             left:
                                 currentHoverDate && currentHoverDate.valueOf() > 0 && sortedTimeFrames.length > 0
@@ -348,13 +356,15 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                         }}
                         onMouseUp={(e: React.MouseEvent<HTMLDivElement>) => handleFrameClick(e)}
                     >
-                        <div className="Tooltip">{currentHoverDate && currentHoverDate.format("MMMM DD, YYYY")}</div>
+                        <div className="FlowDiagramExplorer__Timeline__HoverSlider__Tooltip">
+                            {currentHoverDate && currentHoverDate.format("MMMM DD, YYYY")}
+                        </div>
                     </div>
                     {frames.map((frame) => (
                         <div
                             key={`frame-${frame.timeFrame.startDate.valueOf()}-${frame.timeFrame.endDate.valueOf()}`}
                             className={clsx(
-                                "Frame",
+                                "FlowDiagramExplorer__Timeline__Frame",
                                 currentDate &&
                                     currentDate.isBetween(
                                         frame.timeFrame.startDate,
@@ -362,7 +372,7 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                                         null,
                                         "[]"
                                     )
-                                    ? "active"
+                                    ? "FlowDiagramExplorer__Timeline__Frames--active"
                                     : ""
                             )}
                             style={{ width: frame.width }}
@@ -370,15 +380,19 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                         ></div>
                     ))}
                 </div>
-                <div className="Axis">
+                <div className="FlowDiagramExplorer__Timeline__Axis">
                     {axisTicks.map((tick) =>
                         tick.label ? (
-                            <div className="Label" style={{ left: tick.position }} key={`axis-label-${tick.position}`}>
+                            <div
+                                className="FlowDiagramExplorer__Timeline__AxisLabel"
+                                style={{ left: tick.position }}
+                                key={`axis-label-${tick.position}`}
+                            >
                                 {tick.label}
                             </div>
                         ) : (
                             <div
-                                className="Tick"
+                                className="FlowDiagramExplorer__Timeline__AxisTick"
                                 style={{ left: tick.position }}
                                 key={`axis-tick-${tick.position}`}
                             ></div>

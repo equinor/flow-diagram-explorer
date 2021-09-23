@@ -72,7 +72,11 @@ export const View: React.FC<ViewPropsType> = ({
     }, [onCenterPointChange, scale, adjustedOffset]);
 
     return (
-        <div className="View" ref={viewRef} style={{ width: width, height: height, backgroundColor: backgroundColor }}>
+        <div
+            className="FlowDiagramExplorer__View"
+            ref={viewRef}
+            style={{ width: width, height: height, backgroundColor: backgroundColor }}
+        >
             <div
                 style={{
                     left: Math.floor(adjustedOffset.x),

@@ -115,7 +115,7 @@ export const Map: React.FC<MapPropsType> = (props) => {
     );
 
     return (
-        <div ref={mapRef} className="Map" style={{ width: width, height: height }}>
+        <div ref={mapRef} className="FlowDiagramExplorer__Map" style={{ width: width, height: height }}>
             <View
                 initialCenterPoint={viewCenterPoint}
                 width={width}

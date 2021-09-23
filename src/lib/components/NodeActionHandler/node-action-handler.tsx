@@ -27,19 +27,19 @@ export const NodeActionHandler: React.FC<NodeActionHandlerPropsType> = (props) =
         (id: string) => {
             if (childRef.current && props.sceneProperties !== null) {
                 const highlighted: { svg: SVGElement; originalColor: string; originalZIndex: string }[] = [];
-                const sceneItems: Element[] = [...childRef.current.getElementsByClassName("SceneItem")].filter(
-                    (htmlElement: Element) => {
-                        const nodeEdges = (props.sceneProperties as Diagram).flowNodeEdgeMap.find((el) => el.id === id);
-                        if (nodeEdges) {
-                            return nodeEdges.edgeIndices.some(
-                                (el) =>
-                                    htmlElement.getAttribute("data-id") &&
-                                    htmlElement.getAttribute("data-id") === `edge-${el}`
-                            );
-                        }
-                        return false;
+                const sceneItems: Element[] = [
+                    ...childRef.current.getElementsByClassName("FlowDiagramExplorer__SceneItem"),
+                ].filter((htmlElement: Element) => {
+                    const nodeEdges = (props.sceneProperties as Diagram).flowNodeEdgeMap.find((el) => el.id === id);
+                    if (nodeEdges) {
+                        return nodeEdges.edgeIndices.some(
+                            (el) =>
+                                htmlElement.getAttribute("data-id") &&
+                                htmlElement.getAttribute("data-id") === `edge-${el}`
+                        );
                     }
-                );
+                    return false;
+                });
                 sceneItems.forEach((item) => {
                     if (item.children) {
                         const child = item.children[0];

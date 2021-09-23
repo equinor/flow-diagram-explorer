@@ -3,7 +3,7 @@
     position: relative;
 }
 
-.FlowDiagramExplorer .Levels {
+.FlowDiagramExplorer__Levels {
     position: absolute;
     padding: 16px;
     background-color: white;
@@ -16,7 +16,7 @@
     z-index: 10;
 }
 
-.FlowDiagramExplorer .TimelineContainer {
+.FlowDiagramExplorer__TimelineContainer {
     position: absolute;
     bottom: 16px;
     right: 150px;

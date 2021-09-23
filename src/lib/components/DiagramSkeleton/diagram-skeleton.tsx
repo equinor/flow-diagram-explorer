@@ -4,7 +4,7 @@ import ContentLoader from "react-content-loader";
 import "./diagram-skeleton.css";
 
 export const DiagramSkeleton = (): JSX.Element => (
-    <div className="DiagramSkeleton">
+    <div className="FlowDiagramExplorer__DiagramSkeleton">
         <ContentLoader
             speed={2}
             width={500}
