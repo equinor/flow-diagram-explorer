@@ -1,5 +1,3 @@
-import React from "react";
-
 import { FlowDiagram } from "../../lib/types/diagram";
 import { installationDetails } from "./installation-details";
 
