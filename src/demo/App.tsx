@@ -21,7 +21,7 @@ import { installation, installation2 } from "./examples/installation";
 import CompressorInstallation from "./examples/other-example";
 import { ComplexInstallation } from "./examples/complex";
 import { FlowDiagram, FlowDiagramExplorer } from "../lib";
-import { nodeRenderTypes } from "../lib/render-library";
+import { nodeRenderTypes } from "../lib/render-library/node-render-types";
 
 const customTheme = createMuiTheme({
     palette: {
