@@ -29,7 +29,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
         <div className="FlowDiagramExplorer__MapActions">
             <Tooltip title="Zoom in" placement="left">
                 <Fab
-                    className="FlowDiagramExplorer__FloatingActionButton"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     aria-label="zoom in"
                     onClick={() => handleActionTriggered(MapActionType.ZoomIn)}
                 >
@@ -38,7 +38,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
             </Tooltip>
             <Tooltip title="Zoom out" placement="left">
                 <Fab
-                    className="FlowDiagramExplorer__FloatingActionButton"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     aria-label="zoom out"
                     onClick={() => handleActionTriggered(MapActionType.ZoomOut)}
                 >
@@ -47,7 +47,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
             </Tooltip>
             <Tooltip title="View all" placement="left">
                 <Fab
-                    className="FlowDiagramExplorer__FloatingActionButton"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     aria-label="view all"
                     onClick={() => handleActionTriggered(MapActionType.CenterView)}
                 >
