@@ -60,16 +60,16 @@ export const installation: FlowDiagram = {
         {
             id: "electricity-import",
             label: "Electricity import",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-import",
         },
         {
             id: "electricity-export",
             label: "Electricity export",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-export",
         },
-        { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
+        { id: "emissions", label: "Emissions", type: "emissions" },
+        { id: "fuel", label: "Fuel", type: "fuel" },
+        { id: "oil", label: "Oil", type: "oil" },
     ],
     edges: [
         { flow: "electricity-import", fromNode: "windfarm1", toNode: "installation1" },
@@ -135,16 +135,16 @@ export const installation2: FlowDiagram = {
         {
             id: "electricity-import",
             label: "Electricity import",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-import",
         },
         {
             id: "electricity-export",
             label: "Electricity export",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-export",
         },
-        { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
+        { id: "emissions", label: "Emissions", type: "emissions" },
+        { id: "fuel", label: "Fuel", type: "fuel" },
+        { id: "oil", label: "Oil", type: "oil" },
     ],
     edges: [
         { flow: "electricity-import", fromNode: "windfarm1", toNode: "installation1" },

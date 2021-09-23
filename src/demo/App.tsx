@@ -61,6 +61,16 @@ const diagramMap: { name: string; diagram: FlowDiagram[] }[] = [
     },
 ];
 
+const flowStyles = {
+    "electricity-import": { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+    "electricity-export": { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+    electricity: { strokeColor: "#FABA00", strokeStyle: "0" },
+    emissions: { strokeColor: "#A7B0B6", strokeStyle: "1 2" },
+    fuel: { strokeColor: "#A7B0B6", strokeStyle: "0" },
+    oil: { strokeColor: "#F75D36", strokeStyle: "0" },
+    air: { strokeColor: "#2499E0", strokeStyle: "0" },
+};
+
 function App(): JSX.Element {
     const classes = useStyles();
     const [diagram, setDiagram] = React.useState<string>("Default");
@@ -98,6 +108,7 @@ function App(): JSX.Element {
                 <FlowDiagramExplorer
                     flowDiagram={diagramMap.find((el) => el.name === diagram)?.diagram || []}
                     renderFunctions={nodeRenderTypes}
+                    flowStyles={flowStyles}
                     animationsOn={true}
                     width="100%"
                     height="91vh"

@@ -1,7 +1,7 @@
 import React from "react";
 import dagre from "dagre";
 
-import { FlowDiagram, FlowDiagramNode } from "../types/diagram";
+import { FlowDiagram, FlowDiagramNode, RenderFunctions, FlowStyles } from "../types/diagram";
 import { DiagramConfig } from "../types/diagram";
 import { Size } from "../types/size";
 import { SceneItem, SceneItemPropsType, SceneItemType } from "../components/SceneItem";
@@ -43,9 +43,8 @@ export type Diagram = {
 export class DiagramDrawer {
     private flowDiagram: FlowDiagram;
     private config: DiagramConfig;
-    private renderFunctions?: {
-        [key: string]: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
-    };
+    private renderFunctions?: RenderFunctions;
+    private flowStyles?: FlowStyles;
     private renderJointNode = (): { html: JSX.Element; width: number; height: number } => {
         return {
             html: (
@@ -96,9 +95,8 @@ export class DiagramDrawer {
     constructor(
         flowDiagram: FlowDiagram,
         config: DiagramConfig,
-        renderFunctions?: {
-            [key: string]: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
-        }
+        renderFunctions?: RenderFunctions,
+        flowStyles?: FlowStyles
     ) {
         this.flowDiagram = flowDiagram;
         this.config = config;
@@ -110,6 +108,7 @@ export class DiagramDrawer {
         this.edgePoints = [];
         this.additionalEdgesMap = [];
         this.renderFunctions = renderFunctions;
+        this.flowStyles = flowStyles;
     }
 
     private makeInitialFlowNodes(graph: dagre.graphlib.Graph): void {
@@ -550,7 +549,16 @@ export class DiagramDrawer {
 
     private makeFlows(): void {
         this.flowDiagram.flows.forEach((flow) => {
-            const arrowHeadSize = flow.style?.arrowHeadSize || this.config.defaultEdgeArrowSize;
+            const flowStyle =
+                this.flowStyles && flow.type && flow.type in this.flowStyles
+                    ? this.flowStyles[flow.type]
+                    : {
+                          strokeColor: this.config.defaultEdgeStrokeColor,
+                          strokeStyle: this.config.defaultEdgeStrokeStyle,
+                          strokeWidth: this.config.defaultEdgeStrokeWidth,
+                          arrowHeadSize: this.config.defaultEdgeArrowSize,
+                      };
+            const arrowHeadSize = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
             const svg = (
                 <svg width={this.sceneSize.width} height={this.sceneSize.height}>
                     <defs>
@@ -566,7 +574,7 @@ export class DiagramDrawer {
                         >
                             <path
                                 d={`M0,0 L0,${(arrowHeadSize * 2) / 3} L${arrowHeadSize},${arrowHeadSize / 3} z`}
-                                fill={flow.style?.strokeColor || this.config.defaultEdgeStrokeColor}
+                                fill={flowStyle.strokeColor || this.config.defaultEdgeStrokeColor}
                             />
                         </marker>
                         <marker
@@ -617,10 +625,20 @@ export class DiagramDrawer {
         this.edgePoints.forEach((edge) => {
             const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.flow);
             if (flow) {
-                const strokeWidth = flow.style?.strokeWidth || this.config.defaultEdgeStrokeWidth;
-                const arrowWidth = flow.style?.arrowHeadSize || this.config.defaultEdgeArrowSize;
-                const strokeColor = flow.style?.strokeColor || this.config.defaultEdgeStrokeColor;
-                const strokeStyle = flow.style?.strokeStyle || this.config.defaultEdgeStrokeStyle;
+                const flowStyle =
+                    this.flowStyles && flow.type && flow.type in this.flowStyles
+                        ? this.flowStyles[flow.type]
+                        : {
+                              strokeColor: this.config.defaultEdgeStrokeColor,
+                              strokeStyle: this.config.defaultEdgeStrokeStyle,
+                              strokeWidth: this.config.defaultEdgeStrokeWidth,
+                              arrowHeadSize: this.config.defaultEdgeArrowSize,
+                          };
+
+                const strokeWidth = flowStyle.strokeWidth || this.config.defaultEdgeStrokeWidth;
+                const arrowWidth = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
+                const strokeColor = flowStyle.strokeColor || this.config.defaultEdgeStrokeColor;
+                const strokeStyle = flowStyle.strokeStyle || this.config.defaultEdgeStrokeStyle;
                 const points = edge.points;
                 const width =
                     Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x))) +

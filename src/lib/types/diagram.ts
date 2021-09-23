@@ -15,10 +15,14 @@ export type RenderFunctions = {
     [key: string]: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
 };
 
+export type FlowStyles = {
+    [key: string]: { strokeColor?: string; strokeStyle?: string; strokeWidth?: number; arrowHeadSize?: number };
+};
+
 export type FlowDiagramFlow = {
     id: string;
     label: string;
-    style?: { strokeColor?: string; strokeStyle?: string; strokeWidth?: number; arrowHeadSize?: number };
+    type?: string;
 };
 
 export type FlowDiagramEdge = {

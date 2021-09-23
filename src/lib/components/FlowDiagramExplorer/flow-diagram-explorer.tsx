@@ -3,7 +3,7 @@ import { Dayjs } from "dayjs";
 
 import { Scene } from "../Scene";
 import { Map } from "../Map";
-import { FlowDiagram, FlowDiagramNode, RenderFunctions } from "../../types/diagram";
+import { FlowDiagram, FlowDiagramNode, FlowStyles, RenderFunctions } from "../../types/diagram";
 import { DiagramSkeleton } from "../DiagramSkeleton/diagram-skeleton";
 import { Breadcrumbs } from "@equinor/eds-core-react";
 import { DiagramConfig } from "../../types/diagram";
@@ -54,6 +54,7 @@ type FlowDiagramExplorerPropsType = {
     width: string | number;
     height: string | number;
     renderFunctions?: RenderFunctions;
+    flowStyles?: FlowStyles;
     diagramConfig?: Partial<DiagramConfig>;
     animationsOn?: boolean;
     onNodeClick?: (nodeId: string) => void;
@@ -82,7 +83,12 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
 
     const [state, dispatch] = React.useReducer(
         DiagramReducer,
-        { flowDiagrams: flowDiagrams, diagramConfig: diagramConfig, renderFunctions: props.renderFunctions },
+        {
+            flowDiagrams: flowDiagrams,
+            diagramConfig: diagramConfig,
+            renderFunctions: props.renderFunctions,
+            flowStyles: props.flowStyles,
+        },
         DiagramReducerInit
     );
 

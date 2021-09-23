@@ -31,7 +31,7 @@ export const installationDetails: FlowDiagram = {
             type: "pump",
         },
     ],
-    flows: [{ id: "something", label: "Something", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } }],
+    flows: [{ id: "something", label: "Something" }],
     edges: [
         { flow: "something", fromNode: "input", toNode: "pump1" },
         { flow: "something", fromNode: "input", toNode: "pump2" },
