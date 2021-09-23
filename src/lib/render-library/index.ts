@@ -13,6 +13,7 @@ import { turbineRenderer } from "./Turbine";
 import { turbineGeneratorSetRenderer } from "./TurbineGeneratorSet";
 import { windTurbineRenderer } from "./WindTurbine";
 import { windTurbineSystemRenderer } from "./WindTurbineSystem";
+import { nodeRenderTypes } from "./node-render-types";
 
 export {
     cableRenderer,
@@ -30,4 +31,5 @@ export {
     turbineGeneratorSetRenderer,
     windTurbineRenderer,
     windTurbineSystemRenderer,
+    nodeRenderTypes,
 };

@@ -11,10 +11,14 @@ export interface FlowDiagram {
     edges: FlowDiagramEdge[];
 }
 
+export type RenderFunctions = {
+    [key: string]: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
+};
+
 export type FlowDiagramFlow = {
     id: string;
     label: string;
-    style: { strokeColor?: string; strokeStyle?: string; strokeWidth?: number; arrowHeadSize?: number };
+    style?: { strokeColor?: string; strokeStyle?: string; strokeWidth?: number; arrowHeadSize?: number };
 };
 
 export type FlowDiagramEdge = {
@@ -25,10 +29,10 @@ export type FlowDiagramEdge = {
 
 export type FlowDiagramNode = {
     id: string;
+    type?: string;
     title?: string;
     icon?: string;
     subdiagram?: FlowDiagram | FlowDiagram[];
-    render?: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
 };
 
 export type DiagramConfig = {
@@ -40,6 +44,7 @@ export type DiagramConfig = {
     defaultEdgeArrowSize: number;
     defaultEdgeStrokeColor: string;
     defaultEdgeStrokeStyle: string;
+    defaultRenderFunction: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
 };
 
 export type NodeElement = {

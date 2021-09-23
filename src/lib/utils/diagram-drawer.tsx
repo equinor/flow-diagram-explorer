@@ -43,6 +43,9 @@ export type Diagram = {
 export class DiagramDrawer {
     private flowDiagram: FlowDiagram;
     private config: DiagramConfig;
+    private renderFunctions?: {
+        [key: string]: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
+    };
     private renderJointNode = (): { html: JSX.Element; width: number; height: number } => {
         return {
             html: (
@@ -90,7 +93,13 @@ export class DiagramDrawer {
     private edgePoints: EdgePointsItem[];
     private additionalEdgesMap: AdditionalEdgesMapItem[];
 
-    constructor(flowDiagram: FlowDiagram, config: DiagramConfig) {
+    constructor(
+        flowDiagram: FlowDiagram,
+        config: DiagramConfig,
+        renderFunctions?: {
+            [key: string]: (node: FlowDiagramNode) => { html: JSX.Element; width: number; height: number };
+        }
+    ) {
         this.flowDiagram = flowDiagram;
         this.config = config;
         this.sceneItems = [];
@@ -100,6 +109,7 @@ export class DiagramDrawer {
         this.numRanks = 0;
         this.edgePoints = [];
         this.additionalEdgesMap = [];
+        this.renderFunctions = renderFunctions;
     }
 
     private makeInitialFlowNodes(graph: dagre.graphlib.Graph): void {
@@ -200,7 +210,10 @@ export class DiagramDrawer {
         graph.setGraph({ rankdir: "LR", ranksep: this.config.horizontalSpacing, nodesep: this.config.verticalSpacing });
 
         this.flowDiagram.nodes.forEach((node) => {
-            const nodeMeta = node.render ? node.render(node) : this.renderDefaultNode(node);
+            const nodeMeta =
+                node.type && this.renderFunctions && node.type in this.renderFunctions
+                    ? this.renderFunctions[node.type](node)
+                    : this.renderDefaultNode(node);
             graph.setNode(node.id, { label: node.title, width: nodeMeta.width, height: nodeMeta.height });
         });
 
@@ -221,20 +234,26 @@ export class DiagramDrawer {
 
     private makeNodes(graph: dagre.graphlib.Graph): void {
         graph.nodes().forEach((v) => {
-            const node = this.flowDiagram.nodes.find((node) => node.id === v) || {
-                id: v,
-                render: this.renderJointNode,
-            };
-            const { html, width, height } = node.render ? node.render(node) : this.renderDefaultNode(node);
+            let renderResults = undefined;
+            const node = this.flowDiagram.nodes.find((node) => node.id === v);
+            if (node) {
+                if (node.type && this.renderFunctions && node.type in this.renderFunctions) {
+                    renderResults = this.renderFunctions[node.type](node);
+                } else {
+                    renderResults = this.renderDefaultNode(node);
+                }
+            } else {
+                renderResults = this.renderJointNode();
+            }
             this.sceneItems.push(
                 <SceneItem
                     key={v}
                     id={v}
                     type={SceneItemType.Node}
-                    size={{ width: width, height: height }}
+                    size={{ width: renderResults.width, height: renderResults.height }}
                     position={{ x: graph.node(v).x, y: graph.node(v).y }}
                     zIndex={8}
-                    children={html}
+                    children={renderResults.html}
                     clickable={true}
                     hoverable={true}
                 />
@@ -531,7 +550,7 @@ export class DiagramDrawer {
 
     private makeFlows(): void {
         this.flowDiagram.flows.forEach((flow) => {
-            const arrowHeadSize = flow.style.arrowHeadSize || 9;
+            const arrowHeadSize = flow.style?.arrowHeadSize || this.config.defaultEdgeArrowSize;
             const svg = (
                 <svg width={this.sceneSize.width} height={this.sceneSize.height}>
                     <defs>
@@ -547,7 +566,7 @@ export class DiagramDrawer {
                         >
                             <path
                                 d={`M0,0 L0,${(arrowHeadSize * 2) / 3} L${arrowHeadSize},${arrowHeadSize / 3} z`}
-                                fill={flow.style.strokeColor}
+                                fill={flow.style?.strokeColor || this.config.defaultEdgeStrokeColor}
                             />
                         </marker>
                         <marker
@@ -598,10 +617,10 @@ export class DiagramDrawer {
         this.edgePoints.forEach((edge) => {
             const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.flow);
             if (flow) {
-                const strokeWidth = flow.style.strokeWidth || this.config.defaultEdgeStrokeWidth;
-                const arrowWidth = flow.style.arrowHeadSize || this.config.defaultEdgeArrowSize;
-                const strokeColor = flow.style.strokeColor || this.config.defaultEdgeStrokeColor;
-                const strokeStyle = flow.style.strokeStyle || this.config.defaultEdgeStrokeStyle;
+                const strokeWidth = flow.style?.strokeWidth || this.config.defaultEdgeStrokeWidth;
+                const arrowWidth = flow.style?.arrowHeadSize || this.config.defaultEdgeArrowSize;
+                const strokeColor = flow.style?.strokeColor || this.config.defaultEdgeStrokeColor;
+                const strokeStyle = flow.style?.strokeStyle || this.config.defaultEdgeStrokeStyle;
                 const points = edge.points;
                 const width =
                     Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x))) +

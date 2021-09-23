@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
 
-import { FlowDiagram, DiagramConfig } from "../../types/diagram";
+import { FlowDiagram, DiagramConfig, RenderFunctions } from "../../types/diagram";
 import { Diagram, DiagramDrawer } from "../../utils/diagram-drawer";
 
 type ActionMap<M extends { [index: string]: { [key: string]: string | Dayjs | number | FlowDiagram[] } }> = {
@@ -25,6 +25,7 @@ type DiagramReducerStateType = {
     fixed: {
         flowDiagrams: FlowDiagram[];
         diagramConfig: DiagramConfig;
+        renderFunctions?: RenderFunctions;
         globalStartDate: Dayjs;
         globalEndDate: Dayjs;
     };
@@ -64,9 +65,11 @@ type PathElement = {
 export const DiagramReducerInit = ({
     flowDiagrams,
     diagramConfig,
+    renderFunctions,
 }: {
     flowDiagrams: FlowDiagram[];
     diagramConfig: DiagramConfig;
+    renderFunctions?: RenderFunctions;
 }): DiagramReducerStateType => {
     let startDate: string | undefined = undefined;
     let endDate: string | undefined = undefined;
@@ -88,7 +91,7 @@ export const DiagramReducerInit = ({
                 endDate = diagram.endDate;
             }
         });
-        const diagramDrawer = new DiagramDrawer(flowDiagrams[0], diagramConfig);
+        const diagramDrawer = new DiagramDrawer(flowDiagrams[0], diagramConfig, renderFunctions);
         diagram = diagramDrawer.diagram();
         title = flowDiagrams[0].title;
 
@@ -100,6 +103,7 @@ export const DiagramReducerInit = ({
         fixed: {
             flowDiagrams: flowDiagrams,
             diagramConfig: diagramConfig,
+            renderFunctions: renderFunctions,
             globalStartDate: dayjs(startDate),
             globalEndDate: dayjs(endDate),
         },
@@ -134,7 +138,9 @@ const findAndCreateDiagram = (
             }
         }
     });
-    const diagramDrawer = currentDiagram ? new DiagramDrawer(currentDiagram, state.fixed.diagramConfig) : undefined;
+    const diagramDrawer = currentDiagram
+        ? new DiagramDrawer(currentDiagram, state.fixed.diagramConfig, state.fixed.renderFunctions)
+        : undefined;
     return diagramDrawer?.diagram();
 };
 
@@ -247,6 +253,7 @@ export const DiagramReducer = (state: DiagramReducerStateType, action: Actions):
             return DiagramReducerInit({
                 flowDiagrams: action.payload.diagram,
                 diagramConfig: state.fixed.diagramConfig,
+                renderFunctions: state.fixed.renderFunctions,
             });
         }
     }

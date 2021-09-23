@@ -1,17 +1,6 @@
 import React from "react";
 
 import { FlowDiagram } from "../../lib/types/diagram";
-import {
-    windTurbineSystemRenderer,
-    turbineGeneratorSetRenderer,
-    installationRenderer,
-    cableRenderer,
-} from "../../lib/render-library";
-import { engineGeneratorSetRenderer } from "../../lib/render-library/EngineGeneratorSet/engine-generator-set";
-import { pumpSystemRenderer } from "../../lib/render-library/PumpSystem/pump-system";
-import { directRenderer } from "../../lib/render-library/Direct/direct";
-import { tabulatedRenderer } from "../../lib/render-library/Tabulated/tabulated";
-import { compressorSystemRenderer } from "../../lib/render-library/CompressorSystem/compressor-system";
 
 const renderInputOutputNode = (): { html: JSX.Element; width: number; height: number } => {
     return {
@@ -37,67 +26,67 @@ export const ComplexInstallation: FlowDiagram = {
         {
             id: "input",
             title: "Input",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "turbine-generator-set",
             title: "Turbine generator set",
-            render: turbineGeneratorSetRenderer,
+            type: "turbine-generator-set",
         },
         {
             id: "engine-generator-set",
             title: "Engine generator set",
-            render: engineGeneratorSetRenderer,
+            type: "engine-generator-set",
         },
         {
             id: "windfarm",
             title: "Wind farm",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "power-from-shore",
             title: "Power from shore",
-            render: cableRenderer,
+            type: "cable",
         },
         {
             id: "pump-system",
             title: "Pump system",
-            render: pumpSystemRenderer,
+            type: "pump-system",
         },
         {
             id: "compressor-system",
             title: "Compressor system",
-            render: compressorSystemRenderer,
+            type: "compressor-system",
         },
         {
             id: "installation",
             title: "Installation",
-            render: installationRenderer,
+            type: "installation",
         },
         {
             id: "direct",
             title: "Direct",
-            render: directRenderer,
+            type: "direct",
         },
         {
             id: "tabulated",
             title: "Tabulated",
-            render: tabulatedRenderer,
+            type: "tabulated",
         },
         {
             id: "oil-output",
             title: "Oil output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "emissions-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "electricity-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
     ],
     flows: [

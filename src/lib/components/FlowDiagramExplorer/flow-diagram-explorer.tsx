@@ -3,7 +3,7 @@ import { Dayjs } from "dayjs";
 
 import { Scene } from "../Scene";
 import { Map } from "../Map";
-import { FlowDiagram } from "../../types/diagram";
+import { FlowDiagram, FlowDiagramNode, RenderFunctions } from "../../types/diagram";
 import { DiagramSkeleton } from "../DiagramSkeleton/diagram-skeleton";
 import { Breadcrumbs } from "@equinor/eds-core-react";
 import { DiagramConfig } from "../../types/diagram";
@@ -22,13 +22,39 @@ const defaultDiagramConfig: DiagramConfig = {
     defaultEdgeArrowSize: 16,
     defaultEdgeStrokeColor: "#000",
     defaultEdgeStrokeStyle: "0",
+    defaultRenderFunction: (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => {
+        return {
+            html: (
+                <div
+                    style={{
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "#ccc",
+                        border: "1px black solid",
+                        width: "200px",
+                        height: "100px",
+                        marginTop: "-50px",
+                        marginLeft: "-100px",
+                    }}
+                >
+                    {node.title}
+                </div>
+            ),
+            width: 200,
+            height: 100,
+        };
+    },
 };
 
 type FlowDiagramExplorerPropsType = {
     flowDiagram: FlowDiagram | FlowDiagram[];
     width: string | number;
     height: string | number;
-    diagramConfig?: DiagramConfig;
+    renderFunctions?: RenderFunctions;
+    diagramConfig?: Partial<DiagramConfig>;
     animationsOn?: boolean;
     onNodeClick?: (nodeId: string) => void;
     onDiagramChange?: (title: string) => void;
@@ -37,13 +63,26 @@ type FlowDiagramExplorerPropsType = {
 export const DiagramConfigContext = React.createContext<DiagramConfig>(defaultDiagramConfig);
 
 const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
-    const diagramConfig = props.diagramConfig || defaultDiagramConfig;
+    const diagramConfig: DiagramConfig = {
+        horizontalSpacing: props.diagramConfig?.horizontalSpacing || defaultDiagramConfig.horizontalSpacing,
+        verticalSpacing: props.diagramConfig?.verticalSpacing || defaultDiagramConfig.verticalSpacing,
+        highlightColor: props.diagramConfig?.highlightColor || defaultDiagramConfig.highlightColor,
+        backgroundColor: props.diagramConfig?.backgroundColor || defaultDiagramConfig.backgroundColor,
+        defaultEdgeStrokeWidth:
+            props.diagramConfig?.defaultEdgeStrokeWidth || defaultDiagramConfig.defaultEdgeStrokeWidth,
+        defaultEdgeArrowSize: props.diagramConfig?.defaultEdgeArrowSize || defaultDiagramConfig.defaultEdgeArrowSize,
+        defaultEdgeStrokeColor:
+            props.diagramConfig?.defaultEdgeStrokeColor || defaultDiagramConfig.defaultEdgeStrokeColor,
+        defaultEdgeStrokeStyle:
+            props.diagramConfig?.defaultEdgeStrokeStyle || defaultDiagramConfig.defaultEdgeStrokeStyle,
+        defaultRenderFunction: props.diagramConfig?.defaultRenderFunction || defaultDiagramConfig.defaultRenderFunction,
+    };
     const animationsOn = props.animationsOn !== undefined ? props.animationsOn : false;
     const flowDiagrams = Array.isArray(props.flowDiagram) ? props.flowDiagram : [props.flowDiagram];
 
     const [state, dispatch] = React.useReducer(
         DiagramReducer,
-        { flowDiagrams: flowDiagrams, diagramConfig: diagramConfig },
+        { flowDiagrams: flowDiagrams, diagramConfig: diagramConfig, renderFunctions: props.renderFunctions },
         DiagramReducerInit
     );
 
