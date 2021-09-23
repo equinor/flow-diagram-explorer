@@ -1,21 +1,4 @@
-import React from "react";
-
 import { FlowDiagram } from "../../lib/types/diagram";
-
-const renderInputOutputNode = (): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    width: 0,
-                    height: 0,
-                }}
-            ></div>
-        ),
-        width: 0,
-        height: 100,
-    };
-};
 
 export const ComplexInstallation: FlowDiagram = {
     id: "installation",
