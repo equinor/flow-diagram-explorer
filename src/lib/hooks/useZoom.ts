@@ -47,7 +47,7 @@ export const useZoom = ({
                 ref.current.removeEventListener("dblclick", handleDblClickEvent);
             }
         };
-    }, [ref, scale]);
+    }, [ref, scale, minScale, maxScale]);
 
     const resetScale = React.useCallback(() => {
         setScale(1);

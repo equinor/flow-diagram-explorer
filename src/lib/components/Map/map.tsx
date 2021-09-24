@@ -34,7 +34,16 @@ export const Map: React.FC<MapPropsType> = (props) => {
         width: sceneSize.width,
         height: sceneSize.height,
     });
-    const { scale, setNewScale } = useZoom({ ref: mapRef });
+    const [minScale, setMinScale] = React.useState(0.5);
+    const { scale, setNewScale } = useZoom({ ref: mapRef, minScale: minScale });
+
+    React.useEffect(() => {
+        const minScale = Math.min(
+            0.3,
+            0.5 * Math.min(size.height / boundaryBox.height, size.width / boundaryBox.width)
+        );
+        setMinScale(minScale);
+    }, [size, boundaryBox]);
 
     React.useEffect(() => {
         setBoundaryBox({
