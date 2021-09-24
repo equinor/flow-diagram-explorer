@@ -1,7 +1,7 @@
 import React from "react";
 import dagre from "dagre";
 
-import { FlowDiagram, FlowDiagramNode } from "../types/diagram";
+import { FlowDiagram, RenderFunctions, FlowStyles } from "../types/diagram";
 import { DiagramConfig } from "../types/diagram";
 import { Size } from "../types/size";
 import { SceneItem, SceneItemPropsType, SceneItemType } from "../components/SceneItem";
@@ -43,6 +43,8 @@ export type Diagram = {
 export class DiagramDrawer {
     private flowDiagram: FlowDiagram;
     private config: DiagramConfig;
+    private renderFunctions?: RenderFunctions;
+    private flowStyles?: FlowStyles;
     private renderJointNode = (): { html: JSX.Element; width: number; height: number } => {
         return {
             html: (
@@ -57,31 +59,6 @@ export class DiagramDrawer {
             height: 0,
         };
     };
-    private renderDefaultNode = (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => {
-        return {
-            html: (
-                <div
-                    style={{
-                        textAlign: "center",
-                        verticalAlign: "middle",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#ccc",
-                        border: "1px black solid",
-                        width: "200px",
-                        height: "100px",
-                        marginTop: "-50px",
-                        marginLeft: "-100px",
-                    }}
-                >
-                    {node.title}
-                </div>
-            ),
-            width: 200,
-            height: 100,
-        };
-    };
     private flowNodeEdgeIndicesMap: FlowNodeEdgeIndicesMapItem[];
     private sceneItems: React.ReactElement<SceneItemPropsType>[];
     private sceneSize: Size;
@@ -90,7 +67,12 @@ export class DiagramDrawer {
     private edgePoints: EdgePointsItem[];
     private additionalEdgesMap: AdditionalEdgesMapItem[];
 
-    constructor(flowDiagram: FlowDiagram, config: DiagramConfig) {
+    constructor(
+        flowDiagram: FlowDiagram,
+        config: DiagramConfig,
+        renderFunctions?: RenderFunctions,
+        flowStyles?: FlowStyles
+    ) {
         this.flowDiagram = flowDiagram;
         this.config = config;
         this.sceneItems = [];
@@ -100,6 +82,8 @@ export class DiagramDrawer {
         this.numRanks = 0;
         this.edgePoints = [];
         this.additionalEdgesMap = [];
+        this.renderFunctions = renderFunctions;
+        this.flowStyles = flowStyles;
     }
 
     private makeInitialFlowNodes(graph: dagre.graphlib.Graph): void {
@@ -200,7 +184,10 @@ export class DiagramDrawer {
         graph.setGraph({ rankdir: "LR", ranksep: this.config.horizontalSpacing, nodesep: this.config.verticalSpacing });
 
         this.flowDiagram.nodes.forEach((node) => {
-            const nodeMeta = node.render ? node.render(node) : this.renderDefaultNode(node);
+            const nodeMeta =
+                node.type && this.renderFunctions && node.type in this.renderFunctions
+                    ? this.renderFunctions[node.type](node)
+                    : this.config.defaultRenderFunction(node);
             graph.setNode(node.id, { label: node.title, width: nodeMeta.width, height: nodeMeta.height });
         });
 
@@ -221,20 +208,26 @@ export class DiagramDrawer {
 
     private makeNodes(graph: dagre.graphlib.Graph): void {
         graph.nodes().forEach((v) => {
-            const node = this.flowDiagram.nodes.find((node) => node.id === v) || {
-                id: v,
-                render: this.renderJointNode,
-            };
-            const { html, width, height } = node.render ? node.render(node) : this.renderDefaultNode(node);
+            let renderResults = undefined;
+            const node = this.flowDiagram.nodes.find((node) => node.id === v);
+            if (node) {
+                if (node.type && this.renderFunctions && node.type in this.renderFunctions) {
+                    renderResults = this.renderFunctions[node.type](node);
+                } else {
+                    renderResults = this.config.defaultRenderFunction(node);
+                }
+            } else {
+                renderResults = this.renderJointNode();
+            }
             this.sceneItems.push(
                 <SceneItem
                     key={v}
                     id={v}
                     type={SceneItemType.Node}
-                    size={{ width: width, height: height }}
+                    size={{ width: renderResults.width, height: renderResults.height }}
                     position={{ x: graph.node(v).x, y: graph.node(v).y }}
                     zIndex={8}
-                    children={html}
+                    children={renderResults.html}
                     clickable={true}
                     hoverable={true}
                 />
@@ -531,7 +524,16 @@ export class DiagramDrawer {
 
     private makeFlows(): void {
         this.flowDiagram.flows.forEach((flow) => {
-            const arrowHeadSize = flow.style.arrowHeadSize || 9;
+            const flowStyle =
+                this.flowStyles && flow.type && flow.type in this.flowStyles
+                    ? this.flowStyles[flow.type]
+                    : {
+                          strokeColor: this.config.defaultEdgeStrokeColor,
+                          strokeStyle: this.config.defaultEdgeStrokeStyle,
+                          strokeWidth: this.config.defaultEdgeStrokeWidth,
+                          arrowHeadSize: this.config.defaultEdgeArrowSize,
+                      };
+            const arrowHeadSize = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
             const svg = (
                 <svg width={this.sceneSize.width} height={this.sceneSize.height}>
                     <defs>
@@ -547,7 +549,7 @@ export class DiagramDrawer {
                         >
                             <path
                                 d={`M0,0 L0,${(arrowHeadSize * 2) / 3} L${arrowHeadSize},${arrowHeadSize / 3} z`}
-                                fill={flow.style.strokeColor}
+                                fill={flowStyle.strokeColor || this.config.defaultEdgeStrokeColor}
                             />
                         </marker>
                         <marker
@@ -598,21 +600,43 @@ export class DiagramDrawer {
         this.edgePoints.forEach((edge) => {
             const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.flow);
             if (flow) {
-                const strokeWidth = flow.style.strokeWidth || this.config.defaultEdgeStrokeWidth;
-                const arrowWidth = flow.style.arrowHeadSize || this.config.defaultEdgeArrowSize;
-                const strokeColor = flow.style.strokeColor || this.config.defaultEdgeStrokeColor;
-                const strokeStyle = flow.style.strokeStyle || this.config.defaultEdgeStrokeStyle;
+                const flowStyle =
+                    this.flowStyles && flow.type && flow.type in this.flowStyles
+                        ? this.flowStyles[flow.type]
+                        : {
+                              strokeColor: this.config.defaultEdgeStrokeColor,
+                              strokeStyle: this.config.defaultEdgeStrokeStyle,
+                              strokeWidth: this.config.defaultEdgeStrokeWidth,
+                              arrowHeadSize: this.config.defaultEdgeArrowSize,
+                          };
+
+                const strokeWidth = flowStyle.strokeWidth || this.config.defaultEdgeStrokeWidth;
+                const strokeColor = flowStyle.strokeColor || this.config.defaultEdgeStrokeColor;
+                const strokeStyle = flowStyle.strokeStyle || this.config.defaultEdgeStrokeStyle;
+                const arrowHeadSize = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
+
                 const points = edge.points;
-                const width =
-                    Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x))) +
-                    2 * arrowWidth;
-                const height =
-                    Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y))) +
-                    2 * arrowWidth;
-                const left = Math.min(...points.map((point) => point.x)) - arrowWidth;
-                const top = Math.min(...points.map((point) => point.y)) - arrowWidth;
+                let width = Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x)));
+                let height = Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y)));
+                let left = Math.min(...points.map((point) => point.x));
+                let top = Math.min(...points.map((point) => point.y));
+                if (edge.layer === EdgeLayer.Target) {
+                    width += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
+                    height += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
+                    left -= Math.max(arrowHeadSize, strokeWidth / 2);
+                    top -= Math.max(arrowHeadSize, strokeWidth / 2);
+                } else {
+                    width += strokeWidth;
+                    height += strokeWidth;
+                    left -= strokeWidth / 2;
+                    top -= strokeWidth / 2;
+                }
                 let svg = (
-                    <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
+                    <svg
+                        width={width}
+                        height={height}
+                        style={{ position: "absolute", left: -width / 2, top: -height / 2 }}
+                    >
                         <polyline
                             points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
                             fill="none"
@@ -633,9 +657,21 @@ export class DiagramDrawer {
                     strokes.push("0");
                     const antiDashArray = strokes.join(" ");
                     svg = (
-                        <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
+                        <svg
+                            width={width}
+                            height={height}
+                            style={{ position: "absolute", left: -width / 2, top: -height / 2 }}
+                        >
                             <polyline
-                                points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
+                                points={points
+                                    .map((p, index) => {
+                                        if (edge.layer === EdgeLayer.JointSplit && index === points.length - 1) {
+                                            return `${p.x - left - arrowHeadSize},${p.y - top}`;
+                                        } else {
+                                            return `${p.x - left},${p.y - top}`;
+                                        }
+                                    })
+                                    .join(" ")}
                                 fill="none"
                                 stroke={this.config.backgroundColor}
                                 strokeWidth={strokeWidth}

@@ -1,32 +1,4 @@
-import React from "react";
-
 import { FlowDiagram } from "../../lib/types/diagram";
-import {
-    windTurbineSystemRenderer,
-    turbineGeneratorSetRenderer,
-    installationRenderer,
-    cableRenderer,
-} from "../../lib/render-library";
-import { engineGeneratorSetRenderer } from "../../lib/render-library/EngineGeneratorSet/engine-generator-set";
-import { pumpSystemRenderer } from "../../lib/render-library/PumpSystem/pump-system";
-import { directRenderer } from "../../lib/render-library/Direct/direct";
-import { tabulatedRenderer } from "../../lib/render-library/Tabulated/tabulated";
-import { compressorSystemRenderer } from "../../lib/render-library/CompressorSystem/compressor-system";
-
-const renderInputOutputNode = (): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    width: 0,
-                    height: 0,
-                }}
-            ></div>
-        ),
-        width: 0,
-        height: 100,
-    };
-};
 
 export const ComplexInstallation: FlowDiagram = {
     id: "installation",
@@ -37,85 +9,85 @@ export const ComplexInstallation: FlowDiagram = {
         {
             id: "input",
             title: "Input",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "turbine-generator-set",
             title: "Turbine generator set",
-            render: turbineGeneratorSetRenderer,
+            type: "turbine-generator-set",
         },
         {
             id: "engine-generator-set",
             title: "Engine generator set",
-            render: engineGeneratorSetRenderer,
+            type: "engine-generator-set",
         },
         {
             id: "windfarm",
             title: "Wind farm",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "power-from-shore",
             title: "Power from shore",
-            render: cableRenderer,
+            type: "cable",
         },
         {
             id: "pump-system",
             title: "Pump system",
-            render: pumpSystemRenderer,
+            type: "pump-system",
         },
         {
             id: "compressor-system",
             title: "Compressor system",
-            render: compressorSystemRenderer,
+            type: "compressor-system",
         },
         {
             id: "installation",
             title: "Installation",
-            render: installationRenderer,
+            type: "installation",
         },
         {
             id: "direct",
             title: "Direct",
-            render: directRenderer,
+            type: "direct",
         },
         {
             id: "tabulated",
             title: "Tabulated",
-            render: tabulatedRenderer,
+            type: "tabulated",
         },
         {
             id: "oil-output",
             title: "Oil output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "emissions-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "electricity-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
     ],
     flows: [
         {
             id: "electricity-import",
             label: "Electricity import",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-import",
         },
         {
             id: "electricity-export",
             label: "Electricity export",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-export",
         },
-        { id: "electricity", label: "Electricity", style: { strokeColor: "#FABA00", strokeStyle: "0" } },
-        { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "1 2" } },
-        { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
-        { id: "air", label: "Air", style: { strokeColor: "#2499E0", strokeStyle: "0" } },
+        { id: "electricity", label: "Electricity", type: "electricity" },
+        { id: "emissions", label: "Emissions", type: "emissions" },
+        { id: "fuel", label: "Fuel", type: "fuel" },
+        { id: "oil", label: "Oil", type: "oil" },
+        { id: "air", label: "Air", type: "air" },
     ],
     edges: [
         { flow: "fuel", fromNode: "input", toNode: "turbine-generator-set" },

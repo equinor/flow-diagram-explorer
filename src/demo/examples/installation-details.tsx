@@ -1,21 +1,4 @@
-import React from "react";
 import { FlowDiagram } from "../../lib/types/diagram";
-import { pumpRenderer } from "../../lib/render-library";
-
-const renderInputOutputNode = (): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    width: 0,
-                    height: 0,
-                }}
-            ></div>
-        ),
-        width: 0,
-        height: 100,
-    };
-};
 
 export const installationDetails: FlowDiagram = {
     id: "installation1",
@@ -24,30 +7,30 @@ export const installationDetails: FlowDiagram = {
         {
             id: "input",
             title: "Input",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "pump1",
             title: "Pump 1",
-            render: pumpRenderer,
+            type: "pump",
         },
         {
             id: "pump2",
             title: "Pump 2",
-            render: pumpRenderer,
+            type: "pump",
         },
         {
             id: "pump3",
             title: "Pump 3",
-            render: pumpRenderer,
+            type: "pump",
         },
         {
             id: "pump4",
             title: "Pump 4",
-            render: pumpRenderer,
+            type: "pump",
         },
     ],
-    flows: [{ id: "something", label: "Something", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } }],
+    flows: [{ id: "something", label: "Something" }],
     edges: [
         { flow: "something", fromNode: "input", toNode: "pump1" },
         { flow: "something", fromNode: "input", toNode: "pump2" },

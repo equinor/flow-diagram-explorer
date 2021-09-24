@@ -1,23 +1,5 @@
-import React from "react";
-
 import { FlowDiagram } from "../../lib/types/diagram";
-import { windTurbineSystemRenderer, installationRenderer, cableRenderer } from "../../lib/render-library";
 import { installationDetails } from "./installation-details";
-
-const renderInputOutputNode = (): { html: JSX.Element; width: number; height: number } => {
-    return {
-        html: (
-            <div
-                style={{
-                    width: 0,
-                    height: 0,
-                }}
-            ></div>
-        ),
-        width: 0,
-        height: 100,
-    };
-};
 
 export const installation: FlowDiagram = {
     id: "installation",
@@ -28,64 +10,64 @@ export const installation: FlowDiagram = {
         {
             id: "input",
             title: "Input",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "windfarm1",
             title: "Wind farm 1",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "windfarm2",
             title: "Wind farm 2",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "windfarm3",
             title: "Wind farm 3",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "power-from-shore",
             title: "Power from shore",
-            render: cableRenderer,
+            type: "cable",
         },
         {
             id: "installation1",
             title: "Installation 1",
-            render: installationRenderer,
+            type: "installation",
             subdiagram: installationDetails,
         },
         {
             id: "oil-output",
             title: "Oil output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "emissions-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "electricity-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
     ],
     flows: [
         {
             id: "electricity-import",
             label: "Electricity import",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-import",
         },
         {
             id: "electricity-export",
             label: "Electricity export",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-export",
         },
-        { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
+        { id: "emissions", label: "Emissions", type: "emissions" },
+        { id: "fuel", label: "Fuel", type: "fuel" },
+        { id: "oil", label: "Oil", type: "oil" },
     ],
     edges: [
         { flow: "electricity-import", fromNode: "windfarm1", toNode: "installation1" },
@@ -108,59 +90,59 @@ export const installation2: FlowDiagram = {
         {
             id: "input",
             title: "Input",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "windfarm1",
             title: "Wind farm 1",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "windfarm2",
             title: "Wind farm 2",
-            render: windTurbineSystemRenderer,
+            type: "wind-turbine-system",
         },
         {
             id: "installation1",
             title: "Installation 1",
-            render: installationRenderer,
+            type: "installation",
             subdiagram: installationDetails,
         },
         {
             id: "installation2",
             title: "Installation 2",
-            render: installationRenderer,
+            type: "installation",
         },
         {
             id: "oil-output",
             title: "Oil output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "emissions-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
         {
             id: "electricity-output",
             title: "Output",
-            render: renderInputOutputNode,
+            type: "input-output-node",
         },
     ],
     flows: [
         {
             id: "electricity-import",
             label: "Electricity import",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-import",
         },
         {
             id: "electricity-export",
             label: "Electricity export",
-            style: { strokeColor: "#A7B0B6", strokeStyle: "6 2" },
+            type: "electricity-export",
         },
-        { id: "emissions", label: "Emissions", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "fuel", label: "Fuel", style: { strokeColor: "#A7B0B6", strokeStyle: "0" } },
-        { id: "oil", label: "Oil", style: { strokeColor: "#F75D36", strokeStyle: "0" } },
+        { id: "emissions", label: "Emissions", type: "emissions" },
+        { id: "fuel", label: "Fuel", type: "fuel" },
+        { id: "oil", label: "Oil", type: "oil" },
     ],
     edges: [
         { flow: "electricity-import", fromNode: "windfarm1", toNode: "installation1" },
