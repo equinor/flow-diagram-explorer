@@ -19,7 +19,7 @@ const defaultDiagramConfig: DiagramConfig = {
     highlightColor: "#DF323D",
     backgroundColor: "#F7F7F7",
     defaultEdgeStrokeWidth: 2,
-    defaultEdgeArrowSize: 16,
+    defaultEdgeArrowSize: 9,
     defaultEdgeStrokeColor: "#000",
     defaultEdgeStrokeStyle: "0",
     defaultRenderFunction: (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => {

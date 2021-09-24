@@ -611,9 +611,10 @@ export class DiagramDrawer {
                           };
 
                 const strokeWidth = flowStyle.strokeWidth || this.config.defaultEdgeStrokeWidth;
-                const arrowWidth = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
                 const strokeColor = flowStyle.strokeColor || this.config.defaultEdgeStrokeColor;
                 const strokeStyle = flowStyle.strokeStyle || this.config.defaultEdgeStrokeStyle;
+
+                const arrowWidth = 16;
                 const points = edge.points;
                 const width =
                     Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x))) +
@@ -647,7 +648,15 @@ export class DiagramDrawer {
                     svg = (
                         <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
                             <polyline
-                                points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
+                                points={points
+                                    .map((p, index) => {
+                                        if (edge.layer === EdgeLayer.JointSplit && index === points.length - 1) {
+                                            return `${p.x - left - arrowWidth},${p.y - top}`;
+                                        } else {
+                                            return `${p.x - left},${p.y - top}`;
+                                        }
+                                    })
+                                    .join(" ")}
                                 fill="none"
                                 stroke={this.config.backgroundColor}
                                 strokeWidth={strokeWidth}
