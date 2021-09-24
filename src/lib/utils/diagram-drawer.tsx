@@ -613,7 +613,7 @@ export class DiagramDrawer {
                 const strokeWidth = flowStyle.strokeWidth || this.config.defaultEdgeStrokeWidth;
                 const strokeColor = flowStyle.strokeColor || this.config.defaultEdgeStrokeColor;
                 const strokeStyle = flowStyle.strokeStyle || this.config.defaultEdgeStrokeStyle;
-                const arrowWidth = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
+                const arrowHeadSize = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
 
                 const points = edge.points;
                 let width = Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x)));
@@ -621,10 +621,10 @@ export class DiagramDrawer {
                 let left = Math.min(...points.map((point) => point.x));
                 let top = Math.min(...points.map((point) => point.y));
                 if (edge.layer === EdgeLayer.Target) {
-                    width += 2 * Math.max(arrowWidth, strokeWidth / 2);
-                    height += 2 * Math.max(arrowWidth, strokeWidth / 2);
-                    left -= Math.max(arrowWidth, strokeWidth / 2);
-                    top -= Math.max(arrowWidth, strokeWidth / 2);
+                    width += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
+                    height += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
+                    left -= Math.max(arrowHeadSize, strokeWidth / 2);
+                    top -= Math.max(arrowHeadSize, strokeWidth / 2);
                 } else {
                     width += strokeWidth;
                     height += strokeWidth;
@@ -666,7 +666,7 @@ export class DiagramDrawer {
                                 points={points
                                     .map((p, index) => {
                                         if (edge.layer === EdgeLayer.JointSplit && index === points.length - 1) {
-                                            return `${p.x - left - arrowWidth},${p.y - top}`;
+                                            return `${p.x - left - arrowHeadSize},${p.y - top}`;
                                         } else {
                                             return `${p.x - left},${p.y - top}`;
                                         }
