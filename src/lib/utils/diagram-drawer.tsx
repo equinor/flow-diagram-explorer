@@ -613,19 +613,30 @@ export class DiagramDrawer {
                 const strokeWidth = flowStyle.strokeWidth || this.config.defaultEdgeStrokeWidth;
                 const strokeColor = flowStyle.strokeColor || this.config.defaultEdgeStrokeColor;
                 const strokeStyle = flowStyle.strokeStyle || this.config.defaultEdgeStrokeStyle;
+                const arrowWidth = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
 
-                const arrowWidth = 16;
                 const points = edge.points;
-                const width =
-                    Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x))) +
-                    2 * arrowWidth;
-                const height =
-                    Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y))) +
-                    2 * arrowWidth;
-                const left = Math.min(...points.map((point) => point.x)) - arrowWidth;
-                const top = Math.min(...points.map((point) => point.y)) - arrowWidth;
+                let width = Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x)));
+                let height = Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y)));
+                let left = Math.min(...points.map((point) => point.x));
+                let top = Math.min(...points.map((point) => point.y));
+                if (edge.layer === EdgeLayer.Target) {
+                    width += 2 * Math.max(arrowWidth, strokeWidth / 2);
+                    height += 2 * Math.max(arrowWidth, strokeWidth / 2);
+                    left -= Math.max(arrowWidth, strokeWidth / 2);
+                    top -= Math.max(arrowWidth, strokeWidth / 2);
+                } else {
+                    width += strokeWidth;
+                    height += strokeWidth;
+                    left -= strokeWidth / 2;
+                    top -= strokeWidth / 2;
+                }
                 let svg = (
-                    <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
+                    <svg
+                        width={width}
+                        height={height}
+                        style={{ position: "absolute", left: -width / 2, top: -height / 2 }}
+                    >
                         <polyline
                             points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
                             fill="none"
@@ -646,7 +657,11 @@ export class DiagramDrawer {
                     strokes.push("0");
                     const antiDashArray = strokes.join(" ");
                     svg = (
-                        <svg width={width} height={height} style={{ marginLeft: -width / 2, marginTop: -height / 2 }}>
+                        <svg
+                            width={width}
+                            height={height}
+                            style={{ position: "absolute", left: -width / 2, top: -height / 2 }}
+                        >
                             <polyline
                                 points={points
                                     .map((p, index) => {
