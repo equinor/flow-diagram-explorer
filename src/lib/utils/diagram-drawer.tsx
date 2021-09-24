@@ -1,7 +1,7 @@
 import React from "react";
 import dagre from "dagre";
 
-import { FlowDiagram, FlowDiagramNode, RenderFunctions, FlowStyles } from "../types/diagram";
+import { FlowDiagram, RenderFunctions, FlowStyles } from "../types/diagram";
 import { DiagramConfig } from "../types/diagram";
 import { Size } from "../types/size";
 import { SceneItem, SceneItemPropsType, SceneItemType } from "../components/SceneItem";
@@ -57,31 +57,6 @@ export class DiagramDrawer {
             ),
             width: 0,
             height: 0,
-        };
-    };
-    private renderDefaultNode = (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => {
-        return {
-            html: (
-                <div
-                    style={{
-                        textAlign: "center",
-                        verticalAlign: "middle",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#ccc",
-                        border: "1px black solid",
-                        width: "200px",
-                        height: "100px",
-                        marginTop: "-50px",
-                        marginLeft: "-100px",
-                    }}
-                >
-                    {node.title}
-                </div>
-            ),
-            width: 200,
-            height: 100,
         };
     };
     private flowNodeEdgeIndicesMap: FlowNodeEdgeIndicesMapItem[];
@@ -212,7 +187,7 @@ export class DiagramDrawer {
             const nodeMeta =
                 node.type && this.renderFunctions && node.type in this.renderFunctions
                     ? this.renderFunctions[node.type](node)
-                    : this.renderDefaultNode(node);
+                    : this.config.defaultRenderFunction(node);
             graph.setNode(node.id, { label: node.title, width: nodeMeta.width, height: nodeMeta.height });
         });
 
@@ -239,7 +214,7 @@ export class DiagramDrawer {
                 if (node.type && this.renderFunctions && node.type in this.renderFunctions) {
                     renderResults = this.renderFunctions[node.type](node);
                 } else {
-                    renderResults = this.renderDefaultNode(node);
+                    renderResults = this.config.defaultRenderFunction(node);
                 }
             } else {
                 renderResults = this.renderJointNode();
