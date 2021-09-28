@@ -2,5 +2,9 @@
     position: absolute;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden; /* Chrome and Safari */
-    -moz-backface-visibility: hidden; /* Firefox */
+    will-change: transform;
+}
+
+.FlowDiagramExplorer__SceneItem * {
+    will-change: transform;
 }
