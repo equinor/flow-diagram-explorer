@@ -84,7 +84,7 @@ export const installation: FlowDiagram = {
 export const installation2: FlowDiagram = {
     id: "installation",
     title: "World",
-    startDate: "2019-05-05",
+    startDate: "2019-05-06",
     endDate: "2020-01-04",
     nodes: [
         {
