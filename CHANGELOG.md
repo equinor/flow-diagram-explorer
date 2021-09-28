@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   [#31](https://github.com/equinor/flow-diagram-explorer/pull/31) - Fixed inconsistent behaviour at timeline borders.
 -   [#32](https://github.com/equinor/flow-diagram-explorer/pull/32) - Fixed width and height issue with timeline container.
+-   [#24](https://github.com/equinor/flow-diagram-explorer/pull/30) - Restricted double click actions to map, fixed off-positioning in diagram drawer.
 
 ### Changed
 
