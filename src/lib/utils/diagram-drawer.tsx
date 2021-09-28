@@ -621,16 +621,20 @@ export class DiagramDrawer {
                 let left = Math.min(...points.map((point) => point.x));
                 let top = Math.min(...points.map((point) => point.y));
                 if (edge.layer === EdgeLayer.Target) {
-                    width += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
-                    height += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
-                    left -= Math.max(arrowHeadSize, strokeWidth / 2);
-                    top -= Math.max(arrowHeadSize, strokeWidth / 2);
+                    width += 2 * Math.max(arrowHeadSize, strokeWidth);
+                    height += 2 * Math.max(arrowHeadSize, strokeWidth);
+                    left -= Math.max(arrowHeadSize, strokeWidth);
+                    top -= Math.max(arrowHeadSize, strokeWidth);
                 } else {
-                    width += strokeWidth;
-                    height += strokeWidth;
-                    left -= strokeWidth / 2;
-                    top -= strokeWidth / 2;
+                    width += strokeWidth * 2;
+                    height += strokeWidth * 2;
+                    left -= strokeWidth;
+                    top -= strokeWidth;
                 }
+                width = Math.floor(width);
+                height = Math.floor(height);
+                left = Math.floor(left);
+                top = Math.floor(top);
                 let svg = (
                     <svg
                         width={width}
@@ -698,7 +702,7 @@ export class DiagramDrawer {
                         id={`edge-${edgeIndex}`}
                         type={SceneItemType.Flow}
                         size={{ width: width, height: height }}
-                        position={{ x: left + width / 2, y: top + height / 2 }}
+                        position={{ x: Math.floor(left + width / 2), y: Math.floor(top + height / 2) }}
                         zIndex={2}
                         children={svg}
                         clickable={false}
