@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - YYYY-MM-DD
 
+### Fixed
+
+-   [#31](https://github.com/equinor/flow-diagram-explorer/pull/31) - Fixed inconsistent behaviour at timeline borders.
+
+## [1.0.0-alpha4] - 2021-09-28
+
 ### Changed
 
 -   [#25](https://github.com/equinor/flow-diagram-explorer/pull/25) - Changed class names to be unique for FlowDiagramExplorer.
