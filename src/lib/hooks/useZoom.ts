@@ -17,7 +17,7 @@ export const useZoom = ({
 }): { scale: number; resetScale: () => void; setNewScale: (newScale: number) => void } => {
     const [scale, setScale] = React.useState(1);
 
-    const interval = React.useRef<NodeJS.Timeout>();
+    const interval = React.useRef<null | ReturnType<typeof setInterval>>();
 
     React.useEffect(() => {
         return () => {
