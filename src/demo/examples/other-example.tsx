@@ -32,7 +32,7 @@ const compressorSystem: FlowDiagramNode = {
             ],
             edges: [],
             flows: [],
-            startDate: "2020-01-01",
+            startDate: "2020-01-02",
             endDate: "2021-06-29",
         },
     ],

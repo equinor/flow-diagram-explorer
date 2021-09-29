@@ -255,7 +255,7 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
     const handleDateChange = React.useCallback(
         (date: MaterialUiPickersDate) => {
             if (date) {
-                setCurrentDate(date);
+                setCurrentDate(date.startOf("day"));
             }
         },
         [setCurrentDate]
