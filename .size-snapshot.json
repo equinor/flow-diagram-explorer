@@ -1,0 +1,26 @@
+{
+  "equinor_flow_diagram_explorer.cjs.js": {
+    "bundled": 2341209,
+    "minified": 1138897,
+    "gzipped": 272442
+  },
+  "equinor_flow_diagram_explorer.umd.js": {
+    "bundled": 2473413,
+    "minified": 942651,
+    "gzipped": 248578
+  },
+  "equinor_flow_diagram_explorer.esm.js": {
+    "bundled": 2326672,
+    "minified": 1125673,
+    "gzipped": 271919,
+    "treeshaked": {
+      "rollup": {
+        "code": 669239,
+        "import_statements": 448
+      },
+      "webpack": {
+        "code": 724026
+      }
+    }
+  }
+}
