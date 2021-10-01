@@ -8,7 +8,6 @@ import del from "rollup-plugin-delete";
 import { typescriptPaths } from "rollup-plugin-typescript-paths";
 import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
-import serve from "rollup-plugin-serve";
 
 import pkg from "./package.json";
 
@@ -53,7 +52,6 @@ export default [
             svgr({
                 svgo: false,
             }),
-            serve("public"),
         ],
         output: [
             {
