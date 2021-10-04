@@ -97,7 +97,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerProps> = (props) => {
     }, [props.flowDiagram]);
 
     return (
-        <div className="FlowDiagramExplorer">
+        <div className="FlowDiagramExplorer" style={{ width: props.width, height: props.height }}>
             <DiagramConfigContext.Provider value={diagramConfig}>
                 {flowDiagrams.length > 0 ? (
                     <>
