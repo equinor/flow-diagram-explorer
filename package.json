@@ -57,7 +57,7 @@
         "dev": "rollup -c -w NODE_ENV=development",
         "build": "rollup -c",
         "prepack": "npm run build",
-        "prepublishOnly": "npm test && npm run lint",
+        "prepublishOnly": "npm run lint",
         "preversion": "npm run lint",
         "test": "jest",
         "typecheck": "tsc --noEmit",

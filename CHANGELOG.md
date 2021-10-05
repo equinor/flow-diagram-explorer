@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   [#32](https://github.com/equinor/flow-diagram-explorer/pull/32) - Adjusted build setup (installed `Storybook`, switched to `rollup`, replaced demo app with stories).
+-   [#33](https://github.com/equinor/flow-diagram-explorer/pull/33) - Removed `test` from `prepublish` script (since there are no tests yet).
 
 ## [1.0.0-alpha4] - 2021-09-28
 
