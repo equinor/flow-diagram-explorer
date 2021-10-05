@@ -13,7 +13,7 @@ import { NodeActionHandler } from "../NodeActionHandler";
 import "./flow-diagram-explorer.css";
 import { DiagramReducer, DiagramReducerInit, DiagramActionTypes } from "../DiagramReducer/diagram-reducer";
 
-const defaultDiagramConfig: DiagramConfig = {
+export const defaultDiagramConfig: DiagramConfig = {
     horizontalSpacing: 80,
     verticalSpacing: 50,
     highlightColor: "#DF323D",
@@ -49,7 +49,7 @@ const defaultDiagramConfig: DiagramConfig = {
     },
 };
 
-type FlowDiagramExplorerPropsType = {
+export type FlowDiagramExplorerProps = {
     flowDiagram: FlowDiagram | FlowDiagram[];
     width: string | number;
     height: string | number;
@@ -63,7 +63,7 @@ type FlowDiagramExplorerPropsType = {
 
 export const DiagramConfigContext = React.createContext<DiagramConfig>(defaultDiagramConfig);
 
-const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
+const FlowDiagramExplorer: React.FC<FlowDiagramExplorerProps> = (props) => {
     const diagramConfig: DiagramConfig = {
         horizontalSpacing: props.diagramConfig?.horizontalSpacing || defaultDiagramConfig.horizontalSpacing,
         verticalSpacing: props.diagramConfig?.verticalSpacing || defaultDiagramConfig.verticalSpacing,
@@ -97,7 +97,7 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
     }, [props.flowDiagram]);
 
     return (
-        <div className="FlowDiagramExplorer">
+        <div className="FlowDiagramExplorer" style={{ width: props.width, height: props.height }}>
             <DiagramConfigContext.Provider value={diagramConfig}>
                 {flowDiagrams.length > 0 ? (
                     <>
@@ -119,14 +119,15 @@ const FlowDiagramExplorer: React.FC<FlowDiagramExplorerPropsType> = (props) => {
                                             <Breadcrumbs.Breadcrumb
                                                 key={pathElement.id}
                                                 href="#"
-                                                onClick={() =>
+                                                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                                                    e.preventDefault();
                                                     dispatch({
                                                         type: DiagramActionTypes.MoveUpToNode,
                                                         payload: {
                                                             nodeId: pathElement.id,
                                                         },
-                                                    })
-                                                }
+                                                    });
+                                                }}
                                             >
                                                 {pathElement.title}
                                             </Breadcrumbs.Breadcrumb>

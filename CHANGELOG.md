@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   [#31](https://github.com/equinor/flow-diagram-explorer/pull/31) - Fixed inconsistent behaviour at timeline borders.
+-   [#32](https://github.com/equinor/flow-diagram-explorer/pull/32) - Fixed width and height issue with timeline container.
+
+### Changed
+
+-   [#32](https://github.com/equinor/flow-diagram-explorer/pull/32) - Adjusted build setup (installed `Storybook`, switched to `rollup`, replaced demo app with stories).
 
 ## [1.0.0-alpha4] - 2021-09-28
 
