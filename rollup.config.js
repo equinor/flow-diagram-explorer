@@ -8,6 +8,7 @@ import del from "rollup-plugin-delete";
 import { typescriptPaths } from "rollup-plugin-typescript-paths";
 import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
+import replace from "rollup-plugin-replace";
 
 import pkg from "./package.json";
 
@@ -43,6 +44,10 @@ export default [
                 presets: ["@babel/preset-env", "@babel/preset-react"],
                 extensions,
                 plugins: ["babel-plugin-styled-components"],
+            }),
+            replace({
+                "process.env.NODE_ENV": JSON.stringify(!isDevelopment ? "production" : "development"),
+                "process.env.RTL_SKIP_AUTO_CLEANUP": false,
             }),
             commonjs(),
             sizeSnapshot(),
