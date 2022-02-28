@@ -514,9 +514,6 @@ export class DiagramDrawer {
                     // Connect edges
                     sourceJointPoints.forEach((edgePoint) => {
                         if (edgePoint.rank === rank && edgePoint.layer === EdgeLayer.Source) {
-                            const targetPoints = this.edgePoints.filter(
-                                (el) => el.rank === rank && el.layer === EdgeLayer.Target && el.flow === edgePoint.flow
-                            );
                             targetJointPoints.forEach((targetPoint) => {
                                 if (targetPoint.rank === rank && targetPoint.flow === edgePoint.flow) {
                                     const id = this.makeEdgeId(
