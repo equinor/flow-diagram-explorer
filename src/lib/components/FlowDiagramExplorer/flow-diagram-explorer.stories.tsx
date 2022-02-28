@@ -84,6 +84,15 @@ Simple.args = {
     width: "100%",
     height: "600px",
     diagramConfig: defaultDiagramConfig,
+    animationsOn: true,
+    flowStyles: {
+        "fuel-flow": {
+            strokeColor: "green",
+            strokeStyle: "3 3",
+            strokeWidth: 3,
+            arrowHeadSize: 5,
+        },
+    },
 };
 
 export const Basic = Template.bind({});
@@ -324,6 +333,12 @@ Basic.args = {
     width: "100%",
     height: "600px",
     diagramConfig: defaultDiagramConfig,
+    animationsOn: true,
+    flowStyles: {
+        fuel: { strokeStyle: "2px 2px", strokeColor: "green", strokeWidth: 2 },
+        "electricity-import": { strokeColor: "orange", strokeWidth: 2 },
+        "electricity-export": { strokeStyle: "2 2", strokeColor: "orange", strokeWidth: 2 },
+    },
 };
 
 export const Complex = Template.bind({});
@@ -445,4 +460,9 @@ Complex.args = {
     width: "100%",
     height: "600px",
     diagramConfig: defaultDiagramConfig,
+    animationsOn: true,
+    flowStyles: {
+        fuel: { strokeStyle: "2 2", strokeColor: "green", strokeWidth: 2 },
+        electricity: { strokeColor: "yellow", strokeWidth: 2 },
+    },
 };

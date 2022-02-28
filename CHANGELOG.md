@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] - YYYY-MM-DD
 
+### Added
+
+-   [#42](https://github.com/equinor/flow-diagram-explorer/pull/42) - Added `animationsOn` and `flowStyles` to `storybook` stories.
+
+## [1.0.0-alpha6] - 2021-10-05
+
 ### Fixed
 
 -   [#31](https://github.com/equinor/flow-diagram-explorer/pull/31) - Fixed inconsistent behaviour at timeline borders.
