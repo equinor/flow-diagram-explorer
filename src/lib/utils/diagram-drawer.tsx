@@ -298,7 +298,7 @@ export class DiagramDrawer {
                 let nextRankXPosition = 0;
                 if (nextRankNodes) {
                     nextRankXPosition = Math.min(
-                        ...nextRankNodes.nodes.map((el) => graph.node(el).x - graph.node(el).width / 2)
+                        ...nextRankNodes.nodes.map((el) => Math.round(graph.node(el).x - graph.node(el).width / 2))
                     );
                 }
 
@@ -322,22 +322,24 @@ export class DiagramDrawer {
                             }
                         });
                     }
-                    xStartPosition = Math.max(xStartPosition, graph.node(node).x + graph.node(node).width / 2);
+                    xStartPosition = Math.round(
+                        Math.max(xStartPosition, graph.node(node).x + graph.node(node).width / 2)
+                    );
                 });
 
-                const deltaLayerPositions = (nextRankXPosition - xStartPosition) / 4;
+                const deltaLayerPositions = Math.round((nextRankXPosition - xStartPosition) / 4);
                 nodes.nodes.forEach((node) => {
                     const outEdges = this.makeUniqueFlowEdges(graph.outEdges(node));
                     if (outEdges) {
                         edges.push(...outEdges);
                         const upperRightCorner = {
-                            x: graph.node(node).x + graph.node(node).width / 2,
-                            y: graph.node(node).y - graph.node(node).height / 2,
+                            x: Math.round(graph.node(node).x + graph.node(node).width / 2),
+                            y: Math.round(graph.node(node).y - graph.node(node).height / 2),
                         };
                         outEdges.forEach((edge, index) => {
                             const startPoint = pointSum(upperRightCorner, {
                                 x: 0,
-                                y: ((index + 1) * graph.node(node).height) / (outEdges.length + 1),
+                                y: Math.round(((index + 1) * graph.node(node).height) / (outEdges.length + 1)),
                             });
                             const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.name);
                             if (flow) {
@@ -346,8 +348,8 @@ export class DiagramDrawer {
                                 const endPoint = pointSum(
                                     { x: xStartPosition, y: upperRightCorner.y },
                                     {
-                                        x: ((flowIndex + 1) / flows.length) * deltaLayerPositions,
-                                        y: ((index + 1) * graph.node(node).height) / (outEdges.length + 1),
+                                        x: Math.round(((flowIndex + 1) / flows.length) * deltaLayerPositions),
+                                        y: Math.round(((index + 1) * graph.node(node).height) / (outEdges.length + 1)),
                                     }
                                 );
 
@@ -375,6 +377,9 @@ export class DiagramDrawer {
                     }
                 });
 
+                const sourceJointPoints: EdgePointsItem[] = [];
+                const targetJointPoints: EdgePointsItem[] = [];
+
                 // First layer: joining flows
                 flows.forEach((flow) => {
                     const otherFlowEdgePoints = this.edgePoints.reduce(
@@ -390,6 +395,21 @@ export class DiagramDrawer {
                         otherFlowEdgePoints.map((el) => el.points[el.points.length - 1])
                     );
                     otherFlowEdgePoints.forEach((el) => el.points.push(jointPoint));
+
+                    const edgePoints: dagre.Edge[] = [];
+                    otherFlowEdgePoints.forEach((point) => {
+                        edgePoints.push(...point.edges);
+                    });
+                    sourceJointPoints.push({
+                        flow: flow,
+                        id: "joint-point",
+                        edges: edgePoints,
+                        layer: EdgeLayer.Source,
+                        points: [jointPoint],
+                        rank: rank,
+                        sourceNodes: [],
+                        targetNodes: [],
+                    });
                 });
 
                 if (nextRankNodes) {
@@ -398,13 +418,13 @@ export class DiagramDrawer {
                         const inEdges = this.makeUniqueFlowEdges(graph.inEdges(node));
                         if (inEdges) {
                             const upperLeftCorner = {
-                                x: graph.node(node).x - graph.node(node).width / 2,
-                                y: graph.node(node).y - graph.node(node).height / 2,
+                                x: Math.round(graph.node(node).x - graph.node(node).width / 2),
+                                y: Math.round(graph.node(node).y - graph.node(node).height / 2),
                             };
                             inEdges.forEach((edge, index) => {
                                 const endPoint = pointSum(upperLeftCorner, {
                                     x: 0,
-                                    y: ((index + 1) * graph.node(node).height) / (inEdges.length + 1),
+                                    y: Math.round(((index + 1) * graph.node(node).height) / (inEdges.length + 1)),
                                 });
                                 const flow = this.flowDiagram.flows.find((flow) => flow.id === edge.name);
                                 if (flow) {
@@ -413,8 +433,10 @@ export class DiagramDrawer {
                                     const startPoint = pointSum(
                                         { x: nextRankXPosition, y: upperLeftCorner.y },
                                         {
-                                            x: -((flowIndex + 1) / flows.length) * deltaLayerPositions,
-                                            y: ((index + 1) * graph.node(node).height) / (inEdges.length + 1),
+                                            x: Math.round(-((flowIndex + 1) / flows.length) * deltaLayerPositions),
+                                            y: Math.round(
+                                                ((index + 1) * graph.node(node).height) / (inEdges.length + 1)
+                                            ),
                                         }
                                     );
 
@@ -472,39 +494,56 @@ export class DiagramDrawer {
                         );
                         const jointPoint = this.calcAveragePoint(otherFlowEdgePoints.map((el) => el.points[0]));
                         otherFlowEdgePoints.forEach((el) => el.points.unshift(jointPoint));
+
+                        const edgePoints: dagre.Edge[] = [];
+                        otherFlowEdgePoints.forEach((point) => {
+                            edgePoints.push(...point.edges);
+                        });
+                        targetJointPoints.push({
+                            flow: flow,
+                            id: "joint-point",
+                            edges: edgePoints,
+                            layer: EdgeLayer.Target,
+                            points: [jointPoint],
+                            rank: rank,
+                            sourceNodes: [],
+                            targetNodes: [],
+                        });
                     });
 
                     // Connect edges
-                    this.edgePoints.forEach((edgePoint) => {
+                    sourceJointPoints.forEach((edgePoint) => {
                         if (edgePoint.rank === rank && edgePoint.layer === EdgeLayer.Source) {
                             const targetPoints = this.edgePoints.filter(
                                 (el) => el.rank === rank && el.layer === EdgeLayer.Target && el.flow === edgePoint.flow
                             );
-                            targetPoints.forEach((targetPoint) => {
-                                const id = this.makeEdgeId(
-                                    edgePoint.id,
-                                    targetPoint.id,
-                                    edgePoint.flow,
-                                    EdgeLayer.JointSplit
-                                );
-                                const firstPoint = edgePoint.points[edgePoint.points.length - 1];
-                                const lastPoint = targetPoint.points[0];
-                                const averagePoint = this.calcAveragePoint([firstPoint, lastPoint]);
-                                this.edgePoints.push({
-                                    id: id,
-                                    points: [
-                                        firstPoint,
-                                        { x: averagePoint.x, y: firstPoint.y },
-                                        { x: averagePoint.x, y: lastPoint.y },
-                                        lastPoint,
-                                    ],
-                                    flow: edgePoint.flow,
-                                    layer: EdgeLayer.JointSplit,
-                                    rank: rank,
-                                    edges: edgePoint.edges,
-                                    sourceNodes: [],
-                                    targetNodes: [],
-                                });
+                            targetJointPoints.forEach((targetPoint) => {
+                                if (targetPoint.rank === rank && targetPoint.flow === edgePoint.flow) {
+                                    const id = this.makeEdgeId(
+                                        edgePoint.id,
+                                        targetPoint.id,
+                                        edgePoint.flow,
+                                        EdgeLayer.JointSplit
+                                    );
+                                    const firstPoint = edgePoint.points[edgePoint.points.length - 1];
+                                    const lastPoint = targetPoint.points[0];
+                                    const averagePoint = this.calcAveragePoint([firstPoint, lastPoint]);
+                                    this.edgePoints.push({
+                                        id: id,
+                                        points: [
+                                            firstPoint,
+                                            { x: averagePoint.x, y: firstPoint.y },
+                                            { x: averagePoint.x, y: lastPoint.y },
+                                            lastPoint,
+                                        ],
+                                        flow: edgePoint.flow,
+                                        layer: EdgeLayer.JointSplit,
+                                        rank: rank,
+                                        edges: edgePoint.edges,
+                                        sourceNodes: [],
+                                        targetNodes: [],
+                                    });
+                                }
                             });
                         }
                     });
@@ -616,29 +655,30 @@ export class DiagramDrawer {
                 const arrowHeadSize = flowStyle.arrowHeadSize || this.config.defaultEdgeArrowSize;
 
                 const points = edge.points;
-                let width = Math.abs(Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x)));
-                let height = Math.abs(Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y)));
+                let width = Math.max(...points.map((p) => p.x)) - Math.min(...points.map((p) => p.x));
+                let height = Math.max(...points.map((p) => p.y)) - Math.min(...points.map((p) => p.y));
                 let left = Math.min(...points.map((point) => point.x));
                 let top = Math.min(...points.map((point) => point.y));
                 if (edge.layer === EdgeLayer.Target) {
                     width += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
-                    height += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
                     left -= Math.max(arrowHeadSize, strokeWidth / 2);
+                    height += 2 * Math.max(arrowHeadSize, strokeWidth / 2);
                     top -= Math.max(arrowHeadSize, strokeWidth / 2);
                 } else {
                     width += strokeWidth;
-                    height += strokeWidth;
                     left -= strokeWidth / 2;
+                    height += strokeWidth;
                     top -= strokeWidth / 2;
                 }
+
                 let svg = (
                     <svg
-                        width={width}
-                        height={height}
-                        style={{ position: "absolute", left: -width / 2, top: -height / 2 }}
+                        width={Math.floor(width)}
+                        height={Math.floor(height)}
+                        style={{ position: "absolute", left: -Math.floor(width / 2), top: -Math.floor(height / 2) }}
                     >
                         <polyline
-                            points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
+                            points={points.map((p) => `${Math.floor(p.x - left)},${Math.floor(p.y - top)}`).join(" ")}
                             fill="none"
                             stroke={strokeColor}
                             strokeWidth={strokeWidth}
@@ -658,17 +698,17 @@ export class DiagramDrawer {
                     const antiDashArray = strokes.join(" ");
                     svg = (
                         <svg
-                            width={width}
-                            height={height}
-                            style={{ position: "absolute", left: -width / 2, top: -height / 2 }}
+                            width={Math.floor(width)}
+                            height={Math.floor(height)}
+                            style={{ position: "absolute", left: -Math.floor(width / 2), top: -Math.floor(height / 2) }}
                         >
                             <polyline
                                 points={points
                                     .map((p, index) => {
                                         if (edge.layer === EdgeLayer.JointSplit && index === points.length - 1) {
-                                            return `${p.x - left - arrowHeadSize},${p.y - top}`;
+                                            return `${Math.floor(p.x - left - arrowHeadSize)},${Math.floor(p.y - top)}`;
                                         } else {
-                                            return `${p.x - left},${p.y - top}`;
+                                            return `${Math.floor(p.x - left)},${Math.floor(p.y - top)}`;
                                         }
                                     })
                                     .join(" ")}
@@ -678,7 +718,9 @@ export class DiagramDrawer {
                                 strokeDasharray={antiDashArray}
                             />
                             <polyline
-                                points={points.map((p) => `${p.x - left},${p.y - top}`).join(" ")}
+                                points={points
+                                    .map((p) => `${Math.floor(p.x - left)},${Math.floor(p.y - top)}`)
+                                    .join(" ")}
                                 fill="none"
                                 stroke={strokeColor}
                                 strokeWidth={strokeWidth}
@@ -698,7 +740,7 @@ export class DiagramDrawer {
                         id={`edge-${edgeIndex}`}
                         type={SceneItemType.Flow}
                         size={{ width: width, height: height }}
-                        position={{ x: left + width / 2, y: top + height / 2 }}
+                        position={{ x: Math.floor(left + width / 2), y: Math.floor(top + height / 2) }}
                         zIndex={2}
                         children={svg}
                         clickable={false}
@@ -755,12 +797,12 @@ export class DiagramDrawer {
                             id={`flow-${flow.id}`}
                             type={SceneItemType.Label}
                             size={{
-                                width: graph.edge(edge.edges[0])["width"],
-                                height: graph.edge(edge.edges[0])["height"],
+                                width: Math.floor(graph.edge(edge.edges[0])["width"]),
+                                height: Math.floor(graph.edge(edge.edges[0])["height"]),
                             }}
                             position={{
-                                x: node1.x + (node2.x - node1.x) / 2,
-                                y: node1.y + (node2.y - node1.y) / 2 - graph.edge(edge.edges[0])["height"],
+                                x: Math.floor(node1.x + (node2.x - node1.x) / 2),
+                                y: Math.floor(node1.y + (node2.y - node1.y) / 2 - graph.edge(edge.edges[0])["height"]),
                             }}
                             zIndex={6}
                             children={label}
