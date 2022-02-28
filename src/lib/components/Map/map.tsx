@@ -124,17 +124,19 @@ export const Map: React.FC<MapPropsType> = (props) => {
     );
 
     return (
-        <div ref={mapRef} className="FlowDiagramExplorer__Map" style={{ width: width, height: height }}>
-            <View
-                initialCenterPoint={viewCenterPoint}
-                width={width}
-                height={height}
-                Scene={React.cloneElement(props.ActionHandler, {}, Scene)}
-                boundaryBox={boundaryBox}
-                onCenterPointChange={handleViewCenterPointChange}
-                scale={scale}
-                backgroundColor={config.backgroundColor}
-            />
+        <div className="FlowDiagramExplorer__Map" style={{ width: width, height: height }}>
+            <div ref={mapRef}>
+                <View
+                    initialCenterPoint={viewCenterPoint}
+                    width={width}
+                    height={height}
+                    Scene={React.cloneElement(props.ActionHandler, {}, Scene)}
+                    boundaryBox={boundaryBox}
+                    onCenterPointChange={handleViewCenterPointChange}
+                    scale={scale}
+                    backgroundColor={config.backgroundColor}
+                />
+            </div>
             <Minimap
                 initialCenterPoint={centerPoint}
                 viewSize={size}
