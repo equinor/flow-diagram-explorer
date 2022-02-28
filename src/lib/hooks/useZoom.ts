@@ -29,6 +29,9 @@ export const useZoom = ({
 
     React.useEffect(() => {
         const handleWheelEvent = (e: WheelEvent) => {
+            if (interval.current) {
+                clearInterval(interval.current);
+            }
             e.preventDefault();
             setScale(Math.min(maxScale, Math.max(minScale, scale - Math.sign(e.deltaY) * delta)));
         };
