@@ -1,9 +1,8 @@
 import React from "react";
-import Fab from "@material-ui/core/Fab";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
-import { Tooltip } from "@equinor/eds-core-react";
+import { Tooltip, Button } from "@equinor/eds-core-react";
 
 import "./map-actions.css";
 
@@ -28,31 +27,34 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
     return (
         <div className="FlowDiagramExplorer__MapActions">
             <Tooltip title="Zoom in" placement="left">
-                <Fab
+                <Button
                     className="FlowDiagramExplorer__MapActions__Fab"
                     aria-label="zoom in"
                     onClick={() => handleActionTriggered(MapActionType.ZoomIn)}
+                    variant="ghost_icon"
                 >
                     <ZoomInIcon />
-                </Fab>
+                </Button>
             </Tooltip>
             <Tooltip title="Zoom out" placement="left">
-                <Fab
-                    className="FlowDiagramExplorer__MapActions__Fab"
+                <Button
                     aria-label="zoom out"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     onClick={() => handleActionTriggered(MapActionType.ZoomOut)}
+                    variant="ghost_icon"
                 >
                     <ZoomOutIcon />
-                </Fab>
+                </Button>
             </Tooltip>
             <Tooltip title="View all" placement="left">
-                <Fab
-                    className="FlowDiagramExplorer__MapActions__Fab"
+                <Button
                     aria-label="view all"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     onClick={() => handleActionTriggered(MapActionType.CenterView)}
+                    variant="ghost_icon"
                 >
                     <FilterCenterFocusIcon />
-                </Fab>
+                </Button>
             </Tooltip>
         </div>
     );
