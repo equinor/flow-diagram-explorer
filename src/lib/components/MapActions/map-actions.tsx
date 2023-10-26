@@ -1,9 +1,6 @@
 import React from "react";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import ZoomOutIcon from "@material-ui/icons/ZoomOut";
-import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
-import { Tooltip, Button } from "@equinor/eds-core-react";
-
+import { Tooltip, Button, Icon } from "@equinor/eds-core-react";
+import { focus_center, zoom_in, zoom_out } from "@equinor/eds-icons";
 import "./map-actions.css";
 
 export enum MapActionType {
@@ -33,7 +30,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
                     onClick={() => handleActionTriggered(MapActionType.ZoomIn)}
                     variant="ghost_icon"
                 >
-                    <ZoomInIcon />
+                    <Icon data={zoom_in} />
                 </Button>
             </Tooltip>
             <Tooltip title="Zoom out" placement="left">
@@ -43,7 +40,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
                     onClick={() => handleActionTriggered(MapActionType.ZoomOut)}
                     variant="ghost_icon"
                 >
-                    <ZoomOutIcon />
+                    <Icon data={zoom_out} />
                 </Button>
             </Tooltip>
             <Tooltip title="View all" placement="left">
@@ -53,7 +50,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
                     onClick={() => handleActionTriggered(MapActionType.CenterView)}
                     variant="ghost_icon"
                 >
-                    <FilterCenterFocusIcon />
+                    <Icon data={focus_center} />
                 </Button>
             </Tooltip>
         </div>
