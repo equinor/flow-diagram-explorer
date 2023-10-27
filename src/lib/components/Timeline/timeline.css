@@ -1,46 +1,38 @@
 .FlowDiagramExplorer__Timeline {
-    position: relative;
+    display: flex;
+    flex-flow: column;
+    gap: 1rem;
+    min-width: 0;
+    padding: 0 140px 0 180px;
     user-select: none;
 }
 
-.FlowDiagramExplorer__InnerTimeline {
-    padding: 16px;
-    background-color: white;
-    box-shadow: 0px 3px 5px #888888;
-    display: block;
-    border-radius: 8px;
-}
-
 .FlowDiagramExplorer__Timeline__CurrentSelectionLabel {
-    position: absolute;
-    left: 50%;
-    margin-left: -120px;
-    width: 204px;
-    top: -75px;
-    padding-top: 12px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-right: 52px;
-    background-color: white;
-    box-shadow: 0px 3px 5px #888888;
-    display: block;
-    border-radius: 8px;
-    white-space: nowrap;
-    text-align: center;
+    display: flex;
+    gap: 0.5rem;
+    margin: auto;
+    padding: 0.25rem 0.5rem;
+    align-items: center;
+    border-radius: 0.5rem;
+    background: white;
+    box-shadow: 0 3px 5px #888888;
+}
+.FlowDiagramExplorer__Timeline__CurrentSelectionLabel input {
+    min-width: 150px;
+    box-shadow: none;
+    background: none;
+    border-radius: 0.25rem;
+}
+.FlowDiagramExplorer__Timeline__CurrentSelectionLabel div {
+    flex: 1;
 }
 
-.FlowDiagramExplorer__Timeline__CurrentSelectionLabel button:first-of-type {
-    margin-right: 8px;
+.FlowDiagramExplorer__InnerTimeline {
+    padding: 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 3px 5px #888888;
 }
-
-button.FlowDiagramExplorer__Timeline__Toggle {
-    margin-top: -7px;
-}
-
-.FlowDiagramExplorer__Timeline__DatePicker {
-    width: 160px;
-}
-
 .FlowDiagramExplorer__Timeline__Frames {
     display: flex;
     position: relative;

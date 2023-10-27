@@ -5,21 +5,21 @@
 
 .FlowDiagramExplorer__Levels {
     position: absolute;
-    padding: 16px;
-    background-color: white;
-    box-shadow: 0px 3px 5px #888888;
-    top: 16px;
-    left: 16px;
-    height: 20px;
     display: block;
-    border-radius: 4px;
+    top: 1rem;
+    left: 1rem;
+    height: 20px;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: 0 3px 5px #888888;
+    border-radius: 0.25rem;
     z-index: 10;
 }
 
 .FlowDiagramExplorer__TimelineContainer {
     position: absolute;
-    bottom: 16px;
-    right: 150px;
-    left: 250px;
+    bottom: 1rem;
     z-index: 10;
+    width: 100%;
+    display: grid;
 }
