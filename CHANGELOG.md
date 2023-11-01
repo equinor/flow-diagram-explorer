@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0-alpha6] - 2021-10-05
 
+## Changed
+
+-   [#61](https://github.com/equinor/flow-diagram-explorer/pull/61) - Replaced all MUI components with EDS
+
 ### Fixed
 
 -   [#31](https://github.com/equinor/flow-diagram-explorer/pull/31) - Fixed inconsistent behaviour at timeline borders.

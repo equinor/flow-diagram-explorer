@@ -1,16 +1,11 @@
 import React from "react";
 import clsx from "clsx";
-import { Tooltip, Button, Icon } from "@equinor/eds-core-react";
+import { Tooltip, Button, Icon, TextField } from "@equinor/eds-core-react";
 import { visibility, visibility_off, calendar } from "@equinor/eds-icons";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
-import DayjsUtils from "@date-io/dayjs";
-
 import { useContainerDimensions } from "../../hooks/useContainerDimensions";
 import { useMousePosition } from "../../hooks/useMousePosition";
-
 import "./timeline.css";
 
 Icon.add({ visibility, visibility_off, calendar });
@@ -38,6 +33,8 @@ type TimelineProps = {
     onDateChange?: (date: Dayjs) => void;
 };
 
+type DateEvent = React.ChangeEvent<HTMLInputElement>;
+
 export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Element => {
     const [axisTicks, setAxisTicks] = React.useState<AxisTick[]>([]);
     const [frames, setFrames] = React.useState<TimeFrameItem[]>([]);
@@ -52,7 +49,6 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
     const [sliderActive, setSliderActive] = React.useState(false);
     const [resolution, setResolution] = React.useState(0);
     const [hoverSliderVisible, setHoverSliderVisible] = React.useState(false);
-    const [datePickerOpen, setDatePickerOpen] = React.useState(false);
 
     React.useEffect(() => {
         if (visible) {
@@ -252,14 +248,9 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
         };
     }, [setSliderActive]);
 
-    const handleDateChange = React.useCallback(
-        (date: MaterialUiPickersDate) => {
-            if (date) {
-                setCurrentDate(date.startOf("day"));
-            }
-        },
-        [setCurrentDate]
-    );
+    const handleDateChange = (e: DateEvent) => {
+        if (e?.target?.value) setCurrentDate(dayjs(e.target.value));
+    };
 
     React.useEffect(() => {
         if (props.onDateChange && currentDate) {
@@ -267,44 +258,24 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
         }
     }, [currentDate]);
 
-    const toggleDatePickerDialogVisibility = () => {
-        setDatePickerOpen(!datePickerOpen);
-    };
-
     return (
         <div className="FlowDiagramExplorer__Timeline">
             {currentDate && (
                 <div className="FlowDiagramExplorer__Timeline__CurrentSelectionLabel">
-                    <Tooltip title="Open date picker dialog" placement="top">
-                        <Button
-                            className="FlowDiagramExplorer__Timeline__Toggle"
-                            variant="ghost_icon"
-                            onClick={toggleDatePickerDialogVisibility}
-                        >
-                            <Icon name="calendar" title="Current date" size={16} />
-                        </Button>
-                    </Tooltip>
-                    <MuiPickersUtilsProvider utils={DayjsUtils}>
-                        <DatePicker
-                            variant="inline"
-                            value={currentDate}
-                            onChange={handleDateChange}
-                            format="MMMM DD, YYYY"
-                            open={datePickerOpen}
-                            maxDate={
-                                sortedTimeFrames.length > 0
-                                    ? sortedTimeFrames[sortedTimeFrames.length - 1].endDate
-                                    : undefined
-                            }
-                            onOpen={() => setDatePickerOpen(true)}
-                            onClose={() => setDatePickerOpen(false)}
-                            minDate={sortedTimeFrames.length > 0 ? sortedTimeFrames[0].startDate : undefined}
-                            className="FlowDiagramExplorer__Timeline__DatePicker"
-                            InputProps={{
-                                disableUnderline: true,
-                            }}
-                        />
-                    </MuiPickersUtilsProvider>
+                    <TextField
+                        id="timeline_date"
+                        type="date"
+                        value={currentDate.format("YYYY-MM-DD")}
+                        onChange={(e: DateEvent) => handleDateChange(e)}
+                        min={
+                            sortedTimeFrames.length > 0 ? sortedTimeFrames[0].startDate.format("YYYY-MM-DD") : undefined
+                        }
+                        max={
+                            sortedTimeFrames.length > 0
+                                ? sortedTimeFrames[sortedTimeFrames.length - 1].endDate.format("YYYY-MM-DD")
+                                : undefined
+                        }
+                    />
                     <Tooltip title={visible ? "Hide timeline" : "Show timeline"} placement="top">
                         <Button
                             className="FlowDiagramExplorer__Timeline__Toggle"

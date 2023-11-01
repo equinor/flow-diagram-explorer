@@ -1,10 +1,6 @@
 import React from "react";
-import Fab from "@material-ui/core/Fab";
-import ZoomInIcon from "@material-ui/icons/ZoomIn";
-import ZoomOutIcon from "@material-ui/icons/ZoomOut";
-import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
-import { Tooltip } from "@equinor/eds-core-react";
-
+import { Tooltip, Button, Icon } from "@equinor/eds-core-react";
+import { focus_center, zoom_in, zoom_out } from "@equinor/eds-icons";
 import "./map-actions.css";
 
 export enum MapActionType {
@@ -28,31 +24,34 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
     return (
         <div className="FlowDiagramExplorer__MapActions">
             <Tooltip title="Zoom in" placement="left">
-                <Fab
+                <Button
                     className="FlowDiagramExplorer__MapActions__Fab"
                     aria-label="zoom in"
                     onClick={() => handleActionTriggered(MapActionType.ZoomIn)}
+                    variant="ghost_icon"
                 >
-                    <ZoomInIcon />
-                </Fab>
+                    <Icon data={zoom_in} />
+                </Button>
             </Tooltip>
             <Tooltip title="Zoom out" placement="left">
-                <Fab
-                    className="FlowDiagramExplorer__MapActions__Fab"
+                <Button
                     aria-label="zoom out"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     onClick={() => handleActionTriggered(MapActionType.ZoomOut)}
+                    variant="ghost_icon"
                 >
-                    <ZoomOutIcon />
-                </Fab>
+                    <Icon data={zoom_out} />
+                </Button>
             </Tooltip>
             <Tooltip title="View all" placement="left">
-                <Fab
-                    className="FlowDiagramExplorer__MapActions__Fab"
+                <Button
                     aria-label="view all"
+                    className="FlowDiagramExplorer__MapActions__Fab"
                     onClick={() => handleActionTriggered(MapActionType.CenterView)}
+                    variant="ghost_icon"
                 >
-                    <FilterCenterFocusIcon />
-                </Fab>
+                    <Icon data={focus_center} />
+                </Button>
             </Tooltip>
         </div>
     );
