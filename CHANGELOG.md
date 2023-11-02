@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Changed
 
+-   [#64](https://github.com/equinor/flow-diagram-explorer/pull/64) - Fix typo
 -   [#63](https://github.com/equinor/flow-diagram-explorer/pull/63) - Updated release workflow
 -   [#62](https://github.com/equinor/flow-diagram-explorer/pull/62) - Uninstalled MUI packages
 -   [#61](https://github.com/equinor/flow-diagram-explorer/pull/61) - Replaced all MUI components with EDS
