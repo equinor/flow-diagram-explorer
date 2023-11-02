@@ -21,6 +21,11 @@ jobs:
             - name: 📖 Checkout commit locally
               uses: actions/checkout@v2
 
+            - name: set node to v14
+              - uses: actions/setup-node@v4
+                with:
+                  node-version: '14.16.1'
+
             - name: 📦 Install build dependencies
               run: |
                   npx npm-force-resolutions
