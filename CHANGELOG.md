@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+-   [#40](https://github.com/equinor/flow-diagram-explorer/pull/40) - Changed `whitespace` CSS property of diagram node template to `pre-wrap` and aligned text in center.
+
+## [1.0.0-alpha6] - 2021-10-05
+
+### Fixed
+
 -   [#31](https://github.com/equinor/flow-diagram-explorer/pull/31) - Fixed inconsistent behaviour at timeline borders.
 -   [#32](https://github.com/equinor/flow-diagram-explorer/pull/32) - Fixed width and height issue with timeline container.
 
