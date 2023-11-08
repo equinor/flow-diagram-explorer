@@ -140,8 +140,8 @@
         "rollup-plugin-typescript-paths": "^1.4.0",
         "rollup-plugin-typescript2": "^0.36.0",
         "storybook": "^7.5.3",
-        "style-loader": "^2.0.0",
-        "ts-loader": "^8.0.18",
+        "style-loader": "^3.3.3",
+        "ts-loader": "^9.5.0",
         "typescript": "^5.2.2",
         "url-loader": "^4.1.1",
         "web-vitals": "^3.5.0"
