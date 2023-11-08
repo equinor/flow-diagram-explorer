@@ -10,7 +10,7 @@ import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
 import replace from "rollup-plugin-replace";
 
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
 
 const peerDeps = Object.keys(pkg.peerDependencies || {});
 const environment = process.env.NODE_ENV;
