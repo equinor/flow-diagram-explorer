@@ -138,7 +138,7 @@
         "ts-loader": "^8.0.18",
         "typescript": "^4.2.4",
         "url-loader": "^4.1.1",
-        "web-vitals": "^1.1.2"
+        "web-vitals": "^3.5.0"
     },
     "resolutions": {
         "dns-packet": ">=5.2.2"
