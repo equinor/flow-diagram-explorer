@@ -30,7 +30,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
                     onClick={() => handleActionTriggered(MapActionType.ZoomIn)}
                     variant="ghost_icon"
                 >
-                    <Icon data={zoom_in} />
+                    <Icon data={zoom_in} fr={undefined} />
                 </Button>
             </Tooltip>
             <Tooltip title="Zoom out" placement="left">
@@ -40,7 +40,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
                     onClick={() => handleActionTriggered(MapActionType.ZoomOut)}
                     variant="ghost_icon"
                 >
-                    <Icon data={zoom_out} />
+                    <Icon data={zoom_out} fr={undefined} />
                 </Button>
             </Tooltip>
             <Tooltip title="View all" placement="left">
@@ -50,7 +50,7 @@ export const MapActions: React.FC<MapActionsProps> = (props) => {
                     onClick={() => handleActionTriggered(MapActionType.CenterView)}
                     variant="ghost_icon"
                 >
-                    <Icon data={focus_center} />
+                    <Icon data={focus_center} fr={undefined} />
                 </Button>
             </Tooltip>
         </div>
