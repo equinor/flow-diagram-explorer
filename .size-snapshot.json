@@ -1,18 +1,18 @@
 {
   "equinor_flow_diagram_explorer.cjs.js": {
-    "bundled": 716055,
-    "minified": 346109,
-    "gzipped": 87603
+    "bundled": 716082,
+    "minified": 346110,
+    "gzipped": 87605
   },
   "equinor_flow_diagram_explorer.umd.js": {
-    "bundled": 800385,
-    "minified": 274136,
-    "gzipped": 77740
+    "bundled": 800416,
+    "minified": 274137,
+    "gzipped": 77744
   },
   "equinor_flow_diagram_explorer.esm.js": {
-    "bundled": 709073,
-    "minified": 339999,
-    "gzipped": 87286,
+    "bundled": 709100,
+    "minified": 340000,
+    "gzipped": 87289,
     "treeshaked": {
       "rollup": {
         "code": 162826,
