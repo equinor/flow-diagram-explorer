@@ -142,7 +142,7 @@
         "storybook": "^7.5.3",
         "style-loader": "^2.0.0",
         "ts-loader": "^8.0.18",
-        "typescript": "^4.2.4",
+        "typescript": "^5.2.2",
         "url-loader": "^4.1.1",
         "web-vitals": "^3.5.0"
     },
