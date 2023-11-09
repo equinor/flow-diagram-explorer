@@ -7,7 +7,7 @@ import del from "rollup-plugin-delete";
 import { typescriptPaths } from "rollup-plugin-typescript-paths";
 import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
-import replace from "rollup-plugin-replace";
+import replace from "@rollup/plugin-replace";
 
 import pkg from "./package.json" assert { type: "json" };
 
