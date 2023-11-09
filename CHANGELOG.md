@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   [#41](https://github.com/equinor/flow-diagram-explorer/pull/41) - Fixed edge line offsets.
 
-## [1.0.0-alpha6] - 2021-10-05
+## [1.0.0-alpha8] - 2023-11-09
+
+## Changed
+
+-   [#65](https://github.com/equinor/flow-diagram-explorer/pull/65) - upgrade all packages
+
+## [1.0.0-alpha7] - 2023-11-02
 
 ## Changed
 
@@ -17,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [#63](https://github.com/equinor/flow-diagram-explorer/pull/63) - Updated release workflow
 -   [#62](https://github.com/equinor/flow-diagram-explorer/pull/62) - Uninstalled MUI packages
 -   [#61](https://github.com/equinor/flow-diagram-explorer/pull/61) - Replaced all MUI components with EDS
+
+## [1.0.0-alpha6] - 2021-10-05
 
 ### Fixed
 
