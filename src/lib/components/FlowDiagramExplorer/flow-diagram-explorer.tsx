@@ -1,53 +1,16 @@
 import React from "react";
 import { Dayjs } from "dayjs";
-
 import { Scene } from "../Scene";
 import { Map } from "../Map";
-import { FlowDiagram, FlowDiagramNode, FlowStyles, RenderFunctions } from "../../types/diagram";
+import { FlowDiagram, FlowStyles, RenderFunctions } from "../../types/diagram";
 import { DiagramSkeleton } from "../DiagramSkeleton/diagram-skeleton";
 import { Breadcrumbs } from "@equinor/eds-core-react";
 import { DiagramConfig } from "../../types/diagram";
 import { Timeline } from "../Timeline";
 import { NodeActionHandler } from "../NodeActionHandler";
-
 import "./flow-diagram-explorer.css";
 import { DiagramReducer, DiagramReducerInit, DiagramActionTypes } from "../DiagramReducer/diagram-reducer";
-
-export const defaultDiagramConfig: DiagramConfig = {
-    horizontalSpacing: 80,
-    verticalSpacing: 50,
-    highlightColor: "#DF323D",
-    backgroundColor: "#F7F7F7",
-    defaultEdgeStrokeWidth: 2,
-    defaultEdgeArrowSize: 9,
-    defaultEdgeStrokeColor: "#000",
-    defaultEdgeStrokeStyle: "0",
-    defaultRenderFunction: (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => {
-        return {
-            html: (
-                <div
-                    style={{
-                        textAlign: "center",
-                        verticalAlign: "middle",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#ccc",
-                        border: "1px black solid",
-                        width: "200px",
-                        height: "100px",
-                        marginTop: "-50px",
-                        marginLeft: "-100px",
-                    }}
-                >
-                    {node.title}
-                </div>
-            ),
-            width: 200,
-            height: 100,
-        };
-    },
-};
+import { DiagramConfigContext, defaultDiagramConfig } from "../NodeActionHandler/node-action-handler";
 
 export type FlowDiagramExplorerProps = {
     flowDiagram: FlowDiagram | FlowDiagram[];
@@ -60,8 +23,6 @@ export type FlowDiagramExplorerProps = {
     onNodeClick?: (nodeId: string) => void;
     onDiagramChange?: (title: string) => void;
 };
-
-export const DiagramConfigContext = React.createContext<DiagramConfig>(defaultDiagramConfig);
 
 const FlowDiagramExplorer: React.FC<FlowDiagramExplorerProps> = (props) => {
     const diagramConfig: DiagramConfig = {

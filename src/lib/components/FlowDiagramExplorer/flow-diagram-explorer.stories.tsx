@@ -3,7 +3,7 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react";
 
-import FlowDiagramExplorer, { FlowDiagramExplorerProps, defaultDiagramConfig } from "./flow-diagram-explorer";
+import FlowDiagramExplorer, { FlowDiagramExplorerProps } from "./flow-diagram-explorer";
 
 export default {
     component: FlowDiagramExplorer,
@@ -12,6 +12,7 @@ export default {
 
 import { FlowDiagram, FlowDiagramNode } from "../../types/diagram";
 import { nodeRenderTypes } from "../../render-library/node-render-types";
+import { defaultDiagramConfig } from "../NodeActionHandler/node-action-handler";
 
 const Template: Story<FlowDiagramExplorerProps> = (props) => <FlowDiagramExplorer {...props} />;
 
