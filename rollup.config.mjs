@@ -1,4 +1,3 @@
-/* eslint-disable import/no-default-export */
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import babel from "@rollup/plugin-babel";
@@ -12,6 +11,7 @@ import replace from "@rollup/plugin-replace";
 import pkg from "./package.json" assert { type: "json" };
 
 const peerDeps = Object.keys(pkg.peerDependencies || {});
+// eslint-disable-next-line no-undef
 const environment = process.env.NODE_ENV;
 
 const isDevelopment = environment === "development";
@@ -47,6 +47,7 @@ export default [
             replace({
                 "process.env.NODE_ENV": JSON.stringify(!isDevelopment ? "production" : "development"),
                 "process.env.RTL_SKIP_AUTO_CLEANUP": false,
+                preventAssignment: true,
             }),
             commonjs(),
             // sizeSnapshot(),
