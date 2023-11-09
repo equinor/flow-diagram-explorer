@@ -283,9 +283,9 @@ export const Timeline: React.FC<TimelineProps> = (props: TimelineProps): JSX.Ele
                             onClick={handleToggleVisibility}
                         >
                             {visible ? (
-                                <Icon name="visibility_off" title="Hide" size={16} fr={undefined} />
+                                <Icon name="visibility_off" title="Hide" size={16} />
                             ) : (
-                                <Icon name="visibility" title="Show" size={16} fr={undefined} />
+                                <Icon name="visibility" title="Show" size={16} />
                             )}
                         </Button>
                     </Tooltip>
