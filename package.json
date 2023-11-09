@@ -142,8 +142,5 @@
         "typescript": "^5.2.2",
         "url-loader": "^4.1.1",
         "web-vitals": "^3.5.0"
-    },
-    "resolutions": {
-        "dns-packet": ">=5.2.2"
     }
 }

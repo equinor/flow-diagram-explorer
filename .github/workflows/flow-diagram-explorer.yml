@@ -23,7 +23,6 @@ jobs:
 
             - name: 📦 Install build dependencies
               run: |
-                  npx npm-force-resolutions
                   npm ci --ignore-scripts
 
             - name: 🏗️ Build application
