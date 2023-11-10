@@ -1,10 +1,9 @@
 import React from "react";
-
 import { Diagram } from "../../utils/diagram-drawer";
-import { DiagramConfigContext } from "../FlowDiagramExplorer/flow-diagram-explorer";
 import { Point } from "../../types/point";
 import { Size } from "../../types/size";
 import { ScenePropsType } from "../Scene/scene";
+import { DiagramConfig, FlowDiagramNode } from "../../types/diagram";
 
 type NodeActionHandlerPropsType = {
     sceneProperties?: Diagram;
@@ -14,6 +13,44 @@ type NodeActionHandlerPropsType = {
     onDiagramChange?: (diagramId: string) => void;
     children?: React.ReactElement<ScenePropsType> | React.ReactElement<ScenePropsType>[];
 };
+
+export const defaultDiagramConfig: DiagramConfig = {
+    horizontalSpacing: 80,
+    verticalSpacing: 50,
+    highlightColor: "#DF323D",
+    backgroundColor: "#F7F7F7",
+    defaultEdgeStrokeWidth: 2,
+    defaultEdgeArrowSize: 9,
+    defaultEdgeStrokeColor: "#000",
+    defaultEdgeStrokeStyle: "0",
+    defaultRenderFunction: (node: FlowDiagramNode): { html: JSX.Element; width: number; height: number } => {
+        return {
+            html: (
+                <div
+                    style={{
+                        textAlign: "center",
+                        verticalAlign: "middle",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "#ccc",
+                        border: "1px black solid",
+                        width: "200px",
+                        height: "100px",
+                        marginTop: "-50px",
+                        marginLeft: "-100px",
+                    }}
+                >
+                    {node.title}
+                </div>
+            ),
+            width: 200,
+            height: 100,
+        };
+    },
+};
+
+export const DiagramConfigContext = React.createContext<DiagramConfig>(defaultDiagramConfig);
 
 export const NodeActionHandler: React.FC<NodeActionHandlerPropsType> = (props) => {
     const children = props.children ? (Array.isArray(props.children) ? props.children : [props.children]) : [];
