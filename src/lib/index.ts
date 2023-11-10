@@ -5,8 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 import FlowDiagramExplorer from "./components/FlowDiagramExplorer";
+import type { FlowDiagramExplorerProps } from "./components/FlowDiagramExplorer";
 import * as RenderLibrary from "./render-library";
-import { FlowDiagram, DiagramConfig, FlowDiagramNode } from "./types/diagram";
+import type { FlowDiagram, DiagramConfig, FlowDiagramNode } from "./types/diagram";
 
 export { FlowDiagramExplorer, RenderLibrary };
-export type { FlowDiagram, DiagramConfig, FlowDiagramNode };
+export type { FlowDiagram, DiagramConfig, FlowDiagramNode, FlowDiagramExplorerProps };
