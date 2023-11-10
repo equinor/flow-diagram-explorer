@@ -3,17 +3,12 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react";
 
-import FlowDiagramExplorer, { FlowDiagramExplorerProps } from "./flow-diagram-explorer";
-
 export default {
     component: FlowDiagramExplorer,
     title: "FlowDiagramExplorer",
 } as Meta;
-
-import { FlowDiagram, FlowDiagramNode } from "../../types/diagram";
-import { nodeRenderTypes } from "../../render-library/";
-import { defaultDiagramConfig } from "../NodeActionHandler/node-action-handler";
-
+import type { FlowDiagramNode, FlowDiagram, FlowDiagramExplorerProps } from "../..";
+import { RenderLibrary, FlowDiagramExplorer } from "../../";
 const Template: Story<FlowDiagramExplorerProps> = (props) => <FlowDiagramExplorer {...props} />;
 
 export const Simple = Template.bind({});
@@ -81,10 +76,9 @@ const simpleInstallation: FlowDiagram[] = [
 
 Simple.args = {
     flowDiagram: simpleInstallation,
-    renderFunctions: nodeRenderTypes,
+    renderFunctions: RenderLibrary.nodeRenderTypes,
     width: "100%",
     height: "600px",
-    diagramConfig: defaultDiagramConfig,
 };
 
 export const Basic = Template.bind({});
@@ -321,10 +315,9 @@ const basicInstallation2: FlowDiagram = {
 
 Basic.args = {
     flowDiagram: [basicInstallation, basicInstallation2],
-    renderFunctions: nodeRenderTypes,
+    renderFunctions: RenderLibrary.nodeRenderTypes,
     width: "100%",
     height: "600px",
-    diagramConfig: defaultDiagramConfig,
 };
 
 export const Complex = Template.bind({});
@@ -442,8 +435,7 @@ const complexInstallation: FlowDiagram = {
 
 Complex.args = {
     flowDiagram: [complexInstallation],
-    renderFunctions: nodeRenderTypes,
+    renderFunctions: RenderLibrary.nodeRenderTypes,
     width: "100%",
     height: "600px",
-    diagramConfig: defaultDiagramConfig,
 };
