@@ -9,11 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   [#41](https://github.com/equinor/flow-diagram-explorer/pull/41) - Fixed edge line offsets.
 
+## [1.0.0-alpha10] - 2023-11-09
+
+## Fixed
+
+-   [#68] - https://github.com/equinor/flow-diagram-explorer/pull/68 - fix peer deps bug
+
+## [1.0.0-alpha9] - 2023-11-09
+
+## Fixed
+
+-   [#67](https://github.com/equinor/flow-diagram-explorer/pull/67) - fix: 🐛 export nodeRenderTypes
+
 ## [1.0.0-alpha8] - 2023-11-09
 
 ## Changed
 
--   [#67](https://github.com/equinor/flow-diagram-explorer/pull/67) - fix: 🐛 export nodeRenderTypes
 -   [#66](https://github.com/equinor/flow-diagram-explorer/pull/66) - remove npm config set always-auth true
 -   [#65](https://github.com/equinor/flow-diagram-explorer/pull/65) - upgrade all packages
 
