@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Changed
 
+-   [#67](https://github.com/equinor/flow-diagram-explorer/pull/67) - fix: 🐛 export nodeRenderTypes
 -   [#66](https://github.com/equinor/flow-diagram-explorer/pull/66) - remove npm config set always-auth true
 -   [#65](https://github.com/equinor/flow-diagram-explorer/pull/65) - upgrade all packages
 
