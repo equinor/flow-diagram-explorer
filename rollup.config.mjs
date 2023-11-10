@@ -19,7 +19,6 @@ const isDevelopment = environment === "development";
 const globals = {
     react: "React",
     "react-dom": "ReactDOM",
-    "styled-components": "styled",
 };
 
 const extensions = [".jsx", ".js", ".tsx", ".ts"];
@@ -42,7 +41,6 @@ export default [
                 babelHelpers: "bundled",
                 presets: ["@babel/preset-env", "@babel/preset-react"],
                 extensions,
-                plugins: ["babel-plugin-styled-components"],
             }),
             replace({
                 "process.env.NODE_ENV": JSON.stringify(!isDevelopment ? "production" : "development"),
