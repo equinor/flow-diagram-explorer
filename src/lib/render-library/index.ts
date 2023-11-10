@@ -1,3 +1,4 @@
+import { RenderFunctions } from "lib/types/diagram";
 import { cableRenderer } from "./Cable";
 import { compressorRenderer } from "./Compressor";
 import { compressorSystemRenderer } from "./CompressorSystem";
@@ -13,6 +14,26 @@ import { turbineRenderer } from "./Turbine";
 import { turbineGeneratorSetRenderer } from "./TurbineGeneratorSet";
 import { windTurbineRenderer } from "./WindTurbine";
 import { windTurbineSystemRenderer } from "./WindTurbineSystem";
+import { renderInputOutputNode } from "./inputOutputNodeRenderer";
+
+const nodeRenderTypes: RenderFunctions = {
+    cable: cableRenderer,
+    compressor: compressorRenderer,
+    "compressor-system": compressorSystemRenderer,
+    direct: directRenderer,
+    engine: engineRenderer,
+    "engine-generator-set": engineGeneratorSetRenderer,
+    generator: generatorRenderer,
+    "input-output-node": renderInputOutputNode,
+    installation: installationRenderer,
+    pump: pumpRenderer,
+    "pump-system": pumpSystemRenderer,
+    tabulated: tabulatedRenderer,
+    turbine: turbineRenderer,
+    "turbine-generator-set": turbineGeneratorSetRenderer,
+    "wind-turbine": windTurbineRenderer,
+    "wind-turbine-system": windTurbineSystemRenderer,
+};
 
 export {
     cableRenderer,
@@ -30,4 +51,5 @@ export {
     turbineGeneratorSetRenderer,
     windTurbineRenderer,
     windTurbineSystemRenderer,
+    nodeRenderTypes,
 };

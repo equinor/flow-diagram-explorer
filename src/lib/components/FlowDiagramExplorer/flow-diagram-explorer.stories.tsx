@@ -11,7 +11,7 @@ export default {
 } as Meta;
 
 import { FlowDiagram, FlowDiagramNode } from "../../types/diagram";
-import { nodeRenderTypes } from "../../render-library/node-render-types";
+import { nodeRenderTypes } from "../../render-library/";
 import { defaultDiagramConfig } from "../NodeActionHandler/node-action-handler";
 
 const Template: Story<FlowDiagramExplorerProps> = (props) => <FlowDiagramExplorer {...props} />;
