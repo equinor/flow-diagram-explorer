@@ -1,17 +1,12 @@
-// Button.stories.ts | Button.stories.tsx
-
-import React from "react";
-import { Story, Meta } from "@storybook/react";
-
-export default {
-    component: FlowDiagramExplorer,
-    title: "FlowDiagramExplorer",
-} as Meta;
+import { Meta, StoryObj } from "@storybook/react";
 import type { FlowDiagramNode, FlowDiagram, FlowDiagramExplorerProps } from "../..";
 import { RenderLibrary, FlowDiagramExplorer } from "../../";
-const Template: Story<FlowDiagramExplorerProps> = (props) => <FlowDiagramExplorer {...props} />;
 
-export const Simple = Template.bind({});
+const meta: Meta<typeof FlowDiagramExplorer> = {
+    component: FlowDiagramExplorer,
+};
+export default meta;
+type Story = StoryObj<FlowDiagramExplorerProps>;
 
 const compressor: FlowDiagramNode = {
     id: "compressor1",
@@ -74,14 +69,14 @@ const simpleInstallation: FlowDiagram[] = [
     },
 ];
 
-Simple.args = {
-    flowDiagram: simpleInstallation,
-    renderFunctions: RenderLibrary.nodeRenderTypes,
-    width: "100%",
-    height: "600px",
+export const Simple: Story = {
+    args: {
+        flowDiagram: simpleInstallation,
+        renderFunctions: RenderLibrary.nodeRenderTypes,
+        width: "100%",
+        height: "600px",
+    },
 };
-
-export const Basic = Template.bind({});
 
 const basicInstallation: FlowDiagram = {
     id: "installation",
@@ -313,14 +308,14 @@ const basicInstallation2: FlowDiagram = {
     ],
 };
 
-Basic.args = {
-    flowDiagram: [basicInstallation, basicInstallation2],
-    renderFunctions: RenderLibrary.nodeRenderTypes,
-    width: "100%",
-    height: "600px",
+export const Basic: Story = {
+    args: {
+        flowDiagram: [basicInstallation, basicInstallation2],
+        renderFunctions: RenderLibrary.nodeRenderTypes,
+        width: "100%",
+        height: "600px",
+    },
 };
-
-export const Complex = Template.bind({});
 
 const complexInstallation: FlowDiagram = {
     id: "installation",
@@ -433,9 +428,11 @@ const complexInstallation: FlowDiagram = {
     ],
 };
 
-Complex.args = {
-    flowDiagram: [complexInstallation],
-    renderFunctions: RenderLibrary.nodeRenderTypes,
-    width: "100%",
-    height: "600px",
+export const Complex: Story = {
+    args: {
+        flowDiagram: [complexInstallation],
+        renderFunctions: RenderLibrary.nodeRenderTypes,
+        width: "100%",
+        height: "600px",
+    },
 };

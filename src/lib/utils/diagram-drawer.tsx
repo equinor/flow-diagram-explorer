@@ -402,7 +402,7 @@ export class DiagramDrawer {
                     });
                     sourceJointPoints.push({
                         flow: flow,
-                        id: "joint-point",
+                        id: `joint-point-${flow}-${rank}`,
                         edges: edgePoints,
                         layer: EdgeLayer.Source,
                         points: [jointPoint],
@@ -501,7 +501,7 @@ export class DiagramDrawer {
                         });
                         targetJointPoints.push({
                             flow: flow,
-                            id: "joint-point",
+                            id: `joint-point-${flow}-${rank}`,
                             edges: edgePoints,
                             layer: EdgeLayer.Target,
                             points: [jointPoint],

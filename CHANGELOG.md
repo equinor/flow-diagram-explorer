@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   [#41](https://github.com/equinor/flow-diagram-explorer/pull/41) - Fixed edge line offsets.
 
+## [1.0.0-alpha12] - 2023-11-09
+
+## Fixed
+
+-   [#70] - https://github.com/equinor/flow-diagram-explorer/pull/70 - cleanup fixes
+
 ## [1.0.0-alpha11] - 2023-11-09
 
 ## Fixed
