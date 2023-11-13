@@ -7,13 +7,12 @@ import { typescriptPaths } from "rollup-plugin-typescript-paths";
 import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
 import replace from "@rollup/plugin-replace";
-
 import pkg from "./package.json" assert { type: "json" };
 
 const peerDeps = Object.keys(pkg.peerDependencies || {});
+
 // eslint-disable-next-line no-undef
 const environment = process.env.NODE_ENV;
-
 const isDevelopment = environment === "development";
 
 const globals = {
@@ -48,7 +47,6 @@ export default [
                 preventAssignment: true,
             }),
             commonjs(),
-            // sizeSnapshot(),
             postcss({
                 extensions: [".css"],
             }),
